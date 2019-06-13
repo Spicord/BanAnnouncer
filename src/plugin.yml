@@ -1,0 +1,5 @@
+name: BanAnnouncer
+author: OopsieWoopsie
+main: eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit
+version: 1.0.2
+depend: [Spicord]

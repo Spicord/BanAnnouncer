@@ -1,0 +1,19 @@
+# Channel(s) where the messages will be sent
+channels-to-announce:
+  - 123456789012345678
+
+# I don't like to comment... variables are self-explained
+# If the text is empty, the message will not be sent
+messages:
+  kick:      "The player `%player%` was **kicked** by `%staff%` for `%reason%`"
+  ban:       "The player `%player%` has been **banned** by `%staff%` for `%reason%`"
+  tempban:   "The player `%player%` was **temporarily banned** by `%staff%` for `%reason%`, duration: %duration%"
+  mute:      "The player `%player%` has been **muted** by `%staff%` for `%reason%`"
+  tempmute:  "The player `%player%` was **temporarily muted** by `%staff%` for `%reason%`, duration: %duration%"
+  banip:     "The player `%player%` was **ip-banned** by `%staff%` for `%reason%`"
+  tempbanip: "The player `%player%` was **temporarily ip-banned** by `%staff%` for `%reason%`, duration: %duration%"
+  warn:      "The player `%player%` has been **warned** by `%staff%` for `%reason%`"
+  tempwarn:  "The player `%player%` has been **warned** by `%staff%` for `%reason%`, duration: %duration%"
+
+# Do not change this or i'll eat your cookies
+config-version: 1

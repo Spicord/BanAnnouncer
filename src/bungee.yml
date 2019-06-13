@@ -1,0 +1,5 @@
+name: BanAnnouncer
+author: OopsieWoopsie
+main: eu.mcdb.ban_announcer.bungee.BanAnnouncerBungee
+version: 1.0.2
+depends: [Spicord]
