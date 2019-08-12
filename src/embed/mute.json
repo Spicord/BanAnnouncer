@@ -1,0 +1,11 @@
+{
+  "embed": {
+    "title": "New punishment 🤐",
+    "description": "The player `%player%` has been muted by `%staff%` for `%reason%`",
+    "color": 1755751,
+    "footer": {
+      "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+      "text": "Powered by BanAnnouncer"
+    }
+  }
+}
