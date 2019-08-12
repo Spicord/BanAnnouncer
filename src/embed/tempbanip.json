@@ -1,0 +1,11 @@
+{
+  "embed": {
+    "title": "New punishment ⏲️",
+    "description": "The player `%player%` was temporarily ip-banned by `%staff%` for `%reason%`, duration: `%duration%`",
+    "color": 5540790,
+    "footer": {
+      "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+      "text": "Powered by BanAnnouncer"
+    }
+  }
+}

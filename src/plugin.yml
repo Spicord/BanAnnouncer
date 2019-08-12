@@ -1,5 +1,6 @@
 name: BanAnnouncer
 author: OopsieWoopsie
 main: eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit
-version: 1.0.2
+version: 1.1.1-SNAPSHOT
 depend: [Spicord]
+description: Announce the punishments on your Discord server
