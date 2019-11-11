@@ -24,8 +24,8 @@ import net.md_5.bungee.event.EventHandler;
 
 public final class AdvancedBanListener implements Listener {
 
-	@EventHandler
-	public void onPunishment(PunishmentEvent event) {
+    @EventHandler
+    public void onPunishment(PunishmentEvent event) {
         AdvancedBan.onPunishment(event.getPunishment());
-	}
+    }
 }

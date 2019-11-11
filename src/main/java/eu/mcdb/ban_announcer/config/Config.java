@@ -42,24 +42,24 @@ public final class Config {
     public static List<Long> CHANNELS_TO_ANNOUNCE = new ArrayList<Long>();
     public static Messages MESSAGES;
     private int config_version = 3;
-	private File file;
+    private File file;
     private File dataFolder;
-	private Object pl;
+    private Object pl;
 
-	@Getter
+    @Getter
     private String punishmentManager;
 
-	@Getter
+    @Getter
     private EmbedLoader embedLoader;
 
-	@Getter
+    @Getter
     private boolean ignoreSilent;
 
-	@Getter
+    @Getter
     private static Config instance;
 
     public Config(Object pl) {
-    	this.pl = pl;
+        this.pl = pl;
         instance = this;
         switch (Server.getServerType()) {
         case BUKKIT:

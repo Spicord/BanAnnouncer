@@ -25,9 +25,9 @@ import me.leoko.advancedban.utils.Punishment;
 public final class AdvancedBan {
 
     public static void onPunishment(Punishment abp) {
-    	BanAnnouncer ba = BanAnnouncer.getInstance();
+        BanAnnouncer ba = BanAnnouncer.getInstance();
 
-    	BAPunishment punishment = new BAPunishment();
+        BAPunishment punishment = new BAPunishment();
 
         punishment.setDuration(abp.getDuration(true));
         punishment.setOperator(abp.getOperator());

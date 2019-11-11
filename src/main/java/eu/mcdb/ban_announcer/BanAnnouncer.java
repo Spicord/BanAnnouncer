@@ -36,13 +36,13 @@ import net.dv8tion.jda.core.entities.TextChannel;
 
 public final class BanAnnouncer {
 
-	@Getter
+    @Getter
     private static BanAnnouncer instance;
 
-	@Getter
+    @Getter
     private final Logger logger;
 
-	private final Set<DiscordBot> bots;
+    private final Set<DiscordBot> bots;
     private boolean enabled = true;
 
     public BanAnnouncer(Logger logger) {

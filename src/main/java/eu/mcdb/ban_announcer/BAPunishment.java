@@ -24,20 +24,20 @@ import lombok.ToString;
 @Data
 public final class BAPunishment {
 
-	private String player = "";
-	private String operator = "";
-	private String reason = "";
-	private String duration = "";
-	private boolean permanent = false;
-	private Type type = Type.UNKNOWN;
+    private String player = "";
+    private String operator = "";
+    private String reason = "";
+    private String duration = "";
+    private boolean permanent = false;
+    private Type type = Type.UNKNOWN;
 
-	public BAPunishment() {}
+    public BAPunishment() {}
 
-	public BAPunishment(Type type) {
-		this.type = type;
-	}
+    public BAPunishment(Type type) {
+        this.type = type;
+    }
 
-	public enum Type {
-		KICK, BAN, TEMPBAN, MUTE, TEMPMUTE, BANIP, TEMPBANIP, WARN, TEMPWARN, UNKNOWN;
-	}
+    public enum Type {
+        KICK, BAN, TEMPBAN, MUTE, TEMPMUTE, BANIP, TEMPBANIP, WARN, TEMPWARN, UNKNOWN;
+    }
 }
