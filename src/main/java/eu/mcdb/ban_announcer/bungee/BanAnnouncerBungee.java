@@ -68,8 +68,8 @@ public final class BanAnnouncerBungee extends Plugin {
             break;
         case "maxbans":
         case "maxbansplus":
-        	getLogger().severe("You choose MaxBansPlus but it only works on spigot/bukkit, BanAnnouncer will not work!.");
-        	break;
+            getLogger().severe("You choose MaxBansPlus but it only works on spigot/bukkit, BanAnnouncer will not work!.");
+            break;
         default:
             getLogger().severe("The punishment manager '" + config.getPunishmentManager()
                     + "' is not compatible with BanAnnouncer, you can request the integration"
@@ -79,11 +79,11 @@ public final class BanAnnouncerBungee extends Plugin {
     }
 
     private boolean usingLiteBans() {
-    	return ReflectionUtils.classExists("litebans.api.Events");
-	}
+        return ReflectionUtils.classExists("litebans.api.Events");
+    }
 
     private boolean usingAdvancedBan() {
-    	return ReflectionUtils.classExists("me.leoko.advancedban.Universal");
+        return ReflectionUtils.classExists("me.leoko.advancedban.Universal");
     }
 
     @Override
