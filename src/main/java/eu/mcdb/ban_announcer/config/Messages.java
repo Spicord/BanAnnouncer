@@ -41,15 +41,15 @@ public final class Messages {
         this.configInstance = configInstance;
         this.getStringMethod = getStringMethod;
 
-        this.KICK = getEmbed("kick");
-        this.BAN = getEmbed("ban");
-        this.TEMPBAN = getEmbed("tempban");
-        this.MUTE = getEmbed("mute");
-        this.TEMPMUTE = getEmbed("tempmute");
-        this.BANIP = getEmbed("banip");
+        this.KICK      = getEmbed("kick");
+        this.BAN       = getEmbed("ban");
+        this.TEMPBAN   = getEmbed("tempban");
+        this.MUTE      = getEmbed("mute");
+        this.TEMPMUTE  = getEmbed("tempmute");
+        this.BANIP     = getEmbed("banip");
         this.TEMPBANIP = getEmbed("tempbanip");
-        this.WARN = getEmbed("warn");
-        this.TEMPWARN = getEmbed("tempwarn");
+        this.WARN      = getEmbed("warn");
+        this.TEMPWARN  = getEmbed("tempwarn");
     }
 
     private Embed getEmbed(String key) {
