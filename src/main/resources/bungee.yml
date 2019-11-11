@@ -1,5 +1,5 @@
 name: BanAnnouncer
 author: OopsieWoopsie
 main: eu.mcdb.ban_announcer.bungee.BanAnnouncerBungee
-version: 1.1.1-SNAPSHOT
+version: ${project.version}
 depends: [Spicord]

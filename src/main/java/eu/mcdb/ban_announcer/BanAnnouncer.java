@@ -1,3 +1,20 @@
+/*
+ * Copyright (C) 2019  OopsieWoopsie
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package eu.mcdb.ban_announcer;
 
 import java.util.Collections;
@@ -14,15 +31,19 @@ import eu.mcdb.spicord.bot.DiscordBot;
 import eu.mcdb.spicord.embed.Embed;
 import eu.mcdb.spicord.embed.EmbedSender;
 import eu.mcdb.util.chat.ChatColor;
+import lombok.Getter;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 public final class BanAnnouncer {
 
+	@Getter
     private static BanAnnouncer instance;
+
+	@Getter
     private final Logger logger;
-    private final Set<DiscordBot> bots;
+
+	private final Set<DiscordBot> bots;
     private boolean enabled = true;
-    private static final String version = "1.1.1-SNAPSHOT";
 
     public BanAnnouncer(Logger logger) {
         instance = this;
@@ -32,8 +53,11 @@ public final class BanAnnouncer {
     }
 
     public void handlePunishment(BAPunishment punishment) {
-        if (!enabled)
+        if (!enabled) {
+            System.out.println("BanAnnouncer is not enabled, ignoring punishment.");
+            System.out.println(punishment.toString());
             return;
+        }
 
         String player = punishment.getPlayer();
         String operator = punishment.getOperator();
@@ -62,6 +86,8 @@ public final class BanAnnouncer {
         case TEMPBANIP:
             sendIpBanMessage(player, operator, reason, duration, permanent);
             break;
+        case UNKNOWN:
+        default:
         }
     }
 
@@ -120,18 +146,23 @@ public final class BanAnnouncer {
     }
 
     private void sendDiscordMessage(Embed message) {
-        if (message == null)
+        if (message == null) {
+            System.out.println("Message is null, ignoring it.");
             return;
+        }
 
         bots.stream().filter(DiscordBot::isReady).map(DiscordBot::getJda).forEach(jda -> {
             Config.CHANNELS_TO_ANNOUNCE.forEach(channelId -> {
                 TextChannel channel = jda.getTextChannelById(channelId);
 
                 if (channel == null) {
-                    getLogger()
-                            .severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");
+                    logger.severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");
                 } else {
-                    EmbedSender.prepare(channel, message).queue();
+                    EmbedSender.prepare(channel, message).queue(success -> {
+                        logger.info("The punishment message was sent.");
+                    }, fail -> {
+                        logger.warning("Couldn't send the punishment message: " + fail.getMessage());
+                    });
                 }
             });
         });
@@ -141,18 +172,10 @@ public final class BanAnnouncer {
         bots.add(bot);
     }
 
-    public static BanAnnouncer getInstance() {
-        return instance;
-    }
-
     public void disable() {
         enabled = false;
         instance = null;
         bots.clear();
-    }
-
-    public Logger getLogger() {
-        return logger;
     }
 
     private class MessageFormatter {
@@ -178,9 +201,5 @@ public final class BanAnnouncer {
             }
             return str;
         }
-    }
-
-    public static String getVersion() {
-        return version;
     }
 }

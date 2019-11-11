@@ -28,29 +28,40 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 import org.bukkit.configuration.file.FileConfiguration;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 import eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit;
 import eu.mcdb.ban_announcer.bungee.BanAnnouncerBungee;
 import eu.mcdb.spicord.embed.EmbedLoader;
-import eu.mcdb.util.ServerType;
+import eu.mcdb.util.Server;
+import lombok.Getter;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
 
 public final class Config {
 
     public static List<Long> CHANNELS_TO_ANNOUNCE = new ArrayList<Long>();
     public static Messages MESSAGES;
-    private int config_version = 2;
-    private String punishmentsManager;
-    private EmbedLoader embedLoader;
-    private File file;
+    private int config_version = 3;
+	private File file;
     private File dataFolder;
+	private Object pl;
+
+	@Getter
+    private String punishmentManager;
+
+	@Getter
+    private EmbedLoader embedLoader;
+
+	@Getter
     private boolean ignoreSilent;
+
+	@Getter
     private static Config instance;
 
-    public Config(ServerType serverType) {
+    public Config(Object pl) {
+    	this.pl = pl;
         instance = this;
-        switch (serverType) {
+        switch (Server.getServerType()) {
         case BUKKIT:
             loadBukkit();
             break;
@@ -61,7 +72,7 @@ public final class Config {
     }
 
     private void loadBungee() {
-        BanAnnouncerBungee plugin = BanAnnouncerBungee.getInstance();
+        BanAnnouncerBungee plugin = (BanAnnouncerBungee) pl;
         plugin.getDataFolder().mkdir();
         try {
             this.file = plugin.getFile();
@@ -88,7 +99,7 @@ public final class Config {
             } else {
                 MESSAGES = new Messages(this, config, config.getClass().getDeclaredMethod("getString", String.class));
                 CHANNELS_TO_ANNOUNCE = config.getLongList("channels-to-announce");
-                punishmentsManager = config.getString("punishments-manager", "auto");
+                punishmentManager = config.getString("punishment-manager", "auto");
                 ignoreSilent = config.getBoolean("ignore-silent", false);
             }
         } catch (Exception e) {
@@ -100,12 +111,12 @@ public final class Config {
     }
 
     private void loadBukkit() {
-        BanAnnouncerBukkit plugin = BanAnnouncerBukkit.getInstance();
+        BanAnnouncerBukkit plugin = (BanAnnouncerBukkit) pl;
         plugin.getDataFolder().mkdir();
 
         try {
             this.file = plugin.getFile();
-            dataFolder = plugin.getDataFolder();
+            this.dataFolder = plugin.getDataFolder();
             extractEmbeds();
             this.embedLoader = new EmbedLoader();
             embedLoader.load(new File(plugin.getDataFolder(), "embed"));
@@ -129,7 +140,7 @@ public final class Config {
                 MESSAGES = new Messages(this, config, config.getClass().getSuperclass().getSuperclass().getSuperclass()
                         .getDeclaredMethod("getString", String.class));
                 CHANNELS_TO_ANNOUNCE = config.getLongList("channels-to-announce");
-                punishmentsManager = config.getString("punishments-manager", "auto");
+                punishmentManager = config.getString("punishment-manager", "auto");
                 ignoreSilent = config.getBoolean("ignore-silent", false);
             }
         } catch (Exception e) {
@@ -155,14 +166,6 @@ public final class Config {
         }
 
         return file;
-    }
-
-    public String getPunishmentsManager() {
-        return punishmentsManager;
-    }
-
-    public EmbedLoader getEmbedLoader() {
-        return embedLoader;
     }
 
     private void extractEmbeds() {
@@ -193,13 +196,5 @@ public final class Config {
             jarFile.close();
         } catch (Exception e) {
         }
-    }
-
-    public boolean isIgnoreSilent() {
-        return ignoreSilent;
-    }
-
-    public static Config getInstance() {
-        return instance;
     }
 }

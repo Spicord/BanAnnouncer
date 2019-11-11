@@ -30,11 +30,12 @@ messages:
 #     auto        = Auto detect
 #     advancedban = Use AdvancedBan
 #     litebans    = Use LiteBans
-punishments-manager: auto
+#     maxbans     = Use MaxBansPlus
+punishment-manager: auto
 
 # If it's set to false, the punishments made
 #    with the '-s' flag of LiteBans will be sent anyways.
 ignore-silent: false
 
 # Do not change this or i'll eat your cookies
-config-version: 2
+config-version: 3
