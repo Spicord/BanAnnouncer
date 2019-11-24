@@ -1,0 +1,11 @@
+{
+  "embed": {
+    "title": "Punishment revoked",
+    "description": "The punishment `%type%` of player `%player%` has been pardoned by `%staff%` reason: `%reason%`",
+    "color": 5540790,
+    "footer": {
+      "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+      "text": "Powered by BanAnnouncer"
+    }
+  }
+}

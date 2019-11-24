@@ -91,6 +91,33 @@ public final class BanAnnouncer {
         }
     }
 
+    public void handleUnpunishment(BAUnpunishment punishment) {
+        if (!enabled) {
+            System.out.println("BanAnnouncer is not enabled, ignoring punishment.");
+            System.out.println(punishment.toString());
+            return;
+        }
+
+        String player = punishment.getPlayer();
+        String operator = punishment.getOperator();
+        String type = punishment.getType().toString().toLowerCase();
+        String reason = ChatColor.stripColor(punishment.getReason());
+        reason = reason.equals("") ? "none" : reason;
+
+        sendUnpunishMessage(player, operator, type, reason);
+    }
+
+    private void sendUnpunishMessage(String player, String operator, String type, String reason) {
+        MessageFormatter formatter = new MessageFormatter()
+                .setString("player", player)
+                .setString("type", type)
+                .setString("staff", operator)
+                .setString("reason", reason);
+        Embed embed = formatter.format(Config.MESSAGES.UNPUNISH);
+
+        sendDiscordMessage(embed);
+    }
+
     private void sendKickMessage(String player, String operator, String reason) {
         MessageFormatter formatter = new MessageFormatter()
                 .setString("player", player)

@@ -24,6 +24,7 @@ messages:
   tempbanip: "{embed:tempbanip}"
   warn:      "{embed:warn}"
   tempwarn:  "{embed:tempwarn}"
+  unpunish:  "{embed:unpunish}"
 
 # The plugin used for manage the punishments
 # Possible values:

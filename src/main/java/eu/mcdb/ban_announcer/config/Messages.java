@@ -32,6 +32,8 @@ public final class Messages {
     public final Embed WARN;
     public final Embed TEMPWARN;
 
+    public final Embed UNPUNISH;
+
     private final Object configInstance;
     private final Method getStringMethod;
     private Config config;
@@ -50,6 +52,7 @@ public final class Messages {
         this.TEMPBANIP = getEmbed("tempbanip");
         this.WARN      = getEmbed("warn");
         this.TEMPWARN  = getEmbed("tempwarn");
+        this.UNPUNISH = getEmbed("unpunish");
     }
 
     private Embed getEmbed(String key) {

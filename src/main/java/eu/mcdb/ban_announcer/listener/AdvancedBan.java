@@ -19,6 +19,7 @@ package eu.mcdb.ban_announcer.listener;
 
 import eu.mcdb.ban_announcer.BAPunishment;
 import eu.mcdb.ban_announcer.BAPunishment.Type;
+import eu.mcdb.ban_announcer.BAUnpunishment;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import me.leoko.advancedban.utils.Punishment;
 
@@ -70,4 +71,43 @@ public final class AdvancedBan {
 
         ba.handlePunishment(punishment);
     }
+
+    public static void onRevokePunishment(Punishment abp, boolean massClear) {
+        BanAnnouncer ba = BanAnnouncer.getInstance();
+
+        BAUnpunishment punishment = new BAUnpunishment();
+
+        punishment.setOperator(abp.getOperator());
+        punishment.setReason(abp.getReason());
+        punishment.setPlayer(abp.getName());
+
+        switch (abp.getType()) {
+            case KICK:
+                punishment.setType(BAUnpunishment.Type.UNKICK);
+                break;
+            case BAN:
+                punishment.setType(BAUnpunishment.Type.UNBAN);
+                break;
+            case IP_BAN:
+                punishment.setType(BAUnpunishment.Type.UNBANIP);
+                break;
+            case MUTE:
+                punishment.setType(BAUnpunishment.Type.UNMUTE);
+                break;
+            case WARNING:
+                punishment.setType(BAUnpunishment.Type.UNWARN);
+                break;
+            default:
+                ba.getLogger().severe("Unknown event '" + abp.getType() + "'.");
+                return;
+        }
+
+        if(massClear){
+            punishment.setType(BAUnpunishment.Type.MASS);
+            return;
+        }
+
+        ba.handleUnpunishment(punishment);
+    }
+
 }

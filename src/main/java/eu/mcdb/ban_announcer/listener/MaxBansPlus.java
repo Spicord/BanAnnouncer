@@ -19,6 +19,8 @@ package eu.mcdb.ban_announcer.listener;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+
+import eu.mcdb.ban_announcer.BAUnpunishment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -116,20 +118,37 @@ public class MaxBansPlus implements Listener {
     }
 
     @EventHandler
-    public void onUnbanAddress(UnbanAddressEvent event) {} // unused
+    public void onUnbanAddress(UnbanAddressEvent event) {
+        handleUnpunish(event, event.getBan(), BAUnpunishment.Type.UNBAN);
+    }
 
     @EventHandler
-    public void onUnbanUser(UnbanUserEvent event) {} // unused
+    public void onUnbanUser(UnbanUserEvent event) {
+        handleUnpunish(event, event.getBan(), BAUnpunishment.Type.UNBAN);
+    }
 
     @EventHandler
-    public void onUnmuteAddress(UnmuteAddressEvent event) {} // unused
+    public void onUnmuteAddress(UnmuteAddressEvent event) {
+        handleUnpunish(event, event.getMute(), BAUnpunishment.Type.UNMUTE);
+    }
 
     @EventHandler
-    public void onUnmuteUser(UnmuteUserEvent event) {} // unused
+    public void onUnmuteUser(UnmuteUserEvent event) {
+        handleUnpunish(event, event.getMute(), BAUnpunishment.Type.UNMUTE);
+    }
 
     @EventHandler
     public void onWarnUser(WarnUserEvent event) {
         handleRestriction(event, event.getWarning(), Type.WARN, Type.TEMPWARN);
+    }
+
+    public void handleUnpunish(MaxBansRestrictEvent<?> event, Restriction restriction, BAUnpunishment.Type type){
+        BAUnpunishment punishment = new BAUnpunishment();
+        punishment.setPlayer(event.getTarget().getName());
+        punishment.setOperator(event.isPlayerAdministered() ? event.getAdmin().getName() : "Console");
+        punishment.setType(type);
+        punishment.setReason(restriction.getReason());
+        banAnnouncer.handleUnpunishment(punishment);
     }
 
     private void handleRestriction(MaxBansRestrictEvent<?> event, Restriction restriction, Type perm, Type temp) {

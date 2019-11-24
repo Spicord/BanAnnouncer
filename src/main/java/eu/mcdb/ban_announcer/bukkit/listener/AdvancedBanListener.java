@@ -17,6 +17,7 @@
 
 package eu.mcdb.ban_announcer.bukkit.listener;
 
+import me.leoko.advancedban.bukkit.event.RevokePunishmentEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import eu.mcdb.ban_announcer.listener.AdvancedBan;
@@ -28,4 +29,8 @@ public final class AdvancedBanListener implements Listener {
     public void onPunishment(PunishmentEvent event) {
         AdvancedBan.onPunishment(event.getPunishment());
     }
+
+    @EventHandler
+    public void onRevoke(RevokePunishmentEvent event) { AdvancedBan.onRevokePunishment(event.getPunishment(), event.isMassClear());}
+
 }

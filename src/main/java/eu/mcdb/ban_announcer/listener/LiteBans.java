@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import eu.mcdb.ban_announcer.BAPunishment;
 import eu.mcdb.ban_announcer.BAPunishment.Type;
+import eu.mcdb.ban_announcer.BAUnpunishment;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.config.Config;
 import litebans.api.Database;
@@ -108,5 +109,40 @@ public final class LiteBans {
 
             ba.handlePunishment(punishment);
         }
+
+        @Override
+        public void entryRemoved(Entry entry) {
+
+            BAUnpunishment punishment = new BAUnpunishment();
+
+            switch (entry.getType()) {
+                case "ban":
+                    punishment.setType(BAUnpunishment.Type.UNBAN);
+                    break;
+                case "mute":
+                    punishment.setType(BAUnpunishment.Type.UNMUTE);
+                    break;
+                case "warn":
+                    punishment.setType(BAUnpunishment.Type.UNWARN);
+                    break;
+                default:
+                    ba.getLogger().severe("Unknown event '" + entry.getType() + "'.");
+                    return;
+            }
+
+            String name = LiteBans.this.getName(entry.getUuid());
+
+            if (name == null) {
+                ba.getLogger().severe("Couldn't fetch player name from UUID '" + entry.getUuid() + "'. The message was not sent.");
+                return;
+            }
+
+            punishment.setPlayer(name);
+            punishment.setOperator(entry.getExecutorName() == null ? "Console" : entry.getExecutorName());
+            punishment.setReason(entry.getReason());
+
+            ba.handleUnpunishment(punishment);
+        }
+
     }
 }
