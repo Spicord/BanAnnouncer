@@ -41,7 +41,7 @@ public final class Config {
 
     public static List<Long> CHANNELS_TO_ANNOUNCE = new ArrayList<Long>();
     public static Messages MESSAGES;
-    private int config_version = 3;
+    private int config_version = 4;
     private File file;
     private File dataFolder;
     private Object pl;
