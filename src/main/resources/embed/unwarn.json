@@ -1,0 +1,11 @@
+{
+  "embed": {
+    "title": "Revoked punishment",
+    "description": "The player `%player%` has been unwarned by `%staff%`",
+    "color": 10771377,
+    "footer": {
+      "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+      "text": "Powered by BanAnnouncer"
+    }
+  }
+}
