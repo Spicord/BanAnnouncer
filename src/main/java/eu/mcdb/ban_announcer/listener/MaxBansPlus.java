@@ -37,9 +37,9 @@ import org.maxgamer.maxbans.orm.Restriction;
 import org.maxgamer.maxbans.util.TemporalDuration;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentAction.Type;
-import eu.mcdb.ban_announcer.BanAnnouncer;
 
 public class MaxBansPlus implements Listener {
 
@@ -56,6 +56,8 @@ public class MaxBansPlus implements Listener {
 
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        // FIXME: all the reasons are "none"
+
         String command = event.getMessage();
 
         // syntax: /kick <player> [reason]
@@ -116,21 +118,29 @@ public class MaxBansPlus implements Listener {
     }
 
     @EventHandler
-    public void onUnbanAddress(UnbanAddressEvent event) {} // unused
+    public void onUnbanAddress(UnbanAddressEvent event) {
+        handleRevokedRestriction(event, Type.UNBANIP);
+    }
 
     @EventHandler
-    public void onUnbanUser(UnbanUserEvent event) {} // unused
+    public void onUnbanUser(UnbanUserEvent event) {
+        handleRevokedRestriction(event, Type.UNBAN);
+    }
 
     @EventHandler
     public void onUnmuteAddress(UnmuteAddressEvent event) {} // unused
 
     @EventHandler
-    public void onUnmuteUser(UnmuteUserEvent event) {} // unused
+    public void onUnmuteUser(UnmuteUserEvent event) {
+        handleRevokedRestriction(event, Type.UNMUTE);
+    }
 
     @EventHandler
     public void onWarnUser(WarnUserEvent event) {
         handleRestriction(event, event.getWarning(), Type.WARN, Type.TEMPWARN);
     }
+
+    // missing UnwarnUserEvent
 
     private void handleRestriction(MaxBansRestrictEvent<?> event, Restriction restriction, Type perm, Type temp) {
         PunishmentAction punishment = new PunishmentAction();
@@ -140,6 +150,13 @@ public class MaxBansPlus implements Listener {
         punishment.setType(punishment.isPermanent() ? perm : temp);
         punishment.setReason(restriction.getReason());
         punishment.setDuration(getDuration(restriction));
+        banAnnouncer.handlePunishmentAction(punishment);
+    }
+
+    private void handleRevokedRestriction(MaxBansRestrictEvent<?> event, Type type) {
+        PunishmentAction punishment = new PunishmentAction(type);
+        punishment.setPlayer(event.getTarget().getName());
+        punishment.setOperator(event.isPlayerAdministered() ? event.getAdmin().getName() : "Console");
         banAnnouncer.handlePunishmentAction(punishment);
     }
 
