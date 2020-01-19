@@ -17,6 +17,7 @@
 
 package eu.mcdb.ban_announcer;
 
+import eu.mcdb.util.chat.ChatColor;
 import lombok.Data;
 import lombok.ToString;
 
@@ -35,6 +36,28 @@ public final class PunishmentAction {
 
     public PunishmentAction(Type type) {
         this.type = type;
+    }
+
+    public void setReason(String reason) {
+        reason = ChatColor.stripColor(reason);
+        this.reason = reason.equals("") ? "none" : reason;
+    }
+
+    public void setDuration(String duration) {
+        duration = ChatColor.stripColor(duration);
+        this.duration = duration.equals("") ? "unknown" : duration;
+    }
+
+    public boolean isRevoked() {
+        switch (type) {
+        case UNBAN:
+        case UNBANIP:
+        case UNMUTE:
+        case UNWARN:
+            return true;
+        default:
+            return false;
+        }
     }
 
     public enum Type {

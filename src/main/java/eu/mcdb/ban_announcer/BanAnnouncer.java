@@ -29,10 +29,10 @@ import eu.mcdb.spicord.Spicord;
 import eu.mcdb.spicord.bot.DiscordBot;
 import eu.mcdb.spicord.embed.Embed;
 import eu.mcdb.spicord.embed.EmbedSender;
-import eu.mcdb.util.chat.ChatColor;
 import lombok.Getter;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+// TODO: optimization? oop? - i dont like to make a method for send every message
 public final class BanAnnouncer {
 
     @Getter
@@ -60,9 +60,8 @@ public final class BanAnnouncer {
 
         String player = punishment.getPlayer();
         String operator = punishment.getOperator();
-        String reason = ChatColor.stripColor(punishment.getReason());
-        reason = reason.equals("") ? "none" : reason;
-        String duration = ChatColor.stripColor(punishment.getDuration());
+        String reason = punishment.getReason();
+        String duration = punishment.getDuration();
         boolean permanent = punishment.isPermanent();
 
         switch (punishment.getType()) {
@@ -81,12 +80,52 @@ public final class BanAnnouncer {
         case TEMPBANIP:
             sendIpBanMessage(player, operator, reason, duration, permanent); break;
         case UNBAN:
+            sendUnbanMessage(player, operator); break;
         case UNMUTE:
+            sendUnmuteMessage(player, operator); break;
         case UNWARN:
+            sendUnwarnMessage(player, operator); break;
         case UNBANIP:
+            sendUnbanipMessage(player, operator); break;
         case UNKNOWN:
         default:
         }
+    }
+
+    private void sendUnbanipMessage(String player, String operator) {
+        MessageFormatter formatter = new MessageFormatter()
+                .setString("player", player)
+                .setString("staff", operator);
+        Embed embed = formatter.format(Config.MESSAGES.UNBANIP);
+
+        sendDiscordMessage(embed);
+    }
+
+    private void sendUnwarnMessage(String player, String operator) {
+        MessageFormatter formatter = new MessageFormatter()
+                .setString("player", player)
+                .setString("staff", operator);
+        Embed embed = formatter.format(Config.MESSAGES.UNWARN);
+
+        sendDiscordMessage(embed);
+    }
+
+    private void sendUnmuteMessage(String player, String operator) {
+        MessageFormatter formatter = new MessageFormatter()
+                .setString("player", player)
+                .setString("staff", operator);
+        Embed embed = formatter.format(Config.MESSAGES.UNMUTE);
+
+        sendDiscordMessage(embed);
+    }
+
+    private void sendUnbanMessage(String player, String operator) {
+        MessageFormatter formatter = new MessageFormatter()
+                .setString("player", player)
+                .setString("staff", operator);
+        Embed embed = formatter.format(Config.MESSAGES.UNBAN);
+
+        sendDiscordMessage(embed);
     }
 
     private void sendKickMessage(String player, String operator, String reason) {
