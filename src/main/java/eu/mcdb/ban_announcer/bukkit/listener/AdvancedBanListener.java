@@ -31,7 +31,7 @@ public final class AdvancedBanListener implements Listener {
     }
 
     @EventHandler
-    public void onPunishment(RevokePunishmentEvent event) {
+    public void onRevokePunishment(RevokePunishmentEvent event) {
         AdvancedBan.onPunishmentAction(event.getPunishment(), true);
     }
 }
