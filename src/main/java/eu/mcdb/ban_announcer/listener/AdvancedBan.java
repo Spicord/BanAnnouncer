@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019  OopsieWoopsie
+ * Copyright (C) 2020  OopsieWoopsie
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,57 +17,59 @@
 
 package eu.mcdb.ban_announcer.listener;
 
-import eu.mcdb.ban_announcer.BAPunishment;
-import eu.mcdb.ban_announcer.BAPunishment.Type;
+import eu.mcdb.ban_announcer.PunishmentAction;
+import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import me.leoko.advancedban.utils.Punishment;
 
 public final class AdvancedBan {
 
-    public static void onPunishment(Punishment abp) {
-        BanAnnouncer ba = BanAnnouncer.getInstance();
+    public static void onPunishmentAction(final Punishment pun, final boolean revoked) {
+        final BanAnnouncer bann = BanAnnouncer.getInstance();
+        final PunishmentAction punishment = new PunishmentAction();
 
-        BAPunishment punishment = new BAPunishment();
+        punishment.setOperator(pun.getOperator());
+        punishment.setPlayer(pun.getName());
 
-        punishment.setDuration(abp.getDuration(true));
-        punishment.setOperator(abp.getOperator());
-        punishment.setReason(abp.getReason());
-        punishment.setPlayer(abp.getName());
-        punishment.setPermanent(punishment.getDuration().equals("permanent"));
+        if (!revoked) {
+            punishment.setReason(pun.getReason());
+            punishment.setDuration(pun.getDuration(true));
+            punishment.setPermanent(punishment.getDuration().equals("permanent"));
+        }
 
-        switch (abp.getType()) {
+        switch (pun.getType()) {
         case KICK:
             punishment.setType(Type.KICK);
             break;
         case BAN:
-            punishment.setType(Type.BAN);
+            punishment.setType(revoked ? Type.UNBAN : Type.BAN);
             break;
         case TEMP_BAN:
-            punishment.setType(Type.TEMPBAN);
+            punishment.setType(revoked ? Type.UNBAN : Type.TEMPBAN);
             break;
         case IP_BAN:
-            punishment.setType(Type.BANIP);
+            punishment.setType(revoked ? Type.UNBANIP : Type.BANIP);
             break;
         case TEMP_IP_BAN:
-            punishment.setType(Type.TEMPBANIP);
+            punishment.setType(revoked ? Type.UNBANIP : Type.TEMPBANIP);
             break;
         case MUTE:
-            punishment.setType(Type.MUTE);
+            punishment.setType(revoked ? Type.UNMUTE : Type.MUTE);
             break;
         case TEMP_MUTE:
-            punishment.setType(Type.TEMPMUTE);
+            punishment.setType(revoked ? Type.UNMUTE : Type.TEMPMUTE);
             break;
         case WARNING:
-            punishment.setType(Type.WARN);
+            punishment.setType(revoked ? Type.UNWARN : Type.WARN);
             break;
         case TEMP_WARNING:
-            punishment.setType(Type.TEMPWARN);
+            punishment.setType(revoked ? Type.UNWARN : Type.TEMPWARN);
             break;
         default:
-            ba.getLogger().severe("Unknown event '" + abp.getType() + "'.");
+            bann.getLogger().severe("Unknown punishment type '" + pun.getType() + "'.");
             return;
         }
 
-        ba.handlePunishment(punishment);
+        bann.handlePunishmentAction(punishment);
     }
 }

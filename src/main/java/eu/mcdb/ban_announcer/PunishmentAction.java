@@ -22,7 +22,7 @@ import lombok.ToString;
 
 @ToString
 @Data
-public final class BAPunishment {
+public final class PunishmentAction {
 
     private String player = "";
     private String operator = "";
@@ -31,13 +31,13 @@ public final class BAPunishment {
     private boolean permanent = false;
     private Type type = Type.UNKNOWN;
 
-    public BAPunishment() {}
+    public PunishmentAction() {}
 
-    public BAPunishment(Type type) {
+    public PunishmentAction(Type type) {
         this.type = type;
     }
 
     public enum Type {
-        KICK, BAN, TEMPBAN, MUTE, TEMPMUTE, BANIP, TEMPBANIP, WARN, TEMPWARN, UNKNOWN;
+        KICK, BAN, TEMPBAN, MUTE, TEMPMUTE, BANIP, TEMPBANIP, WARN, TEMPWARN, UNBAN, UNMUTE, UNBANIP, UNWARN, UNKNOWN;
     }
 }

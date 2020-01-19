@@ -17,7 +17,6 @@
 
 package eu.mcdb.ban_announcer;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -48,11 +47,11 @@ public final class BanAnnouncer {
     public BanAnnouncer(Logger logger) {
         instance = this;
         this.logger = logger;
-        this.bots = Collections.synchronizedSet(new HashSet<DiscordBot>());
+        this.bots = new HashSet<DiscordBot>();
         Spicord.getInstance().getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
-    public void handlePunishment(BAPunishment punishment) {
+    public void handlePunishmentAction(PunishmentAction punishment) {
         if (!enabled) {
             System.out.println("BanAnnouncer is not enabled, ignoring punishment.");
             System.out.println(punishment.toString());
@@ -69,23 +68,22 @@ public final class BanAnnouncer {
         switch (punishment.getType()) {
         case BAN:
         case TEMPBAN:
-            sendBanMessage(player, operator, reason, duration, permanent);
-            break;
+            sendBanMessage(player, operator, reason, duration, permanent); break;
         case KICK:
-            sendKickMessage(player, operator, reason);
-            break;
+            sendKickMessage(player, operator, reason); break;
         case MUTE:
         case TEMPMUTE:
-            sendMuteMessage(player, operator, reason, duration, permanent);
-            break;
+            sendMuteMessage(player, operator, reason, duration, permanent); break;
         case WARN:
         case TEMPWARN:
-            sendWarnMessage(player, operator, reason, duration, permanent);
-            break;
+            sendWarnMessage(player, operator, reason, duration, permanent); break;
         case BANIP:
         case TEMPBANIP:
-            sendIpBanMessage(player, operator, reason, duration, permanent);
-            break;
+            sendIpBanMessage(player, operator, reason, duration, permanent); break;
+        case UNBAN:
+        case UNMUTE:
+        case UNWARN:
+        case UNBANIP:
         case UNKNOWN:
         default:
         }
@@ -179,7 +177,7 @@ public final class BanAnnouncer {
     }
 
     private class MessageFormatter {
-
+ 
         private final Map<String, String> map;
 
         public MessageFormatter() {

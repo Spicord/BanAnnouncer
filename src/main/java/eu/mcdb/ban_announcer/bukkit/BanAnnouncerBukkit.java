@@ -24,7 +24,7 @@ import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
 import eu.mcdb.ban_announcer.listener.MaxBansPlus;
-import eu.mcdb.spicord.util.ReflectionUtils;
+import eu.mcdb.util.ReflectionUtils;
 
 public final class BanAnnouncerBukkit extends JavaPlugin {
 

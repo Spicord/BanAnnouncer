@@ -37,8 +37,8 @@ import org.maxgamer.maxbans.orm.Restriction;
 import org.maxgamer.maxbans.util.TemporalDuration;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import eu.mcdb.ban_announcer.BAPunishment;
-import eu.mcdb.ban_announcer.BAPunishment.Type;
+import eu.mcdb.ban_announcer.PunishmentAction;
+import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 
 public class MaxBansPlus implements Listener {
@@ -96,7 +96,7 @@ public class MaxBansPlus implements Listener {
 
     @EventHandler
     public void onKickUser(KickUserEvent event) {
-        BAPunishment punishment = new BAPunishment(Type.KICK);
+        PunishmentAction punishment = new PunishmentAction(Type.KICK);
         String staff = event.getSource().getName();
         String player = event.getTarget().getName();
         String reason = kickReasons.getIfPresent(player.toLowerCase());
@@ -104,7 +104,7 @@ public class MaxBansPlus implements Listener {
         punishment.setReason(reason);
         punishment.setOperator(staff);
         punishment.setPlayer(player);
-        banAnnouncer.handlePunishment(punishment);
+        banAnnouncer.handlePunishmentAction(punishment);
     }
 
     @EventHandler
@@ -133,14 +133,14 @@ public class MaxBansPlus implements Listener {
     }
 
     private void handleRestriction(MaxBansRestrictEvent<?> event, Restriction restriction, Type perm, Type temp) {
-        BAPunishment punishment = new BAPunishment();
+        PunishmentAction punishment = new PunishmentAction();
         punishment.setPlayer(event.getTarget().getName());
         punishment.setOperator(event.isPlayerAdministered() ? event.getAdmin().getName() : "Console");
         punishment.setPermanent(restriction.getExpiresAt() == null);
         punishment.setType(punishment.isPermanent() ? perm : temp);
         punishment.setReason(restriction.getReason());
         punishment.setDuration(getDuration(restriction));
-        banAnnouncer.handlePunishment(punishment);
+        banAnnouncer.handlePunishmentAction(punishment);
     }
 
     private String getDuration(Restriction restriction) {

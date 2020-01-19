@@ -22,7 +22,7 @@ import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.bungee.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
-import eu.mcdb.spicord.util.ReflectionUtils;
+import eu.mcdb.util.ReflectionUtils;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class BanAnnouncerBungee extends Plugin {

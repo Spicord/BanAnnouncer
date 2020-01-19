@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019  OopsieWoopsie
+ * Copyright (C) 2020  OopsieWoopsie
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -20,8 +20,8 @@ package eu.mcdb.ban_announcer.listener;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import eu.mcdb.ban_announcer.BAPunishment;
-import eu.mcdb.ban_announcer.BAPunishment.Type;
+import eu.mcdb.ban_announcer.PunishmentAction;
+import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.config.Config;
 import litebans.api.Database;
@@ -31,45 +31,46 @@ import litebans.api.Events.Listener;
 
 public final class LiteBans {
 
-    private Events events;
-    private Database database;
-    private BanAnnouncer ba;
+    private final Events events;
+    private final Database database;
+    private final BanAnnouncer bann;
 
-    public LiteBans(BanAnnouncer ba) {
-        this.ba = ba;
+    public LiteBans(final BanAnnouncer bann) {
+        this.bann = bann;
         this.events = Events.get();
         this.database = Database.get();
 
         events.register(new LiteBansListener());
     }
 
-    public String getName(String uuid) {
-        String sql = "SELECT name FROM {history} WHERE uuid = ? LIMIT 1";
+    private String getName(final String uuid) {
+        final String sentence = "SELECT name FROM {history} WHERE uuid = ? LIMIT 1";
 
-        try(PreparedStatement stmt = database.prepareStatement(sql)) {
+        try (final PreparedStatement stmt = database.prepareStatement(sentence)) {
             stmt.setString(1, uuid);
 
-            ResultSet rs = stmt.executeQuery();
+            final ResultSet rs = stmt.executeQuery();
 
             if (rs.first())
                 return rs.getString(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
     private class LiteBansListener extends Listener {
 
         @Override
-        public void entryAdded(Entry entry) {
+        public void entryAdded(final Entry entry) {
             if (!entry.isActive() && !entry.getType().equals("kick"))
                 return;
 
             if (entry.isSilent() && Config.getInstance().isIgnoreSilent())
                 return;
 
-            BAPunishment punishment = new BAPunishment();
+            final PunishmentAction punishment = new PunishmentAction();
 
             switch (entry.getType()) {
             case "ban":
@@ -89,14 +90,14 @@ public final class LiteBans {
                 punishment.setType(Type.KICK);
                 break;
             default:
-                ba.getLogger().severe("Unknown event '" + entry.getType() + "'.");
+                bann.getLogger().severe("Unknown event '" + entry.getType() + "'.");
                 return;
             }
 
-            String name = LiteBans.this.getName(entry.getUuid());
+            final String name = LiteBans.this.getName(entry.getUuid());
 
             if (name == null) {
-                ba.getLogger().severe("Couldn't fetch player name from UUID '" + entry.getUuid() + "'. The message was not sent.");
+                bann.getLogger().severe("Couldn't fetch player name from UUID '" + entry.getUuid() + "'. The message was not sent.");
                 return;
             }
 
@@ -106,7 +107,12 @@ public final class LiteBans {
             punishment.setReason(entry.getReason());
             punishment.setDuration(entry.getDurationString());
 
-            ba.handlePunishment(punishment);
+            bann.handlePunishmentAction(punishment);
+        }
+
+        @Override
+        public void entryRemoved(Entry entry) {
+            // TODO Auto-generated method stub
         }
     }
 }
