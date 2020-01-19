@@ -70,27 +70,42 @@ public final class LiteBans {
             if (entry.isSilent() && Config.getInstance().isIgnoreSilent())
                 return;
 
+            handleEntry(entry, false);
+        }
+
+        @Override
+        public void entryRemoved(final Entry entry) {
+            if (entry.getType().equals("kick"))
+                return;
+
+            if (entry.isSilent() && Config.getInstance().isIgnoreSilent())
+                return;
+
+            handleEntry(entry, true);
+        }
+
+        public void handleEntry(final Entry entry, final boolean revoked) {
             final PunishmentAction punishment = new PunishmentAction();
 
             switch (entry.getType()) {
             case "ban":
                 if (entry.isIpban()) {
-                    punishment.setType(entry.isPermanent() ? Type.BANIP : Type.TEMPBANIP);
+                    punishment.setType(revoked ? Type.UNBANIP : entry.isPermanent() ? Type.BANIP : Type.TEMPBANIP);
                 } else {
-                    punishment.setType(entry.isPermanent() ? Type.BAN : Type.TEMPBAN);
+                    punishment.setType(revoked ? Type.UNBAN : entry.isPermanent() ? Type.BAN : Type.TEMPBAN);
                 }
                 break;
             case "mute":
-                punishment.setType(entry.isPermanent() ? Type.MUTE : Type.TEMPMUTE);
+                punishment.setType(revoked ? Type.UNMUTE : entry.isPermanent() ? Type.MUTE : Type.TEMPMUTE);
                 break;
             case "warn":
-                punishment.setType(entry.isPermanent() ? Type.WARN : Type.TEMPWARN);
+                punishment.setType(revoked ? Type.UNWARN : entry.isPermanent() ? Type.WARN : Type.TEMPWARN);
                 break;
             case "kick":
                 punishment.setType(Type.KICK);
                 break;
             default:
-                bann.getLogger().severe("Unknown event '" + entry.getType() + "'.");
+                bann.getLogger().severe("Unknown punishment type '" + entry.getType() + "'.");
                 return;
             }
 
@@ -103,16 +118,14 @@ public final class LiteBans {
 
             punishment.setPlayer(name);
             punishment.setOperator(entry.getExecutorName() == null ? "Console" : entry.getExecutorName());
-            punishment.setPermanent(entry.isPermanent());
-            punishment.setReason(entry.getReason());
-            punishment.setDuration(entry.getDurationString());
+
+            if (!revoked) {
+                punishment.setPermanent(entry.isPermanent());
+                punishment.setReason(entry.getReason());
+                punishment.setDuration(entry.getDurationString());
+            }
 
             bann.handlePunishmentAction(punishment);
-        }
-
-        @Override
-        public void entryRemoved(Entry entry) {
-            // TODO Auto-generated method stub
         }
     }
 }
