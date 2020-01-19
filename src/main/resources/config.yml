@@ -24,6 +24,10 @@ messages:
   tempbanip: "{embed:tempbanip}"
   warn:      "{embed:warn}"
   tempwarn:  "{embed:tempwarn}"
+  unbanip:   "{embed:unbanip}"
+  unwarn:    "{embed:unwarn}"
+  unmute:    "{embed:unmute}"
+  unban:     "{embed:unban}"
 
 # The plugin used for manage the punishments
 # Possible values:
@@ -38,4 +42,4 @@ punishment-manager: auto
 ignore-silent: false
 
 # Do not change this or i'll eat your cookies
-config-version: 3
+config-version: 4
