@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019  OopsieWoopsie
+ * Copyright (C) 2020  OopsieWoopsie
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@
 package eu.mcdb.ban_announcer.config;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
@@ -26,25 +27,25 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
-import org.bukkit.configuration.file.FileConfiguration;
 import eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit;
 import eu.mcdb.ban_announcer.bungee.BanAnnouncerBungee;
 import eu.mcdb.spicord.embed.EmbedLoader;
+import eu.mcdb.universal.config.YamlConfiguration;
 import eu.mcdb.util.Server;
 import lombok.Getter;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
-public final class Config {
+public class Config {
+
+    private final static int CONFIG_VERSION = 4;
 
     public static List<Long> CHANNELS_TO_ANNOUNCE = new ArrayList<Long>();
     public static Messages MESSAGES;
-    private int config_version = 4;
+
     private File file;
     private File dataFolder;
-    private Object pl;
+    private Object plugin;
 
     @Getter
     private String punishmentManager;
@@ -55,11 +56,14 @@ public final class Config {
     @Getter
     private boolean ignoreSilent;
 
+    private File configFile;
+    private Logger logger;
+
     @Getter
     private static Config instance;
 
-    public Config(Object pl) {
-        this.pl = pl;
+    public Config(Object plugin) {
+        this.plugin = plugin;
         instance = this;
         switch (Server.getServerType()) {
         case BUKKIT:
@@ -68,133 +72,97 @@ public final class Config {
         case BUNGEECORD:
             loadBungee();
             break;
+        default:
+            throw new RuntimeException("");
         }
+
+        this.extractEmbeds();
+        this.embedLoader = new EmbedLoader();
+        this.embedLoader.load(new File(dataFolder, "embed"));
+
+        this.configFile = new File(dataFolder, "config.yml");
+        this.loadConfig();
     }
 
     private void loadBungee() {
-        BanAnnouncerBungee plugin = (BanAnnouncerBungee) pl;
-        plugin.getDataFolder().mkdir();
-        try {
-            this.file = plugin.getFile();
-            dataFolder = plugin.getDataFolder();
-            extractEmbeds();
-            this.embedLoader = new EmbedLoader();
-            embedLoader.load(new File(plugin.getDataFolder(), "embed"));
-
-            File configFile = createIfNotExists(plugin.getDataFolder());
-            Configuration config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
-
-            int cfg_ver = config.getInt("config-version", 0);
-
-            if (cfg_ver != config_version) {
-                File newFile = new File(plugin.getDataFolder(), "config.yml." + cfg_ver);
-
-                if (newFile.exists())
-                    newFile.delete();
-
-                configFile.renameTo(newFile);
-                plugin.getLogger()
-                        .warning("An outdated config was found and it was renamed to '" + newFile.getName() + "'");
-                loadBungee();
-            } else {
-                MESSAGES = new Messages(this, config, config.getClass().getDeclaredMethod("getString", String.class));
-                CHANNELS_TO_ANNOUNCE = config.getLongList("channels-to-announce");
-                punishmentManager = config.getString("punishment-manager", "auto");
-                ignoreSilent = config.getBoolean("ignore-silent", false);
-            }
-        } catch (Exception e) {
-            plugin.getLogger().severe(
-                    "This is a configuration error, NOT a plugin error, please generate a new config or fix it. "
-                            + e.getMessage());
-            e.printStackTrace();
-        }
+        final BanAnnouncerBungee plugin = (BanAnnouncerBungee) this.plugin;
+        this.dataFolder = plugin.getDataFolder();
+        this.file = plugin.getFile();
+        this.logger = plugin.getLogger();
     }
 
     private void loadBukkit() {
-        BanAnnouncerBukkit plugin = (BanAnnouncerBukkit) pl;
-        plugin.getDataFolder().mkdir();
+        final BanAnnouncerBukkit plugin = (BanAnnouncerBukkit) this.plugin;
+        this.dataFolder = plugin.getDataFolder();
+        this.file = plugin.getFile();
+        this.logger = plugin.getLogger();
+    }
 
+    private void loadConfig() {
         try {
-            this.file = plugin.getFile();
-            this.dataFolder = plugin.getDataFolder();
-            extractEmbeds();
-            this.embedLoader = new EmbedLoader();
-            embedLoader.load(new File(plugin.getDataFolder(), "embed"));
+            final YamlConfiguration config = YamlConfiguration.load(configFile);
+            final int file_version = config.getInt("config-version", 0);
 
-            File configFile = createIfNotExists(plugin.getDataFolder());
-            FileConfiguration config = plugin.getConfig();
+            if (file_version < CONFIG_VERSION) {
+                final File oldConfig = new File(dataFolder, "config.yml." + file_version);
 
-            int cfg_ver = config.getInt("config-version", 0);
+                if (oldConfig.exists())
+                    oldConfig.delete();
 
-            if (cfg_ver != config_version) {
-                File newFile = new File(plugin.getDataFolder(), "config.yml." + cfg_ver);
+                configFile.renameTo(oldConfig);
 
-                if (newFile.exists())
-                    newFile.delete();
+                logger.warning("An outdated config was found and it was renamed to '" + oldConfig.getName() + "'.");
 
-                configFile.renameTo(newFile);
-                plugin.getLogger()
-                        .warning("An outdated config was found and it was renamed to '" + newFile.getName() + "'.");
-                loadBukkit();
+                createConfig();
+
+                loadConfig();
             } else {
-                MESSAGES = new Messages(this, config, config.getClass().getSuperclass().getSuperclass().getSuperclass()
-                        .getDeclaredMethod("getString", String.class));
+                MESSAGES = new Messages(embedLoader, config);
                 CHANNELS_TO_ANNOUNCE = config.getLongList("channels-to-announce");
                 punishmentManager = config.getString("punishment-manager", "auto");
                 ignoreSilent = config.getBoolean("ignore-silent", false);
             }
         } catch (Exception e) {
-            plugin.getLogger().severe(
-                    "This is a configuration error, NOT a plugin error, please generate a new config or fix it. "
-                            + e.getMessage());
+            logger.severe("This is a configuration error, NOT a plugin error, please generate a new config or fix it.");
             e.printStackTrace();
         }
     }
 
-    private File createIfNotExists(File dataFolder) {
+    private void createConfig() throws IOException {
         if (!dataFolder.exists())
             dataFolder.mkdir();
 
-        File file = new File(dataFolder, "config.yml");
-
-        if (!file.exists()) {
-            try (InputStream in = getClass().getResourceAsStream("/config.yml")) {
-                Files.copy(in, file.toPath());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try (final InputStream in = getClass().getResourceAsStream("/config.yml")) {
+            Files.copy(in, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw e;
         }
-
-        return file;
     }
 
     private void extractEmbeds() {
-        try {
-            JarFile jarFile = new JarFile(file);
-            Enumeration<JarEntry> entries = jarFile.entries();
-
-            File embedsFolder = new File(dataFolder, "embed");
+        try (final JarFile jarFile = new JarFile(file)) {
+            final Enumeration<JarEntry> entries = jarFile.entries();
+            final File embedsFolder = new File(dataFolder, "embed");
 
             if (!embedsFolder.exists())
-                embedsFolder.mkdir();
+                embedsFolder.mkdirs();
 
             while (entries.hasMoreElements()) {
-                ZipEntry entry = entries.nextElement();
+                final ZipEntry entry = entries.nextElement();
 
                 if (entry.getName().startsWith("embed/") && entry.getName().endsWith(".json")) {
                     String embedName = entry.getName();
                     embedName = embedName.substring(embedName.lastIndexOf("/") + 1);
 
-                    File file = new File(embedsFolder, embedName);
+                    final File file = new File(embedsFolder, embedName);
 
                     if (!file.exists()) {
                         Files.copy(jarFile.getInputStream(entry), file.toPath(), StandardCopyOption.REPLACE_EXISTING);
                     }
                 }
             }
-
-            jarFile.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

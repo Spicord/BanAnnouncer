@@ -19,9 +19,11 @@ package eu.mcdb.ban_announcer.listener;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.server.ServerCommandEvent;
 import org.maxgamer.maxbans.event.BanAddressEvent;
 import org.maxgamer.maxbans.event.BanUserEvent;
 import org.maxgamer.maxbans.event.KickUserEvent;
@@ -43,11 +45,11 @@ import eu.mcdb.ban_announcer.PunishmentAction.Type;
 
 public class MaxBansPlus implements Listener {
 
-    private final BanAnnouncer banAnnouncer;
+    private final BanAnnouncer bann;
     private final Cache<String, String> kickReasons;
 
     public MaxBansPlus() {
-        this.banAnnouncer = BanAnnouncer.getInstance();
+        this.bann = BanAnnouncer.getInstance();
         this.kickReasons = CacheBuilder.newBuilder()
                 .expireAfterWrite(5, TimeUnit.SECONDS)
                 .initialCapacity(10)
@@ -55,14 +57,21 @@ public class MaxBansPlus implements Listener {
     }
 
     @EventHandler
+    public void onServerCommand(ServerCommandEvent event) {
+        handleCommand(event.getCommand(), event.getSender());
+    }
+
+    @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-        // FIXME: all the reasons are "none"
+        handleCommand(event.getMessage().substring(1), event.getPlayer());
+    }
 
-        String command = event.getMessage();
-
+    private void handleCommand(String command, final CommandSender sender) {
         // syntax: /kick <player> [reason]
-        if (command.startsWith("/kick") || command.startsWith("/maxbans:kick")) {
-            if (event.getPlayer().hasPermission("maxbans.kick")) {
+        final String lcommand = command.toLowerCase();
+
+        if (lcommand.startsWith("kick") || lcommand.startsWith("maxbansplus:kick")) {
+            if (sender.hasPermission("maxbans.kick")) {
                 int index = command.indexOf(' ');
 
                 if (index == -1) return; // no parameters
@@ -71,7 +80,7 @@ public class MaxBansPlus implements Listener {
 
                 index = command.indexOf(' ');
 
-                String player, reason;
+                final String player, reason;
 
                 if (index == -1) { // no reason/message
                     player = command;
@@ -98,15 +107,18 @@ public class MaxBansPlus implements Listener {
 
     @EventHandler
     public void onKickUser(KickUserEvent event) {
-        PunishmentAction punishment = new PunishmentAction(Type.KICK);
-        String staff = event.getSource().getName();
-        String player = event.getTarget().getName();
+        final PunishmentAction punishment = new PunishmentAction(Type.KICK);
+        final String staff = event.getSource().getName();
+        final String player = event.getTarget().getName();
+
         String reason = kickReasons.getIfPresent(player.toLowerCase());
         reason = reason == null ? "none" : reason;
+
         punishment.setReason(reason);
         punishment.setOperator(staff);
         punishment.setPlayer(player);
-        banAnnouncer.handlePunishmentAction(punishment);
+
+        bann.handlePunishmentAction(punishment);
     }
 
     @EventHandler
@@ -143,21 +155,25 @@ public class MaxBansPlus implements Listener {
     // missing UnwarnUserEvent
 
     private void handleRestriction(MaxBansRestrictEvent<?> event, Restriction restriction, Type perm, Type temp) {
-        PunishmentAction punishment = new PunishmentAction();
+        final PunishmentAction punishment = new PunishmentAction();
+
         punishment.setPlayer(event.getTarget().getName());
         punishment.setOperator(event.isPlayerAdministered() ? event.getAdmin().getName() : "Console");
         punishment.setPermanent(restriction.getExpiresAt() == null);
         punishment.setType(punishment.isPermanent() ? perm : temp);
         punishment.setReason(restriction.getReason());
         punishment.setDuration(getDuration(restriction));
-        banAnnouncer.handlePunishmentAction(punishment);
+
+        bann.handlePunishmentAction(punishment);
     }
 
     private void handleRevokedRestriction(MaxBansRestrictEvent<?> event, Type type) {
-        PunishmentAction punishment = new PunishmentAction(type);
+        final PunishmentAction punishment = new PunishmentAction(type);
+
         punishment.setPlayer(event.getTarget().getName());
         punishment.setOperator(event.isPlayerAdministered() ? event.getAdmin().getName() : "Console");
-        banAnnouncer.handlePunishmentAction(punishment);
+
+        bann.handlePunishmentAction(punishment);
     }
 
     private String getDuration(Restriction restriction) {

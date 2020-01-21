@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019  OopsieWoopsie
+ * Copyright (C) 2020  OopsieWoopsie
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -17,8 +17,9 @@
 
 package eu.mcdb.ban_announcer.config;
 
-import java.lang.reflect.Method;
 import eu.mcdb.spicord.embed.Embed;
+import eu.mcdb.spicord.embed.EmbedLoader;
+import eu.mcdb.universal.config.YamlConfiguration;
 
 public final class Messages {
 
@@ -37,14 +38,12 @@ public final class Messages {
     public final Embed UNMUTE;
     public final Embed UNBAN;
 
-    private final Object configInstance;
-    private final Method getStringMethod;
-    private Config config;
+    private final EmbedLoader embedLoader;
+    private final YamlConfiguration config;
 
-    protected Messages(Config config, Object configInstance, Method getStringMethod) {
+    protected Messages(EmbedLoader embedLoader, YamlConfiguration config) {
+        this.embedLoader = embedLoader;
         this.config = config;
-        this.configInstance = configInstance;
-        this.getStringMethod = getStringMethod;
 
         this.KICK      = getEmbed("kick");
         this.BAN       = getEmbed("ban");
@@ -61,19 +60,17 @@ public final class Messages {
         this.UNBAN     = getEmbed("unban");
     }
 
-    private Embed getEmbed(String key) {
-        try {
-            String message = ((String) getStringMethod.invoke(configInstance, "messages." + key)).trim();
-            if (message.startsWith("{embed:") && message.endsWith("}")) {
-                String embedName = message.substring(7, message.length() - 1).trim();
-                return config.getEmbedLoader().getEmbedByName(embedName);
-            } else if (!message.isEmpty()) {
-                return Embed.fromString(message);
-            }
-        } catch (Exception e) {
-            System.out.println("err: " + key);
-            e.printStackTrace();
+    private Embed getEmbed(final String key) {
+        final String message = config.getString("messages." + key).trim();
+
+        if (message.startsWith("{embed:") && message.endsWith("}")) {
+            final String embedName = message.substring(7, message.length() - 1).trim();
+
+            return embedLoader.getEmbedByName(embedName);
+        } else if (!message.isEmpty()) {
+            return Embed.fromString(message);
         }
+
         return null;
     }
 }
