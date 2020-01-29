@@ -32,8 +32,8 @@ import java.util.zip.ZipEntry;
 import eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit;
 import eu.mcdb.ban_announcer.bungee.BanAnnouncerBungee;
 import eu.mcdb.spicord.embed.EmbedLoader;
+import eu.mcdb.universal.Server;
 import eu.mcdb.universal.config.YamlConfiguration;
-import eu.mcdb.util.Server;
 import lombok.Getter;
 
 public class Config {
@@ -100,6 +100,9 @@ public class Config {
 
     private void loadConfig() {
         try {
+            if (!configFile.exists())
+                createConfig();
+
             final YamlConfiguration config = YamlConfiguration.load(configFile);
             final int file_version = config.getInt("config-version", 0);
 
