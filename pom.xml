@@ -5,7 +5,7 @@
 
     <groupId>eu.mcdb</groupId>
     <artifactId>ban-announcer</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <name>BanAnnouncer</name>
 
     <repositories>
@@ -19,7 +19,6 @@
         </repository>
         <repository>
             <id>jcenter</id>
-            <name>jcenter-bintray</name>
             <url>https://jcenter.bintray.com</url>
         </repository>
         <repository>

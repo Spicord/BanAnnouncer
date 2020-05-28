@@ -17,7 +17,6 @@
 
 package eu.mcdb.ban_announcer.bukkit;
 
-import java.io.File;
 import org.bukkit.plugin.java.JavaPlugin;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
@@ -26,7 +25,7 @@ import eu.mcdb.ban_announcer.listener.LiteBans;
 import eu.mcdb.ban_announcer.listener.MaxBansPlus;
 import eu.mcdb.util.ReflectionUtils;
 
-public final class BanAnnouncerBukkit extends JavaPlugin {
+public class BanAnnouncerBukkit extends JavaPlugin {
 
     private BanAnnouncer banAnnouncer;
 
@@ -38,7 +37,7 @@ public final class BanAnnouncerBukkit extends JavaPlugin {
     }
 
     private void enable() {
-        Config config = new Config(this);
+        Config config = new Config(getFile(), getDataFolder());
         switch (config.getPunishmentManager().toLowerCase()) {
         case "auto":
             if (usingLiteBans()) {
@@ -103,10 +102,5 @@ public final class BanAnnouncerBukkit extends JavaPlugin {
     public void onDisable() {
         banAnnouncer.disable();
         this.banAnnouncer = null;
-    }
-
-    @Override
-    public File getFile() {
-        return super.getFile();
     }
 }

@@ -26,7 +26,7 @@ public final class BanAnnouncerAddon extends SimpleAddon {
     private BanAnnouncer ba;
 
     public BanAnnouncerAddon(BanAnnouncer ba) {
-        super("Ban Announcer", "ban_announcer", "OopsieWoopsie");
+        super("BanAnnouncer", "ban_announcer", "Sheidy");
         this.ba = ba;
     }
 

@@ -37,7 +37,7 @@ public final class BanAnnouncerBungee extends Plugin {
     }
 
     private void enable() {
-        Config config = new Config(this);
+        Config config = new Config(getFile(), getDataFolder());
         switch (config.getPunishmentManager()) {
         case "auto":
             if (usingLiteBans()) {
