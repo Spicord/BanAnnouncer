@@ -30,7 +30,7 @@ import eu.mcdb.spicord.bot.DiscordBot;
 import eu.mcdb.spicord.embed.Embed;
 import eu.mcdb.spicord.embed.EmbedSender;
 import lombok.Getter;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.MessageChannel;
 
 // TODO: optimization? oop? - i dont like to make a method for send every message
 public final class BanAnnouncer {
@@ -190,7 +190,7 @@ public final class BanAnnouncer {
 
         bots.stream().filter(DiscordBot::isReady).map(DiscordBot::getJda).forEach(jda -> {
             Config.CHANNELS_TO_ANNOUNCE.forEach(channelId -> {
-                TextChannel channel = jda.getTextChannelById(channelId);
+                MessageChannel channel = jda.getTextChannelById(channelId);
 
                 if (channel == null) {
                     logger.severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");

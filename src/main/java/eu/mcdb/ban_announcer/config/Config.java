@@ -50,7 +50,7 @@ public class Config {
         this.dataFolder = dataFolder;
 
         try {
-            this.embedLoader = EmbedLoader.extractAndLoad(zip, dataFolder);
+            this.embedLoader = EmbedLoader.extractAndLoad(zip, new File(dataFolder, "embed"));
         } catch (IOException e) {
             throw new RuntimeException("An error ocurred while extracting the embed files", e);
         }

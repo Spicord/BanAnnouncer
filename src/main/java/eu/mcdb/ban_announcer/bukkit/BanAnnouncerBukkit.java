@@ -17,13 +17,13 @@
 
 package eu.mcdb.ban_announcer.bukkit;
 
+import static org.spicord.reflect.ReflectUtils.findClass;
 import org.bukkit.plugin.java.JavaPlugin;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
 import eu.mcdb.ban_announcer.listener.MaxBansPlus;
-import eu.mcdb.util.ReflectionUtils;
 
 public class BanAnnouncerBukkit extends JavaPlugin {
 
@@ -87,15 +87,15 @@ public class BanAnnouncerBukkit extends JavaPlugin {
     }
 
     private boolean usingLiteBans() {
-        return ReflectionUtils.classExists("litebans.api.Events");
+        return findClass("litebans.api.Events").isPresent();
     }
 
     private boolean usingAdvancedBan() {
-        return ReflectionUtils.classExists("me.leoko.advancedban.Universal");
+        return findClass("me.leoko.advancedban.Universal").isPresent();
     }
 
     private boolean usingMaxBans() {
-        return ReflectionUtils.classExists("org.maxgamer.maxbans.MaxBansPlus");
+        return findClass("org.maxgamer.maxbans.MaxBansPlus").isPresent();
     }
 
     @Override

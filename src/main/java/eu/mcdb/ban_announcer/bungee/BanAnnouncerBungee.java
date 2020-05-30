@@ -18,11 +18,11 @@
 package eu.mcdb.ban_announcer.bungee;
 
 import java.util.concurrent.TimeUnit;
+import org.spicord.reflect.ReflectUtils;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.bungee.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
-import eu.mcdb.util.ReflectionUtils;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class BanAnnouncerBungee extends Plugin {
@@ -79,11 +79,11 @@ public final class BanAnnouncerBungee extends Plugin {
     }
 
     private boolean usingLiteBans() {
-        return ReflectionUtils.classExists("litebans.api.Events");
+        return ReflectUtils.findClass("litebans.api.Events").isPresent();
     }
 
     private boolean usingAdvancedBan() {
-        return ReflectionUtils.classExists("me.leoko.advancedban.Universal");
+        return ReflectUtils.findClass("me.leoko.advancedban.Universal").isPresent();
     }
 
     @Override
