@@ -17,12 +17,12 @@
 
 package eu.mcdb.ban_announcer.bungee;
 
-import java.util.concurrent.TimeUnit;
 import org.spicord.reflect.ReflectUtils;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.bungee.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
+import eu.mcdb.spicord.Spicord;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class BanAnnouncerBungee extends Plugin {
@@ -31,12 +31,12 @@ public final class BanAnnouncerBungee extends Plugin {
 
     @Override
     public void onEnable() {
-        this.banAnnouncer = new BanAnnouncer(getLogger());
-        getLogger().info("The pĺugin will start in 5 seconds...");
-        getProxy().getScheduler().schedule(this, () -> enable(), 5, TimeUnit.SECONDS);
+        Spicord.getInstance().onLoad(this::enable);
     }
 
-    private void enable() {
+    private void enable(Spicord s) {
+        this.banAnnouncer = new BanAnnouncer(getLogger());
+
         Config config = new Config(getFile(), getDataFolder());
         switch (config.getPunishmentManager()) {
         case "auto":
