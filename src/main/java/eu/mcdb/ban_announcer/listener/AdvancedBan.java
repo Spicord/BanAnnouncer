@@ -28,10 +28,18 @@ public final class AdvancedBan {
         final BanAnnouncer bann = BanAnnouncer.getInstance();
         final PunishmentAction punishment = new PunishmentAction();
 
-        punishment.setOperator(pun.getOperator());
+        String operator = "Console".equalsIgnoreCase(pun.getOperator())
+                ? bann.getConfig().getConsoleName()
+                : pun.getOperator();
+
+        punishment.setOperator(operator);
         punishment.setPlayer(pun.getName());
 
-        if (!revoked) {
+        if (revoked) {
+            if (pun.isExpired()) { // automatic
+                punishment.setOperator(bann.getConfig().getExpiredOperatorName());
+            }
+        } else {
             punishment.setReason(pun.getReason());
             punishment.setDuration(pun.getDuration(true));
             punishment.setPermanent(punishment.getDuration().equals("permanent"));

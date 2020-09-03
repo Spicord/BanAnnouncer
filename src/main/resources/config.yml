@@ -41,5 +41,13 @@ punishment-manager: auto
 #    with the '-s' flag of LiteBans will be sent anyways.
 ignore-silent: false
 
+# Name to show when the console does stuff
+console-name: "Console"
+
+# When a punishment expires this text will be added to the staff name
+# for example:
+# "X was unbanned by StaffName (Automatic)"
+automatic: "Automatic"
+
 # Do not change this or i'll eat your cookies
 config-version: 4

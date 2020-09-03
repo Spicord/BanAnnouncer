@@ -39,20 +39,20 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 public final class BanAnnouncer {
 
     @Getter private static BanAnnouncer instance;
-    @Getter private final Logger logger;
 
-    private final Map<PunishmentAction.Type, Function<PunishmentAction, Embed>> callbacks;
-    private final Set<DiscordBot> bots;
+    @Getter private Config config;
+    @Getter private Logger logger;
+    @Getter private boolean enabled = true;
 
-    private boolean enabled = true;
-
-    private Config config;
+    private Map<PunishmentAction.Type, Function<PunishmentAction, Embed>> callbacks;
+    private Set<DiscordBot> bots;
 
     public BanAnnouncer(Config config, Logger logger) {
         instance = this;
 
         this.config = config;
         this.logger = logger;
+
         this.bots = new HashSet<>();
         this.callbacks = new HashMap<>();
 
@@ -123,9 +123,13 @@ public final class BanAnnouncer {
     }
 
     public void disable() {
+        callbacks.clear();
+        bots.clear();
         enabled = false;
         instance = null;
-        bots.clear();
+        config = null;
+        callbacks = null;
+        bots = null;
     }
 
     private class MessageFormatter {

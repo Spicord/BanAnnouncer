@@ -23,7 +23,6 @@ import java.sql.SQLException;
 import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.BanAnnouncer;
-import eu.mcdb.ban_announcer.config.Config;
 import litebans.api.Database;
 import litebans.api.Entry;
 import litebans.api.Events;
@@ -67,7 +66,7 @@ public final class LiteBans {
             if (!entry.isActive() && !entry.getType().equals("kick"))
                 return;
 
-            if (entry.isSilent() && Config.getInstance().isIgnoreSilent())
+            if (entry.isSilent() && bann.getConfig().isIgnoreSilent())
                 return;
 
             handleEntry(entry, false);
@@ -78,7 +77,7 @@ public final class LiteBans {
             if (entry.getType().equals("kick"))
                 return;
 
-            if (entry.isSilent() && Config.getInstance().isIgnoreSilent())
+            if (entry.isSilent() && bann.getConfig().isIgnoreSilent())
                 return;
 
             handleEntry(entry, true);
@@ -116,10 +115,22 @@ public final class LiteBans {
                 return;
             }
 
-            punishment.setPlayer(name);
-            punishment.setOperator(entry.getExecutorName() == null ? "Console" : entry.getExecutorName());
+            boolean isConsole = entry.getExecutorName() == null
+                    || "Console".equalsIgnoreCase(entry.getExecutorName());
 
-            if (!revoked) {
+            String operator = isConsole
+                    ? bann.getConfig().getConsoleName()
+                    : entry.getExecutorName();
+
+            punishment.setPlayer(name);
+            punishment.setOperator(operator);
+
+            if (revoked) {
+                if (!entry.isPermanent() && entry.isExpired(System.currentTimeMillis())) {
+                    // automatic
+                    punishment.setOperator(bann.getConfig().getExpiredOperatorName());
+                }
+            } else {
                 punishment.setPermanent(entry.isPermanent());
                 punishment.setReason(entry.getReason());
                 punishment.setDuration(entry.getDurationString());

@@ -45,6 +45,8 @@ public class Config {
 
     @Getter private String punishmentManager;
     @Getter private boolean ignoreSilent;
+    @Getter private String consoleName;
+    @Getter private String automaticText;
 
     public Config(File zip, File dataFolder) {
         instance = this;
@@ -62,6 +64,10 @@ public class Config {
 
     public void reload() {
         this.loadConfig(true);
+    }
+
+    public String getExpiredOperatorName() {
+        return String.format("%s (%s)", consoleName, automaticText);
     }
 
     private void loadConfig(boolean reload) {
@@ -91,9 +97,12 @@ public class Config {
                 } else {
                     messages = new Messages(embedLoader, config, dataFolder);
                 }
+
                 channelsToAnnounce = config.getLongList("channels-to-announce");
-                punishmentManager = config.getString("punishment-manager", "auto");
-                ignoreSilent = config.getBoolean("ignore-silent", false);
+                punishmentManager  = config.getString("punishment-manager", "auto");
+                ignoreSilent       = config.getBoolean("ignore-silent", false);
+                consoleName        = config.getString("console-name", "Console");
+                automaticText      = config.getString("automatic", "Automatic");
             }
         } catch (Exception e) {
             logger.severe("This is a configuration error, NOT a plugin error, please generate a new config or fix it.");
