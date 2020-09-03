@@ -4,7 +4,7 @@
     "description": "The player `%player%` has been unbanned by `%staff%`",
     "color": 10771377,
     "footer": {
-      "icon_url": "https://cdn.discordapp.com/embed/avatars/0.png",
+      "icon_url": "https://i.imgur.com/JhEluGV.png",
       "text": "Powered by BanAnnouncer"
     }
   }
