@@ -33,17 +33,18 @@ public class Config {
 
     private final static int CONFIG_VERSION = 4;
 
-    @Getter private EmbedLoader embedLoader;
+    @Getter private static Config instance;
+
     private File dataFolder;
+    private EmbedLoader embedLoader;
     private File configFile;
     private Logger logger;
 
-    public static List<Long> CHANNELS_TO_ANNOUNCE = new ArrayList<Long>();
-    public static Messages MESSAGES;
+    @Getter private List<Long> channelsToAnnounce = new ArrayList<Long>();
+    @Getter private Messages messages;
+
     @Getter private String punishmentManager;
     @Getter private boolean ignoreSilent;
-
-    @Getter private static Config instance;
 
     public Config(File zip, File dataFolder) {
         instance = this;
@@ -56,10 +57,14 @@ public class Config {
         }
 
         this.configFile = new File(dataFolder, "config.yml");
-        this.loadConfig();
+        this.loadConfig(false);
     }
 
-    private void loadConfig() {
+    public void reload() {
+        this.loadConfig(true);
+    }
+
+    private void loadConfig(boolean reload) {
         try {
             if (!configFile.exists())
                 createConfig();
@@ -67,7 +72,7 @@ public class Config {
             final YamlConfiguration config = YamlConfiguration.load(configFile);
             final int file_version = config.getInt("config-version", 0);
 
-            if (file_version < CONFIG_VERSION) {
+            if (file_version < CONFIG_VERSION && !reload) {
                 final File oldConfig = new File(dataFolder, "config.yml." + file_version);
 
                 if (oldConfig.exists())
@@ -79,10 +84,14 @@ public class Config {
 
                 createConfig();
 
-                loadConfig();
+                loadConfig(false);
             } else {
-                MESSAGES = new Messages(embedLoader, config);
-                CHANNELS_TO_ANNOUNCE = config.getLongList("channels-to-announce");
+                if (reload) {
+                    messages.reload();
+                } else {
+                    messages = new Messages(embedLoader, config, dataFolder);
+                }
+                channelsToAnnounce = config.getLongList("channels-to-announce");
                 punishmentManager = config.getString("punishment-manager", "auto");
                 ignoreSilent = config.getBoolean("ignore-silent", false);
             }

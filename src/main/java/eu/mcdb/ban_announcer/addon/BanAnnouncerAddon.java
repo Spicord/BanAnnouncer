@@ -18,20 +18,33 @@
 package eu.mcdb.ban_announcer.addon;
 
 import eu.mcdb.ban_announcer.BanAnnouncer;
+import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.spicord.api.addon.SimpleAddon;
 import eu.mcdb.spicord.bot.DiscordBot;
+import eu.mcdb.spicord.bot.command.DiscordBotCommand;
+import net.dv8tion.jda.core.Permission;
 
 public final class BanAnnouncerAddon extends SimpleAddon {
 
     private BanAnnouncer ba;
 
     public BanAnnouncerAddon(BanAnnouncer ba) {
-        super("BanAnnouncer", "ban_announcer", "Sheidy");
+        super("BanAnnouncer", "ban_announcer", "Sheidy", "2.1.0", new String[] { "bareload" });
         this.ba = ba;
     }
 
     @Override
     public void onLoad(DiscordBot bot) {
         ba.addBot(bot);
+    }
+
+    @Override
+    public void onCommand(DiscordBotCommand command, String[] args) {
+        if (command.getSender().hasPermission(Permission.MANAGE_CHANNEL)) {
+            Config.getInstance().reload();
+            command.reply("Successfully reloaded BanAnnouncer");
+        } else {
+            command.reply(command.getAuthorAsMention() + ", you do not have enough permission to run this command.");
+        }
     }
 }

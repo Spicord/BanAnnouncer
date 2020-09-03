@@ -18,6 +18,8 @@
 package eu.mcdb.ban_announcer.bukkit;
 
 import static org.spicord.reflect.ReflectUtils.findClass;
+
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
@@ -31,13 +33,15 @@ public class BanAnnouncerBukkit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        this.banAnnouncer = new BanAnnouncer(getLogger());
         getLogger().info("The pĺugin will start in 5 seconds...");
         getServer().getScheduler().scheduleSyncDelayedTask(this, () -> enable(), 5 * 20);
     }
 
     private void enable() {
         Config config = new Config(getFile(), getDataFolder());
+
+        this.banAnnouncer = new BanAnnouncer(config, getLogger());
+
         switch (config.getPunishmentManager().toLowerCase()) {
         case "auto":
             if (usingLiteBans()) {
@@ -100,7 +104,11 @@ public class BanAnnouncerBukkit extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        banAnnouncer.disable();
-        this.banAnnouncer = null;
+        HandlerList.unregisterAll(this);
+
+        if (banAnnouncer != null) {
+            banAnnouncer.disable();
+            banAnnouncer = null;
+        }
     }
 }

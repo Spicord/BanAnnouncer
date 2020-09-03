@@ -5,7 +5,7 @@
 
     <groupId>eu.mcdb</groupId>
     <artifactId>ban-announcer</artifactId>
-    <version>2.0.2</version>
+    <version>2.1.0</version>
     <name>BanAnnouncer</name>
 
     <repositories>
@@ -24,8 +24,7 @@
         <repository>
             <!-- Repo for Spicord, LiteBansAPI, AdvancedBan and MaxBansPlus -->
             <id>spicord-repo</id>
-            <name>Spicord Repository</name>
-            <url>https://repo.mcdb.eu/</url>
+            <url>https://repo.spicord.org/</url>
         </repository>
         <repository>
             <!-- Repo for BanManager -->
@@ -38,19 +37,19 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.14.4-R0.1-SNAPSHOT</version>
+            <version>1.16.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.14-SNAPSHOT</version>
+            <version>1.16-R0.4-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>eu.mcdb</groupId>
+            <groupId>org.spicord</groupId>
             <artifactId>spicord-common</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -60,9 +59,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.dv8tion</groupId>
-            <artifactId>JDA</artifactId>
-            <version>3.8.3_464</version>
+            <groupId>org.spicord</groupId>
+            <artifactId>SpicordJDA</artifactId>
+            <version>4.2.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

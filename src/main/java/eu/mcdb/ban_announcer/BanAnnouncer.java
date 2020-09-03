@@ -17,14 +17,18 @@
 
 package eu.mcdb.ban_announcer;
 
+import static eu.mcdb.ban_announcer.PunishmentAction.Type.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.logging.Logger;
 import eu.mcdb.ban_announcer.addon.BanAnnouncerAddon;
 import eu.mcdb.ban_announcer.config.Config;
+import eu.mcdb.ban_announcer.config.Messages;
 import eu.mcdb.spicord.Spicord;
 import eu.mcdb.spicord.bot.DiscordBot;
 import eu.mcdb.spicord.embed.Embed;
@@ -32,153 +36,62 @@ import eu.mcdb.spicord.embed.EmbedSender;
 import lombok.Getter;
 import net.dv8tion.jda.core.entities.MessageChannel;
 
-// TODO: optimization? oop? - i dont like to make a method for send every message
 public final class BanAnnouncer {
 
-    @Getter
-    private static BanAnnouncer instance;
+    @Getter private static BanAnnouncer instance;
+    @Getter private final Logger logger;
 
-    @Getter
-    private final Logger logger;
-
+    private final Map<PunishmentAction.Type, Function<PunishmentAction, Embed>> callbacks;
     private final Set<DiscordBot> bots;
+
     private boolean enabled = true;
 
-    public BanAnnouncer(Logger logger) {
+    private Config config;
+
+    public BanAnnouncer(Config config, Logger logger) {
         instance = this;
+
+        this.config = config;
         this.logger = logger;
-        this.bots = new HashSet<DiscordBot>();
+        this.bots = new HashSet<>();
+        this.callbacks = new HashMap<>();
+
+        BiFunction<PunishmentAction, Embed, Embed> builder;
+
+        builder = (punishment, template) -> new MessageFormatter()
+                .setString("player", punishment.getPlayer())
+                .setString("staff", punishment.getOperator())
+                .setString("reason", punishment.getReason())
+                .setString("duration", punishment.getDuration())
+                .format(template);
+
+        Messages messages = config.getMessages();
+
+        callbacks.put(BAN, p -> builder.apply(p, p.isPermanent() ? messages.getBan() : messages.getTempban()));
+        callbacks.put(BANIP, p -> builder.apply(p, p.isPermanent() ? messages.getBanip() : messages.getTempbanip()));
+        callbacks.put(MUTE, p -> builder.apply(p, p.isPermanent() ? messages.getMute() : messages.getTempmute()));
+        callbacks.put(WARN, p -> builder.apply(p, p.isPermanent() ? messages.getWarn() : messages.getTempwarn()));
+        callbacks.put(KICK, p -> builder.apply(p, messages.getKick()));
+        callbacks.put(TEMPBAN, callbacks.get(BAN));
+        callbacks.put(TEMPBANIP, callbacks.get(BANIP));
+        callbacks.put(TEMPMUTE, callbacks.get(MUTE));
+        callbacks.put(TEMPWARN, callbacks.get(WARN));
+        callbacks.put(UNBAN, p -> builder.apply(p, messages.getUnban()));
+        callbacks.put(UNBANIP, p -> builder.apply(p, messages.getUnbanip()));
+        callbacks.put(UNMUTE, p -> builder.apply(p, messages.getUnmute()));
+        callbacks.put(UNWARN, p -> builder.apply(p, messages.getUnwarn()));
+
         Spicord.getInstance().getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
     public void handlePunishmentAction(PunishmentAction punishment) {
         if (!enabled) {
-            System.out.println("BanAnnouncer is not enabled, ignoring punishment.");
-            System.out.println(punishment.toString());
+            logger.warning("BanAnnouncer is not enabled, ignoring punishment.");
+            logger.warning(punishment.toString());
             return;
         }
 
-        String player = punishment.getPlayer();
-        String operator = punishment.getOperator();
-        String reason = punishment.getReason();
-        String duration = punishment.getDuration();
-        boolean permanent = punishment.isPermanent();
-
-        switch (punishment.getType()) {
-        case BAN:
-        case TEMPBAN:
-            sendBanMessage(player, operator, reason, duration, permanent); break;
-        case KICK:
-            sendKickMessage(player, operator, reason); break;
-        case MUTE:
-        case TEMPMUTE:
-            sendMuteMessage(player, operator, reason, duration, permanent); break;
-        case WARN:
-        case TEMPWARN:
-            sendWarnMessage(player, operator, reason, duration, permanent); break;
-        case BANIP:
-        case TEMPBANIP:
-            sendIpBanMessage(player, operator, reason, duration, permanent); break;
-        case UNBAN:
-            sendUnbanMessage(player, operator); break;
-        case UNMUTE:
-            sendUnmuteMessage(player, operator); break;
-        case UNWARN:
-            sendUnwarnMessage(player, operator); break;
-        case UNBANIP:
-            sendUnbanipMessage(player, operator); break;
-        case UNKNOWN:
-        default:
-        }
-    }
-
-    private void sendUnbanipMessage(String player, String operator) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator);
-        Embed embed = formatter.format(Config.MESSAGES.UNBANIP);
-
-        sendDiscordMessage(embed);
-    }
-
-    private void sendUnwarnMessage(String player, String operator) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator);
-        Embed embed = formatter.format(Config.MESSAGES.UNWARN);
-
-        sendDiscordMessage(embed);
-    }
-
-    private void sendUnmuteMessage(String player, String operator) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator);
-        Embed embed = formatter.format(Config.MESSAGES.UNMUTE);
-
-        sendDiscordMessage(embed);
-    }
-
-    private void sendUnbanMessage(String player, String operator) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator);
-        Embed embed = formatter.format(Config.MESSAGES.UNBAN);
-
-        sendDiscordMessage(embed);
-    }
-
-    private void sendKickMessage(String player, String operator, String reason) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator)
-                .setString("reason", reason);
-        Embed embed = formatter.format(Config.MESSAGES.KICK);
-
-        sendDiscordMessage(embed);
-    }
-
-    private void sendIpBanMessage(String player, String operator, String reason, String duration, boolean permanent) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator)
-                .setString("reason", reason)
-                .setString("duration", duration);
-        Embed embed = formatter.format(permanent ? Config.MESSAGES.BANIP : Config.MESSAGES.TEMPBANIP);
-
-        sendDiscordMessage(embed);
-    }
-
-    private void sendWarnMessage(String player, String operator, String reason, String duration, boolean permanent) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator)
-                .setString("reason", reason)
-                .setString("duration", duration);
-        Embed embed = formatter.format(permanent ? Config.MESSAGES.WARN : Config.MESSAGES.TEMPWARN);
-
-        sendDiscordMessage(embed);
-    }
-
-    private void sendBanMessage(String player, String operator, String reason, String duration, boolean permanent) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator)
-                .setString("reason", reason)
-                .setString("duration", duration);
-        Embed embed = formatter.format(permanent ? Config.MESSAGES.BAN : Config.MESSAGES.TEMPBAN);
-
-        sendDiscordMessage(embed);
-    }
-
-    private void sendMuteMessage(String player, String operator, String reason, String duration, boolean permanent) {
-        MessageFormatter formatter = new MessageFormatter()
-                .setString("player", player)
-                .setString("staff", operator)
-                .setString("reason", reason)
-                .setString("duration", duration);
-        Embed embed = formatter.format(permanent ? Config.MESSAGES.MUTE : Config.MESSAGES.TEMPMUTE);
-
+        Embed embed = callbacks.get(punishment.getType()).apply(punishment);
         sendDiscordMessage(embed);
     }
 
@@ -189,7 +102,7 @@ public final class BanAnnouncer {
         }
 
         bots.stream().filter(DiscordBot::isReady).map(DiscordBot::getJda).forEach(jda -> {
-            Config.CHANNELS_TO_ANNOUNCE.forEach(channelId -> {
+            config.getChannelsToAnnounce().forEach(channelId -> {
                 MessageChannel channel = jda.getTextChannelById(channelId);
 
                 if (channel == null) {
@@ -216,11 +129,17 @@ public final class BanAnnouncer {
     }
 
     private class MessageFormatter {
- 
+
         private final Map<String, String> map;
+        private final char c;
+
+        public MessageFormatter(char c) {
+            this.map = new HashMap<String, String>();
+            this.c = c;
+        }
 
         public MessageFormatter() {
-            this.map = new HashMap<String, String>();
+            this('%');
         }
 
         public MessageFormatter setString(String key, String value) {
@@ -234,7 +153,10 @@ public final class BanAnnouncer {
 
         public String format(String str) {
             for (Entry<String, String> entry : map.entrySet()) {
-                str = str.replace("%" + entry.getKey() + "%", entry.getValue());
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (value == null) continue;
+                str = str.replace(c + key + c, value);
             }
             return str;
         }

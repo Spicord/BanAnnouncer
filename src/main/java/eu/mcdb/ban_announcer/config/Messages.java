@@ -17,47 +17,62 @@
 
 package eu.mcdb.ban_announcer.config;
 
+import java.io.File;
 import eu.mcdb.spicord.embed.Embed;
 import eu.mcdb.spicord.embed.EmbedLoader;
 import eu.mcdb.universal.config.YamlConfiguration;
+import lombok.Getter;
 
+@Getter 
 public final class Messages {
 
-    public final Embed KICK;
-    public final Embed BAN;
-    public final Embed TEMPBAN;
-    public final Embed MUTE;
-    public final Embed TEMPMUTE;
-    public final Embed BANIP;
-    public final Embed TEMPBANIP;
-    public final Embed WARN;
-    public final Embed TEMPWARN;
+    private Embed kick;
 
-    public final Embed UNBANIP;
-    public final Embed UNWARN;
-    public final Embed UNMUTE;
-    public final Embed UNBAN;
+    private Embed ban;
+    private Embed banip;
+    private Embed mute;
+    private Embed warn;
+
+    private Embed tempban;
+    private Embed tempbanip;
+    private Embed tempmute;
+    private Embed tempwarn;
+
+    private Embed unban;
+    private Embed unbanip;
+    private Embed unwarn;
+    private Embed unmute;
 
     private final EmbedLoader embedLoader;
     private final YamlConfiguration config;
+    private final File embedFolder;
 
-    protected Messages(EmbedLoader embedLoader, YamlConfiguration config) {
+    protected Messages(EmbedLoader embedLoader, YamlConfiguration config, File dataFolder) {
         this.embedLoader = embedLoader;
         this.config = config;
+        this.embedFolder = new File(dataFolder, "embed");
+        this.load();
+    }
 
-        this.KICK      = getEmbed("kick");
-        this.BAN       = getEmbed("ban");
-        this.TEMPBAN   = getEmbed("tempban");
-        this.MUTE      = getEmbed("mute");
-        this.TEMPMUTE  = getEmbed("tempmute");
-        this.BANIP     = getEmbed("banip");
-        this.TEMPBANIP = getEmbed("tempbanip");
-        this.WARN      = getEmbed("warn");
-        this.TEMPWARN  = getEmbed("tempwarn");
-        this.UNBANIP   = getEmbed("unbanip");
-        this.UNWARN    = getEmbed("unwarn");
-        this.UNMUTE    = getEmbed("unmute");
-        this.UNBAN     = getEmbed("unban");
+    private void load() {
+        this.kick      = getEmbed("kick");
+        this.ban       = getEmbed("ban");
+        this.tempban   = getEmbed("tempban");
+        this.mute      = getEmbed("mute");
+        this.tempmute  = getEmbed("tempmute");
+        this.banip     = getEmbed("banip");
+        this.tempbanip = getEmbed("tempbanip");
+        this.warn      = getEmbed("warn");
+        this.tempwarn  = getEmbed("tempwarn");
+        this.unbanip   = getEmbed("unbanip");
+        this.unwarn    = getEmbed("unwarn");
+        this.unmute    = getEmbed("unmute");
+        this.unban     = getEmbed("unban");
+    }
+
+    public void reload() {
+        this.embedLoader.load(embedFolder);
+        this.load();
     }
 
     private Embed getEmbed(final String key) {

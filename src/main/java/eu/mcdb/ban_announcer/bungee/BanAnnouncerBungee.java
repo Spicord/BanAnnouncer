@@ -35,9 +35,10 @@ public final class BanAnnouncerBungee extends Plugin {
     }
 
     private void enable(Spicord s) {
-        this.banAnnouncer = new BanAnnouncer(getLogger());
-
         Config config = new Config(getFile(), getDataFolder());
+
+        this.banAnnouncer = new BanAnnouncer(config, getLogger());
+
         switch (config.getPunishmentManager()) {
         case "auto":
             if (usingLiteBans()) {
@@ -88,7 +89,11 @@ public final class BanAnnouncerBungee extends Plugin {
 
     @Override
     public void onDisable() {
-        banAnnouncer.disable();
-        this.banAnnouncer = null;
+        getProxy().getPluginManager().unregisterListeners(this);
+
+        if (banAnnouncer != null) {
+            banAnnouncer.disable();
+            banAnnouncer = null;
+        }
     }
 }
