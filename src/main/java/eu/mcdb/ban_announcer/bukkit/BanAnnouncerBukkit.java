@@ -26,6 +26,7 @@ import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
 import eu.mcdb.ban_announcer.listener.MaxBansPlus;
+import eu.mcdb.spicord.Spicord;
 
 public class BanAnnouncerBukkit extends JavaPlugin {
 
@@ -33,11 +34,10 @@ public class BanAnnouncerBukkit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("The pĺugin will start in 5 seconds...");
-        getServer().getScheduler().scheduleSyncDelayedTask(this, () -> enable(), 5 * 20);
+        Spicord.getInstance().onLoad(this::enable);
     }
 
-    private void enable() {
+    private void enable(Spicord s) {
         Config config = new Config(getFile(), getDataFolder());
 
         this.banAnnouncer = new BanAnnouncer(config, getLogger());
