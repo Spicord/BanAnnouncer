@@ -3,5 +3,6 @@ author: OopsieWoopsie
 main: eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit
 version: ${project.version}
 depend: [Spicord]
+softdepend: [AdvancedBan, LiteBans, MaxBansPlus]
 loadbefore: [MaxBansPlus]
 description: Announce the punishments on your Discord server
