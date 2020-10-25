@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 import eu.mcdb.ban_announcer.addon.BanAnnouncerAddon;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.config.Messages;
-import eu.mcdb.spicord.Spicord;
+import org.spicord.Spicord;
 import eu.mcdb.spicord.bot.DiscordBot;
 import eu.mcdb.spicord.embed.Embed;
 import eu.mcdb.spicord.embed.EmbedSender;
@@ -67,19 +67,20 @@ public final class BanAnnouncer {
 
         Messages messages = config.getMessages();
 
-        callbacks.put(BAN, p -> builder.apply(p, p.isPermanent() ? messages.getBan() : messages.getTempban()));
-        callbacks.put(BANIP, p -> builder.apply(p, p.isPermanent() ? messages.getBanip() : messages.getTempbanip()));
-        callbacks.put(MUTE, p -> builder.apply(p, p.isPermanent() ? messages.getMute() : messages.getTempmute()));
-        callbacks.put(WARN, p -> builder.apply(p, p.isPermanent() ? messages.getWarn() : messages.getTempwarn()));
-        callbacks.put(KICK, p -> builder.apply(p, messages.getKick()));
-        callbacks.put(TEMPBAN, callbacks.get(BAN));
-        callbacks.put(TEMPBANIP, callbacks.get(BANIP));
-        callbacks.put(TEMPMUTE, callbacks.get(MUTE));
-        callbacks.put(TEMPWARN, callbacks.get(WARN));
-        callbacks.put(UNBAN, p -> builder.apply(p, messages.getUnban()));
+        callbacks.put(BAN,     p -> builder.apply(p, p.isPermanent() ? messages.getBan() : messages.getTempban()));
+        callbacks.put(BANIP,   p -> builder.apply(p, p.isPermanent() ? messages.getBanip() : messages.getTempbanip()));
+        callbacks.put(MUTE,    p -> builder.apply(p, p.isPermanent() ? messages.getMute() : messages.getTempmute()));
+        callbacks.put(WARN,    p -> builder.apply(p, p.isPermanent() ? messages.getWarn() : messages.getTempwarn()));
+        callbacks.put(KICK,    p -> builder.apply(p, messages.getKick()));
+        callbacks.put(UNBAN,   p -> builder.apply(p, messages.getUnban()));
         callbacks.put(UNBANIP, p -> builder.apply(p, messages.getUnbanip()));
-        callbacks.put(UNMUTE, p -> builder.apply(p, messages.getUnmute()));
-        callbacks.put(UNWARN, p -> builder.apply(p, messages.getUnwarn()));
+        callbacks.put(UNMUTE,  p -> builder.apply(p, messages.getUnmute()));
+        callbacks.put(UNWARN,  p -> builder.apply(p, messages.getUnwarn()));
+
+        callbacks.put(TEMPBAN,   callbacks.get(BAN));
+        callbacks.put(TEMPBANIP, callbacks.get(BANIP));
+        callbacks.put(TEMPMUTE,  callbacks.get(MUTE));
+        callbacks.put(TEMPWARN,  callbacks.get(WARN));
 
         Spicord.getInstance().getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }

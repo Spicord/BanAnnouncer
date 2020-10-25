@@ -26,7 +26,8 @@ import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
 import eu.mcdb.ban_announcer.listener.MaxBansPlus;
-import eu.mcdb.spicord.Spicord;
+import org.spicord.Spicord;
+import org.spicord.event.SpicordEvent;
 
 public class BanAnnouncerBukkit extends JavaPlugin {
 
@@ -34,7 +35,7 @@ public class BanAnnouncerBukkit extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        Spicord.getInstance().onLoad(this::enable);
+        Spicord.getInstance().addEventListener(SpicordEvent.SPICORD_LOADED, this::enable);
     }
 
     private void enable(Spicord s) {
