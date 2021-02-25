@@ -17,8 +17,6 @@
 
 package eu.mcdb.ban_announcer.bukkit;
 
-import static org.spicord.reflect.ReflectUtils.findClass;
-
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import eu.mcdb.ban_announcer.BanAnnouncer;
@@ -92,15 +90,23 @@ public class BanAnnouncerBukkit extends JavaPlugin {
     }
 
     private boolean usingLiteBans() {
-        return findClass("litebans.api.Events").isPresent();
+        return isClassPresent("litebans.api.Events");
     }
 
     private boolean usingAdvancedBan() {
-        return findClass("me.leoko.advancedban.Universal").isPresent();
+        return isClassPresent("me.leoko.advancedban.Universal");
     }
 
     private boolean usingMaxBans() {
-        return findClass("org.maxgamer.maxbans.MaxBansPlus").isPresent();
+        return isClassPresent("org.maxgamer.maxbans.MaxBansPlus");
+    }
+
+    private boolean isClassPresent(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (Exception e) {}
+        return false;
     }
 
     @Override
