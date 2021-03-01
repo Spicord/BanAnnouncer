@@ -97,7 +97,6 @@ public class Config {
                     messages = new Messages(embedLoader, config, dataFolder);
                 }
 
-                failedIP = config.getString("failedIP");
                 channelsToAnnounce = config.getLongList("channels-to-announce");
                 punishmentManager  = config.getString("punishment-manager", "auto");
                 ignoreSilent       = config.getBoolean("ignore-silent", false);
