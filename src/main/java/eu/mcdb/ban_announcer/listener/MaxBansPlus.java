@@ -117,6 +117,8 @@ public class MaxBansPlus implements Listener {
         punishment.setReason(reason);
         punishment.setOperator(staff);
         punishment.setPlayer(player);
+        punishment.setTime();
+        punishment.setDate();
 
         bann.handlePunishmentAction(punishment);
     }
@@ -163,7 +165,8 @@ public class MaxBansPlus implements Listener {
         punishment.setType(punishment.isPermanent() ? perm : temp);
         punishment.setReason(restriction.getReason());
         punishment.setDuration(getDuration(restriction));
-
+        punishment.setTime();
+        punishment.setDate();
         bann.handlePunishmentAction(punishment);
     }
 
@@ -172,7 +175,8 @@ public class MaxBansPlus implements Listener {
 
         punishment.setPlayer(event.getTarget().getName());
         punishment.setOperator(event.isPlayerAdministered() ? event.getAdmin().getName() : "Console");
-
+        punishment.setTime();
+        punishment.setDate();
         bann.handlePunishmentAction(punishment);
     }
 

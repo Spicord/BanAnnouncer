@@ -63,6 +63,8 @@ public final class BanAnnouncer {
                 .setString("staff", punishment.getOperator())
                 .setString("reason", punishment.getReason())
                 .setString("duration", punishment.getDuration())
+                .setString("time", punishment.getTime())
+                .setString("date", punishment.getDate())
                 .format(template);
 
         Messages messages = config.getMessages();

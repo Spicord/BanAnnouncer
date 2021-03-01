@@ -59,6 +59,8 @@ public final class BanManager implements Listener {
         punishment.setType(punishment.isPermanent() ? Type.BAN : Type.TEMPBAN);
         punishment.setReason(ban.getReason());
         punishment.setDuration(getDuration(ban.getExpires()));
+        punishment.setTime();
+        punishment.setDate();
         banAnnouncer.handlePunishmentAction(punishment);
     }
 

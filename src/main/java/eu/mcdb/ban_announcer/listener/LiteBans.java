@@ -134,6 +134,8 @@ public final class LiteBans {
                 punishment.setPermanent(entry.isPermanent());
                 punishment.setReason(entry.getReason());
                 punishment.setDuration(entry.getDurationString());
+                punishment.setTime();
+                punishment.setDate();
             }
 
             bann.handlePunishmentAction(punishment);

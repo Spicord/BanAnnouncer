@@ -21,6 +21,11 @@ import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import me.leoko.advancedban.utils.Punishment;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+import java.io.IOException;
 
 public final class AdvancedBan {
 
@@ -41,6 +46,8 @@ public final class AdvancedBan {
             }
         } else {
             punishment.setReason(pun.getReason());
+            punishment.setTime();
+            punishment.setDate();
             punishment.setDuration(pun.getDuration(true));
             punishment.setPermanent(punishment.getDuration().equals("permanent"));
         }

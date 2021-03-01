@@ -20,6 +20,11 @@ package eu.mcdb.ban_announcer;
 import eu.mcdb.util.chat.ChatColor;
 import lombok.Data;
 import lombok.ToString;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.Statistic;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @ToString
 @Data
@@ -29,6 +34,8 @@ public final class PunishmentAction {
     private String operator = "";
     private String reason = "";
     private String duration = "";
+    private String time = "";
+    private String date = "";
     private boolean permanent = false;
     private Type type = Type.UNKNOWN;
 
@@ -46,6 +53,18 @@ public final class PunishmentAction {
     public void setDuration(String duration) {
         duration = ChatColor.stripColor(duration);
         this.duration = duration.equals("") ? "unknown" : duration;
+    }
+
+    Date now = new Date();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+    SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss aa");
+
+    public void setTime() {
+        this.time = timeFormat.format(now);
+    }
+
+    public void setDate() {
+        this.date = dateFormat.format(now);
     }
 
     public boolean isRevoked() {

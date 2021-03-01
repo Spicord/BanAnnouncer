@@ -42,7 +42,7 @@ public class Config {
 
     @Getter private List<Long> channelsToAnnounce = new ArrayList<Long>();
     @Getter private Messages messages;
-
+    @Getter private String failedIP;
     @Getter private String punishmentManager;
     @Getter private boolean ignoreSilent;
     @Getter private String consoleName;
@@ -98,6 +98,7 @@ public class Config {
                     messages = new Messages(embedLoader, config, dataFolder);
                 }
 
+                failedIP = config.getString("failedIP");
                 channelsToAnnounce = config.getLongList("channels-to-announce");
                 punishmentManager  = config.getString("punishment-manager", "auto");
                 ignoreSilent       = config.getBoolean("ignore-silent", false);
