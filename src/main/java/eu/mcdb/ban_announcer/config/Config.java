@@ -42,7 +42,6 @@ public class Config {
 
     @Getter private List<Long> channelsToAnnounce = new ArrayList<Long>();
     @Getter private Messages messages;
-    @Getter private String failedIP;
     @Getter private String punishmentManager;
     @Getter private boolean ignoreSilent;
     @Getter private String consoleName;
