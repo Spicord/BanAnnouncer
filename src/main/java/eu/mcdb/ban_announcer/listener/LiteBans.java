@@ -43,7 +43,7 @@ public final class LiteBans {
     }
 
     private String getName(final String uuid) {
-        final String sentence = "SELECT name FROM {history} WHERE uuid = ? ORDER BY uuid DESC LIMIT 1";
+        final String sentence = "SELECT name FROM {history} WHERE uuid = ? ORDER BY id DESC LIMIT 1";
 
         try (final PreparedStatement stmt = database.prepareStatement(sentence)) {
             stmt.setString(1, uuid);
