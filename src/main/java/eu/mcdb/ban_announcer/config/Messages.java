@@ -28,6 +28,8 @@ public final class Messages {
 
     private Embed kick;
 
+    private Embed jail;
+
     private Embed ban;
     private Embed banip;
     private Embed mute;
@@ -38,6 +40,7 @@ public final class Messages {
     private Embed tempmute;
     private Embed tempwarn;
 
+    private Embed unjail;
     private Embed unban;
     private Embed unbanip;
     private Embed unwarn;
@@ -56,6 +59,7 @@ public final class Messages {
 
     private void load() {
         this.kick      = getEmbed("kick");
+        this.jail      = getEmbed("jail");
         this.ban       = getEmbed("ban");
         this.tempban   = getEmbed("tempban");
         this.mute      = getEmbed("mute");
@@ -68,6 +72,7 @@ public final class Messages {
         this.unwarn    = getEmbed("unwarn");
         this.unmute    = getEmbed("unmute");
         this.unban     = getEmbed("unban");
+        this.unjail    = getEmbed("unjail");
     }
 
     public void reload() {
@@ -76,7 +81,13 @@ public final class Messages {
     }
 
     private Embed getEmbed(final String key) {
-        final String message = config.getString("messages." + key).trim();
+        String message = config.getString("messages." + key);
+
+        if (message != null) {
+            message = message.trim();
+        } else {
+            message = "{embed:" + key + "}";
+        }
 
         if (message.startsWith("{embed:") && message.endsWith("}")) {
             final String embedName = message.substring(7, message.length() - 1).trim();

@@ -37,6 +37,12 @@ messages:
 #     maxbans     = Use MaxBansPlus
 punishment-manager: auto
 
+# The plugin used for manage the jails (spigot-only)
+# Possible values:
+#     off        = Do not use this
+#     essentials = Use EssentialsX
+jail-manager: off
+
 # If it's set to false, the punishments made
 #    with the '-s' flag of LiteBans will be sent anyways.
 ignore-silent: false

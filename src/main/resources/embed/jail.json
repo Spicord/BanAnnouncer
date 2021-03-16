@@ -1,0 +1,11 @@
+{
+  "embed": {
+    "title": "New punishment",
+    "description": "The player `%player%` was jailed on `%jail%` by `%staff%`",
+    "color": 5540790,
+    "footer": {
+      "icon_url": "https://i.imgur.com/JhEluGV.png",
+      "text": "Powered by BanAnnouncer"
+    }
+  }
+}

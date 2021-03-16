@@ -1,0 +1,11 @@
+{
+  "embed": {
+    "title": "Revoked punishment",
+    "description": "The player `%player%` has beed unjailed from `%jail%` by `%staff%`",
+    "color": 10771377,
+    "footer": {
+      "icon_url": "https://i.imgur.com/JhEluGV.png",
+      "text": "Powered by BanAnnouncer"
+    }
+  }
+}

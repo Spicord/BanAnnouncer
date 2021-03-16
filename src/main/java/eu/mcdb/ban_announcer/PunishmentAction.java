@@ -25,12 +25,13 @@ import lombok.ToString;
 @Data
 public final class PunishmentAction {
 
-    private String player = "";
-    private String operator = "";
-    private String reason = "";
-    private String duration = "";
+    private String player;
+    private String operator;
+    private String reason;
+    private String duration;
+    private String jail;
     private boolean permanent = false;
-    private Type type = Type.UNKNOWN;
+    private Type type;
 
     public PunishmentAction() {}
 
@@ -49,7 +50,11 @@ public final class PunishmentAction {
     }
 
     public boolean isRevoked() {
+        if (type == null) {
+            throw new IllegalStateException("Type is not set");
+        }
         switch (type) {
+        case UNJAIL:
         case UNBAN:
         case UNBANIP:
         case UNMUTE:
@@ -61,6 +66,11 @@ public final class PunishmentAction {
     }
 
     public enum Type {
-        KICK, BAN, TEMPBAN, MUTE, TEMPMUTE, BANIP, TEMPBANIP, WARN, TEMPWARN, UNBAN, UNMUTE, UNBANIP, UNWARN, UNKNOWN;
+        KICK,
+        JAIL, UNJAIL,
+        BAN, TEMPBAN, UNBAN,
+        MUTE, TEMPMUTE, UNMUTE,
+        BANIP, TEMPBANIP, UNBANIP,
+        WARN, TEMPWARN, UNWARN;
     }
 }

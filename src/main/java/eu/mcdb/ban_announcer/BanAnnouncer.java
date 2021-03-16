@@ -63,6 +63,7 @@ public final class BanAnnouncer {
                 .setString("staff", punishment.getOperator())
                 .setString("reason", punishment.getReason())
                 .setString("duration", punishment.getDuration())
+                .setString("jail", punishment.getJail())
                 .format(template);
 
         Messages messages = config.getMessages();
@@ -72,6 +73,8 @@ public final class BanAnnouncer {
         callbacks.put(MUTE,    p -> builder.apply(p, p.isPermanent() ? messages.getMute() : messages.getTempmute()));
         callbacks.put(WARN,    p -> builder.apply(p, p.isPermanent() ? messages.getWarn() : messages.getTempwarn()));
         callbacks.put(KICK,    p -> builder.apply(p, messages.getKick()));
+        callbacks.put(JAIL,    p -> builder.apply(p, messages.getJail()));
+        callbacks.put(UNJAIL,  p -> builder.apply(p, messages.getUnjail()));
         callbacks.put(UNBAN,   p -> builder.apply(p, messages.getUnban()));
         callbacks.put(UNBANIP, p -> builder.apply(p, messages.getUnbanip()));
         callbacks.put(UNMUTE,  p -> builder.apply(p, messages.getUnmute()));
@@ -136,11 +139,11 @@ public final class BanAnnouncer {
     private class MessageFormatter {
 
         private final Map<String, String> map;
-        private final char c;
+        private final char special;
 
         public MessageFormatter(char c) {
             this.map = new HashMap<String, String>();
-            this.c = c;
+            this.special = c;
         }
 
         public MessageFormatter() {
@@ -156,14 +159,18 @@ public final class BanAnnouncer {
             return embed == null ? null : Embed.fromJson(format(embed.toJson()));
         }
 
-        public String format(String str) {
+        public String format(String message) {
             for (Entry<String, String> entry : map.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                if (value == null) continue;
-                str = str.replace(c + key + c, value);
+
+                if (value == null) {
+                    continue;
+                }
+
+                message = message.replace(special + key + special, value);
             }
-            return str;
+            return message;
         }
     }
 }

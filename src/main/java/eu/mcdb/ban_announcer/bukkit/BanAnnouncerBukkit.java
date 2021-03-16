@@ -21,6 +21,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
+import eu.mcdb.ban_announcer.bukkit.listener.EssentialsJailListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
 import eu.mcdb.ban_announcer.listener.MaxBansPlus;
@@ -40,6 +41,19 @@ public class BanAnnouncerBukkit extends JavaPlugin {
         Config config = new Config(getFile(), getDataFolder());
 
         this.banAnnouncer = new BanAnnouncer(config, getLogger());
+
+        switch (config.getJailManager().toLowerCase()) {
+        case "off": break;
+        case "essentials":
+            if (essentialsPresent()) {
+                getServer().getPluginManager().registerEvents(new EssentialsJailListener(this), this);
+            } else {
+                getLogger().warning("[Jail Manager] EssentialsX is not present");
+            }
+            break;
+        default:
+            break;
+        }
 
         switch (config.getPunishmentManager().toLowerCase()) {
         case "auto":
@@ -87,6 +101,10 @@ public class BanAnnouncerBukkit extends JavaPlugin {
                     + " with it on https://github.com/OopsieWoopsie/BanAnnouncer/issues");
             break;
         }
+    }
+
+    private boolean essentialsPresent() {
+        return isClassPresent("net.ess3.api.events.JailStatusChangeEvent");
     }
 
     private boolean usingLiteBans() {

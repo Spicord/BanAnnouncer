@@ -43,6 +43,7 @@ public class Config {
     @Getter private List<Long> channelsToAnnounce = new ArrayList<Long>();
     @Getter private Messages messages;
 
+    @Getter private String jailManager;
     @Getter private String punishmentManager;
     @Getter private boolean ignoreSilent;
     @Getter private String consoleName;
@@ -100,6 +101,7 @@ public class Config {
 
                 channelsToAnnounce = config.getLongList("channels-to-announce");
                 punishmentManager  = config.getString("punishment-manager", "auto");
+                jailManager        = config.getString("jail-manager", "off");
                 ignoreSilent       = config.getBoolean("ignore-silent", false);
                 consoleName        = config.getString("console-name", "Console");
                 automaticText      = config.getString("automatic", "Automatic");
