@@ -11,13 +11,13 @@ import eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit;
 
 public class BetterJailsListener {
 
-	private final BanAnnouncerBukkit plugin;
+    private final BanAnnouncerBukkit plugin;
     private final BetterJails betterJails;
 
     public BetterJailsListener(BanAnnouncerBukkit plugin) {
-	    this.plugin = plugin;
-		this.betterJails = plugin.getServer().getServicesManager().load(BetterJails.class);
-	}
+        this.plugin = plugin;
+        this.betterJails = plugin.getServer().getServicesManager().load(BetterJails.class);
+    }
 
     public void subscribe() {
         betterJails.getEventBus().subscribe(plugin, PlayerImprisonEvent.class, this::onPlayerImprison);
