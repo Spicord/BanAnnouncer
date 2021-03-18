@@ -21,6 +21,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
+import eu.mcdb.ban_announcer.bukkit.listener.BetterJailsListener;
 import eu.mcdb.ban_announcer.bukkit.listener.EssentialsJailListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.listener.LiteBans;
@@ -31,6 +32,8 @@ import org.spicord.event.SpicordEvent;
 public class BanAnnouncerBukkit extends JavaPlugin {
 
     private BanAnnouncer banAnnouncer;
+
+    private BetterJailsListener betterJailsListener;
 
     @Override
     public void onEnable() {
@@ -48,9 +51,16 @@ public class BanAnnouncerBukkit extends JavaPlugin {
             if (essentialsPresent()) {
                 getServer().getPluginManager().registerEvents(new EssentialsJailListener(this), this);
             } else {
-                getLogger().warning("[Jail Manager] EssentialsX is not present");
+                getLogger().warning("[JailManager] EssentialsX is not present");
             }
             break;
+        case "betterjails":
+            if (betterjailsPresent()) {
+                betterJailsListener = new BetterJailsListener(this);
+                betterJailsListener.subscribe();
+            } else {
+                getLogger().warning("[JailManager] BetterJails is not present");
+            }
         default:
             break;
         }
@@ -107,6 +117,10 @@ public class BanAnnouncerBukkit extends JavaPlugin {
         return isClassPresent("net.ess3.api.events.JailStatusChangeEvent");
     }
 
+    private boolean betterjailsPresent() {
+        return isClassPresent("com.github.fefo.betterjails.api.BetterJails");
+    }
+
     private boolean usingLiteBans() {
         return isClassPresent("litebans.api.Events");
     }
@@ -130,6 +144,10 @@ public class BanAnnouncerBukkit extends JavaPlugin {
     @Override
     public void onDisable() {
         HandlerList.unregisterAll(this);
+
+        if (betterJailsListener != null) {
+            betterJailsListener.unsubscribe();
+        }
 
         if (banAnnouncer != null) {
             banAnnouncer.disable();
