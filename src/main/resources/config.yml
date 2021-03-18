@@ -16,6 +16,7 @@ channels-to-announce:
 # Variables are self-explained...
 messages:
   kick:      "{embed:kick}"
+  jail:      "{embed:jail}"
   ban:       "{embed:ban}"
   tempban:   "{embed:tempban}"
   mute:      "{embed:mute}"
@@ -28,6 +29,7 @@ messages:
   unwarn:    "{embed:unwarn}"
   unmute:    "{embed:unmute}"
   unban:     "{embed:unban}"
+  unjail:    "{embed:unjail}"
 
 # The plugin used for manage the punishments
 # Possible values:
@@ -39,8 +41,9 @@ punishment-manager: auto
 
 # The plugin used for manage the jails (spigot-only)
 # Possible values:
-#     off        = Do not use this
-#     essentials = Use EssentialsX
+#     off         = Do not use this
+#     essentials  = Use EssentialsX
+#     betterjails = Use BetterJails 
 jail-manager: off
 
 # If it's set to false, the punishments made
