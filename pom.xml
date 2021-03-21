@@ -27,11 +27,6 @@
             <url>https://repo.spicord.org/</url>
         </repository>
         <repository>
-            <!-- BanManager -->
-            <id>confuser-repo</id>
-            <url>https://ci.frostcast.net/plugin/repository/everything</url>
-        </repository>
-        <repository>
             <!-- BetterJails -->
             <id>s01-sonatype</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
@@ -90,12 +85,6 @@
             <groupId>org.maxgamer</groupId>
             <artifactId>maxbans-plus</artifactId>
             <version>1.9</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>me.confuser.banmanager</groupId>
-            <artifactId>BanManagerBukkit</artifactId>
-            <version>7.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
