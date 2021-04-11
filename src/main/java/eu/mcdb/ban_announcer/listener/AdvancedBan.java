@@ -32,6 +32,7 @@ public final class AdvancedBan {
                 ? bann.getConfig().getConsoleName()
                 : pun.getOperator();
 
+        punishment.setId(String.valueOf(pun.getId()));
         punishment.setOperator(operator);
         punishment.setPlayer(pun.getName());
 

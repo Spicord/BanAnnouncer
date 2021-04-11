@@ -86,6 +86,8 @@ public final class LiteBans {
         public void handleEntry(final Entry entry, final boolean revoked) {
             final PunishmentAction punishment = new PunishmentAction();
 
+            punishment.setId(String.valueOf(entry.getId()));
+
             switch (entry.getType()) {
             case "ban":
                 if (entry.isIpban()) {

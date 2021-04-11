@@ -59,11 +59,12 @@ public final class BanAnnouncer {
         BiFunction<PunishmentAction, Embed, Embed> builder;
 
         builder = (punishment, template) -> new MessageFormatter()
-                .setString("player", punishment.getPlayer())
-                .setString("staff", punishment.getOperator())
-                .setString("reason", punishment.getReason())
+                .setString("id",       punishment.getId())
+                .setString("player",   punishment.getPlayer())
+                .setString("staff",    punishment.getOperator())
+                .setString("reason",   punishment.getReason())
                 .setString("duration", punishment.getDuration())
-                .setString("jail", punishment.getJail())
+                .setString("jail",     punishment.getJail())
                 .format(template);
 
         Messages messages = config.getMessages();

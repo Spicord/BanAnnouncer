@@ -25,6 +25,7 @@ import lombok.ToString;
 @Data
 public final class PunishmentAction {
 
+    private String id;
     private String player;
     private String operator;
     private String reason;
