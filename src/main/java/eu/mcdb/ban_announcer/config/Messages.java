@@ -27,7 +27,7 @@ import lombok.Getter;
 public final class Messages {
 
     private Embed kick;
-
+    private Embed note;
     private Embed jail;
 
     private Embed ban;
@@ -59,6 +59,7 @@ public final class Messages {
 
     private void load() {
         this.kick      = getEmbed("kick");
+        this.note      = getEmbed("note");
         this.jail      = getEmbed("jail");
         this.ban       = getEmbed("ban");
         this.tempban   = getEmbed("tempban");

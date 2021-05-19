@@ -16,6 +16,7 @@ channels-to-announce:
 # Variables are self-explained...
 messages:
   kick:      "{embed:kick}"
+  note:      "{embed:note}"
   jail:      "{embed:jail}"
   ban:       "{embed:ban}"
   tempban:   "{embed:tempban}"

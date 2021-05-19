@@ -1,0 +1,11 @@
+{
+  "embed": {
+    "title": "New note",
+    "description": "The player `%player%` was noted by `%staff%` for `%reason%`",
+    "color": 5540790,
+    "footer": {
+      "icon_url": "https://i.imgur.com/JhEluGV.png",
+      "text": "Powered by BanAnnouncer"
+    }
+  }
+}

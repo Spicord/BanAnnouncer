@@ -18,6 +18,8 @@
 package eu.mcdb.ban_announcer;
 
 import static eu.mcdb.ban_announcer.PunishmentAction.Type.*;
+
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -54,7 +56,7 @@ public final class BanAnnouncer {
         this.logger = logger;
 
         this.bots = new HashSet<>();
-        this.callbacks = new HashMap<>();
+        this.callbacks = new EnumMap<>(PunishmentAction.Type.class);
 
         BiFunction<PunishmentAction, Embed, Embed> builder;
 
@@ -74,6 +76,7 @@ public final class BanAnnouncer {
         callbacks.put(MUTE,    p -> builder.apply(p, p.isPermanent() ? messages.getMute() : messages.getTempmute()));
         callbacks.put(WARN,    p -> builder.apply(p, p.isPermanent() ? messages.getWarn() : messages.getTempwarn()));
         callbacks.put(KICK,    p -> builder.apply(p, messages.getKick()));
+        callbacks.put(NOTE,    p -> builder.apply(p, messages.getNote()));
         callbacks.put(JAIL,    p -> builder.apply(p, messages.getJail()));
         callbacks.put(UNJAIL,  p -> builder.apply(p, messages.getUnjail()));
         callbacks.put(UNBAN,   p -> builder.apply(p, messages.getUnban()));
