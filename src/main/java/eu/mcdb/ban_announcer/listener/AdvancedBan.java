@@ -75,7 +75,7 @@ public final class AdvancedBan {
             punishment.setType(revoked ? Type.UNWARN : Type.TEMPWARN);
             break;
         case NOTE:
-            punishment.setType(Type.NOTE);
+            punishment.setType(revoked ? Type.UNNOTE : Type.NOTE);
             break;
         default:
             bann.getLogger().severe("Unknown punishment type '" + pun.getType() + "'.");

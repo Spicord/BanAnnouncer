@@ -27,13 +27,13 @@ import lombok.Getter;
 public final class Messages {
 
     private Embed kick;
-    private Embed note;
     private Embed jail;
 
     private Embed ban;
     private Embed banip;
     private Embed mute;
     private Embed warn;
+    private Embed note;
 
     private Embed tempban;
     private Embed tempbanip;
@@ -45,6 +45,7 @@ public final class Messages {
     private Embed unbanip;
     private Embed unwarn;
     private Embed unmute;
+    private Embed unnote;
 
     private final EmbedLoader embedLoader;
     private final YamlConfiguration config;
@@ -74,6 +75,7 @@ public final class Messages {
         this.unmute    = getEmbed("unmute");
         this.unban     = getEmbed("unban");
         this.unjail    = getEmbed("unjail");
+        this.unnote    = getEmbed("unnote");
     }
 
     public void reload() {

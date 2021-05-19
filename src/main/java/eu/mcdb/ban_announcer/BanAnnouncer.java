@@ -77,6 +77,7 @@ public final class BanAnnouncer {
         callbacks.put(WARN,    p -> builder.apply(p, p.isPermanent() ? messages.getWarn() : messages.getTempwarn()));
         callbacks.put(KICK,    p -> builder.apply(p, messages.getKick()));
         callbacks.put(NOTE,    p -> builder.apply(p, messages.getNote()));
+        callbacks.put(UNNOTE,  p -> builder.apply(p, messages.getUnnote()));
         callbacks.put(JAIL,    p -> builder.apply(p, messages.getJail()));
         callbacks.put(UNJAIL,  p -> builder.apply(p, messages.getUnjail()));
         callbacks.put(UNBAN,   p -> builder.apply(p, messages.getUnban()));

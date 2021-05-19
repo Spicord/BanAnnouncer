@@ -30,6 +30,7 @@ messages:
   unwarn:    "{embed:unwarn}"
   unmute:    "{embed:unmute}"
   unban:     "{embed:unban}"
+  unnote:    "{embed:unnote}"
   unjail:    "{embed:unjail}"
 
 # The plugin used for manage the punishments

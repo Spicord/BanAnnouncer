@@ -73,7 +73,7 @@ public final class PunishmentAction {
         MUTE, TEMPMUTE, UNMUTE,
         BANIP, TEMPBANIP, UNBANIP,
         WARN, TEMPWARN, UNWARN,
-        NOTE // AdvancedBan only
+        NOTE, UNNOTE // AdvancedBan only
         ;
     }
 }
