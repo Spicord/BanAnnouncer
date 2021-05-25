@@ -21,6 +21,7 @@ import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import me.leoko.advancedban.utils.Punishment;
+import me.leoko.advancedban.utils.PunishmentType;
 
 public final class AdvancedBan {
 
@@ -39,6 +40,9 @@ public final class AdvancedBan {
         if (revoked) {
             if (pun.isExpired()) { // automatic
                 punishment.setOperator(bann.getConfig().getExpiredOperatorName());
+            }
+            if (pun.getType() == PunishmentType.NOTE) {
+                punishment.setReason(pun.getReason());
             }
         } else {
             punishment.setReason(pun.getReason());
