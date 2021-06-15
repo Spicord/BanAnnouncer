@@ -32,11 +32,11 @@ import eu.mcdb.ban_announcer.addon.BanAnnouncerAddon;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.config.Messages;
 import org.spicord.Spicord;
-import eu.mcdb.spicord.bot.DiscordBot;
-import eu.mcdb.spicord.embed.Embed;
-import eu.mcdb.spicord.embed.EmbedSender;
+import org.spicord.bot.DiscordBot;
+import org.spicord.embed.Embed;
+import org.spicord.embed.EmbedSender;
 import lombok.Getter;
-import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 public final class BanAnnouncer {
 

@@ -19,10 +19,10 @@ package eu.mcdb.ban_announcer.addon;
 
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.config.Config;
-import eu.mcdb.spicord.api.addon.SimpleAddon;
-import eu.mcdb.spicord.bot.DiscordBot;
-import eu.mcdb.spicord.bot.command.DiscordBotCommand;
-import net.dv8tion.jda.core.Permission;
+import org.spicord.api.addon.SimpleAddon;
+import org.spicord.bot.DiscordBot;
+import org.spicord.bot.command.DiscordBotCommand;
+import net.dv8tion.jda.api.Permission;
 
 public final class BanAnnouncerAddon extends SimpleAddon {
 

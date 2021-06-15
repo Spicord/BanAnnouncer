@@ -18,8 +18,8 @@
 package eu.mcdb.ban_announcer.config;
 
 import java.io.File;
-import eu.mcdb.spicord.embed.Embed;
-import eu.mcdb.spicord.embed.EmbedLoader;
+import org.spicord.embed.Embed;
+import org.spicord.embed.EmbedLoader;
 import eu.mcdb.universal.config.YamlConfiguration;
 import lombok.Getter;
 

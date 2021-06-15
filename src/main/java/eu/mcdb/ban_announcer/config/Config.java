@@ -25,7 +25,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import eu.mcdb.spicord.embed.EmbedLoader;
+import org.spicord.embed.EmbedLoader;
 import eu.mcdb.universal.config.YamlConfiguration;
 import lombok.Getter;
 
