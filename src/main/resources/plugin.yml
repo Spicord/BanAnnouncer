@@ -4,5 +4,4 @@ main: eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit
 version: ${project.version}
 depend: [Spicord]
 softdepend: [AdvancedBan, LiteBans, MaxBansPlus, Essentials, BetterJails]
-loadbefore: [MaxBansPlus]
 description: Announce the punishments on your Discord server
