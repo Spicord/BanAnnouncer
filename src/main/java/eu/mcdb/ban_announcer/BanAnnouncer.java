@@ -40,8 +40,6 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 
 public final class BanAnnouncer {
 
-    @Getter private static BanAnnouncer instance;
-
     @Getter private Config config;
     @Getter private Logger logger;
     @Getter private boolean enabled = true;
@@ -49,11 +47,9 @@ public final class BanAnnouncer {
     private Map<PunishmentAction.Type, Function<PunishmentAction, Embed>> callbacks;
     private Set<DiscordBot> bots;
 
-    public BanAnnouncer(Config config, Logger logger) {
-        instance = this;
-
+    public BanAnnouncer(Config config, Spicord spicord) {
         this.config = config;
-        this.logger = logger;
+        this.logger = config.getLogger();
 
         this.bots = new HashSet<>();
         this.callbacks = new EnumMap<>(PunishmentAction.Type.class);
@@ -90,7 +86,7 @@ public final class BanAnnouncer {
         callbacks.put(TEMPMUTE,  callbacks.get(MUTE));
         callbacks.put(TEMPWARN,  callbacks.get(WARN));
 
-        Spicord.getInstance().getAddonManager().registerAddon(new BanAnnouncerAddon(this));
+        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
     public void handlePunishmentAction(PunishmentAction punishment) {
@@ -131,11 +127,14 @@ public final class BanAnnouncer {
         bots.add(bot);
     }
 
+    public void removeBot(DiscordBot bot) {
+        bots.remove(bot);
+    }
+
     public void disable() {
         callbacks.clear();
         bots.clear();
         enabled = false;
-        instance = null;
         config = null;
         callbacks = null;
         bots = null;

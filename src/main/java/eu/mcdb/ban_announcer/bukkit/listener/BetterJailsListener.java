@@ -4,28 +4,30 @@ import com.github.fefo.betterjails.api.BetterJails;
 import com.github.fefo.betterjails.api.event.prisoner.PlayerImprisonEvent;
 import com.github.fefo.betterjails.api.event.prisoner.PrisonerReleaseEvent;
 import com.github.fefo.betterjails.api.model.prisoner.Prisoner;
-import eu.mcdb.ban_announcer.BanAnnouncer;
+
 import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit;
+import eu.mcdb.ban_announcer.bukkit.BukkitPunishmentListener;
 
-public class BetterJailsListener {
+public class BetterJailsListener extends BukkitPunishmentListener {
 
-    private final BanAnnouncerBukkit plugin;
     private final BetterJails betterJails;
 
     public BetterJailsListener(BanAnnouncerBukkit plugin) {
-        this.plugin = plugin;
+        super(plugin);
         this.betterJails = plugin.getServer().getServicesManager().load(BetterJails.class);
     }
 
-    public void subscribe() {
-        betterJails.getEventBus().subscribe(plugin, PlayerImprisonEvent.class, this::onPlayerImprison);
-        betterJails.getEventBus().subscribe(plugin, PrisonerReleaseEvent.class, this::onPrisonerRelease);
+    @Override
+    public void register() {
+        betterJails.getEventBus().subscribe(getPlugin(), PlayerImprisonEvent.class, this::onPlayerImprison);
+        betterJails.getEventBus().subscribe(getPlugin(), PrisonerReleaseEvent.class, this::onPrisonerRelease);
     }
 
-    public void unsubscribe() {
-        betterJails.getEventBus().unsubscribe(plugin);
+    @Override
+    public void unregister() {
+        betterJails.getEventBus().unsubscribe(getPlugin());
     }
 
     private void onPlayerImprison(PlayerImprisonEvent event) {
@@ -41,12 +43,12 @@ public class BetterJailsListener {
         String player = prisoner.name();
         String operator = prisoner.jailedBy();
 
-        PunishmentAction pun = new PunishmentAction(released ? Type.UNJAIL : Type.JAIL);
+        PunishmentAction punishment = new PunishmentAction(released ? Type.UNJAIL : Type.JAIL);
 
-        pun.setJail(jail);
-        pun.setPlayer(player);
-        pun.setOperator(operator);
+        punishment.setJail(jail);
+        punishment.setPlayer(player);
+        punishment.setOperator(operator);
 
-        BanAnnouncer.getInstance().handlePunishmentAction(pun);
+        handlePunishment(punishment);
     }
 }

@@ -1,38 +1,37 @@
 package eu.mcdb.ban_announcer.bukkit.listener;
 
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import eu.mcdb.ban_announcer.BanAnnouncer;
+
 import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit;
+import eu.mcdb.ban_announcer.bukkit.BukkitPunishmentListener;
 import net.ess3.api.IUser;
 import net.ess3.api.events.JailStatusChangeEvent;
 
-public class EssentialsJailListener implements Listener {
+public class EssentialsJailListener extends BukkitPunishmentListener {
 
-    private BanAnnouncerBukkit pl;
-
-    public EssentialsJailListener(BanAnnouncerBukkit pl) {
-        this.pl = pl;
+    public EssentialsJailListener(BanAnnouncerBukkit plugin) {
+        super(plugin);
     }
 
     @EventHandler
+    @SuppressWarnings("deprecation")
     public void onJailStatusChange(JailStatusChangeEvent event) {
         boolean gotJailed = event.getValue();
 
         IUser user = event.getAffected();
         IUser staff = event.getController();
 
-        pl.getServer().getScheduler().scheduleSyncDelayedTask(pl, () -> {
-            PunishmentAction pun = new PunishmentAction();
+        getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
+            PunishmentAction punishment = new PunishmentAction();
 
-            pun.setType(gotJailed ? Type.JAIL : Type.UNJAIL);
-            pun.setJail(user.getJail());
-            pun.setPlayer(user.getName());
-            pun.setOperator(staff.getName());
+            punishment.setType(gotJailed ? Type.JAIL : Type.UNJAIL);
+            punishment.setJail(user.getJail());
+            punishment.setPlayer(user.getName());
+            punishment.setOperator(staff.getName());
 
-            BanAnnouncer.getInstance().handlePunishmentAction(pun);
+            handlePunishment(punishment);
         }, 20);
     }
 }

@@ -15,22 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package eu.mcdb.ban_announcer.listener;
+package eu.mcdb.ban_announcer.utils;
 
 import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentAction.Type;
-import eu.mcdb.ban_announcer.BanAnnouncer;
+import eu.mcdb.ban_announcer.config.Config;
 import me.leoko.advancedban.utils.Punishment;
 import me.leoko.advancedban.utils.PunishmentType;
 
-public final class AdvancedBan {
+public final class AdvancedBanUtil {
 
-    public static void onPunishmentAction(final Punishment pun, final boolean revoked) {
-        final BanAnnouncer bann = BanAnnouncer.getInstance();
-        final PunishmentAction punishment = new PunishmentAction();
+    public static PunishmentAction convertPunishment(Config config, final Punishment pun, final boolean revoked) {
+        PunishmentAction punishment = new PunishmentAction();
 
         String operator = "Console".equalsIgnoreCase(pun.getOperator())
-                ? bann.getConfig().getConsoleName()
+                ? config.getConsoleName()
                 : pun.getOperator();
 
         punishment.setId(String.valueOf(pun.getId()));
@@ -39,7 +38,7 @@ public final class AdvancedBan {
 
         if (revoked) {
             if (pun.isExpired()) { // automatic
-                punishment.setOperator(bann.getConfig().getExpiredOperatorName());
+                punishment.setOperator(config.getExpiredOperatorName());
             }
             if (pun.getType() == PunishmentType.NOTE) {
                 punishment.setReason(pun.getReason());
@@ -82,10 +81,9 @@ public final class AdvancedBan {
             punishment.setType(revoked ? Type.UNNOTE : Type.NOTE);
             break;
         default:
-            bann.getLogger().severe("Unknown punishment type '" + pun.getType() + "'.");
-            return;
+            throw new IllegalStateException("Unknown punishment type '" + pun.getType() + "'.");
         }
 
-        bann.handlePunishmentAction(punishment);
+        return punishment;
     }
 }

@@ -36,6 +36,11 @@
             <id>essentialsx</id>
             <url>https://repo.essentialsx.net/releases/</url>
         </repository>
+        <repository>
+            <!-- LibertyBans -->
+            <id>arim-mvn-agpl3</id>
+            <url>https://mvn-repo.arim.space/affero-gpl3/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -92,6 +97,11 @@
             <artifactId>maxbans-plus</artifactId>
             <version>1.9</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>space.arim.libertybans</groupId>
+            <artifactId>bans-api</artifactId>
+            <version>0.7.6</version>
         </dependency>
         <dependency>
             <groupId>net.ess3</groupId>

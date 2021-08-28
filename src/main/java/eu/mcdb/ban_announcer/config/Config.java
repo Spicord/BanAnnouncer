@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import org.spicord.embed.EmbedLoader;
+
+import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.universal.config.YamlConfiguration;
 import lombok.Getter;
 
@@ -38,7 +40,7 @@ public class Config {
     private File dataFolder;
     private EmbedLoader embedLoader;
     private File configFile;
-    private Logger logger;
+    @Getter private Logger logger;
 
     @Getter private List<Long> channelsToAnnounce = new ArrayList<Long>();
     @Getter private Messages messages;
@@ -49,12 +51,13 @@ public class Config {
     @Getter private String consoleName;
     @Getter private String automaticText;
 
-    public Config(File zip, File dataFolder) {
+    public Config(BanAnnouncerPlugin plugin) {
         instance = this;
-        this.dataFolder = dataFolder;
+        this.dataFolder = plugin.getDataFolder();
+        this.logger = plugin.getLogger();
 
         try {
-            this.embedLoader = EmbedLoader.extractAndLoad(zip, new File(dataFolder, "embed"));
+            this.embedLoader = EmbedLoader.extractAndLoad(plugin.getFile(), new File(dataFolder, "embed"));
         } catch (IOException e) {
             throw new RuntimeException("An error ocurred while extracting the embed files", e);
         }
@@ -118,8 +121,6 @@ public class Config {
 
         try (final InputStream in = getClass().getResourceAsStream("/config.yml")) {
             Files.copy(in, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException e) {
-            throw e;
         }
     }
 }

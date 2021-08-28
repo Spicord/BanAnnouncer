@@ -17,21 +17,29 @@
 
 package eu.mcdb.ban_announcer.bungee.listener;
 
-import eu.mcdb.ban_announcer.listener.AdvancedBan;
+import eu.mcdb.ban_announcer.PunishmentAction;
+import eu.mcdb.ban_announcer.bungee.BanAnnouncerBungee;
+import eu.mcdb.ban_announcer.bungee.BungeePunishmentListener;
+import eu.mcdb.ban_announcer.utils.AdvancedBanUtil;
 import me.leoko.advancedban.bungee.event.PunishmentEvent;
 import me.leoko.advancedban.bungee.event.RevokePunishmentEvent;
-import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-public final class AdvancedBanListener implements Listener {
+public final class AdvancedBanListener extends BungeePunishmentListener {
+
+    public AdvancedBanListener(BanAnnouncerBungee plugin) {
+        super(plugin);
+    }
 
     @EventHandler
     public void onPunishment(PunishmentEvent event) {
-        AdvancedBan.onPunishmentAction(event.getPunishment(), false);
+        PunishmentAction punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), false);
+        handlePunishment(punishment);
     }
 
     @EventHandler
     public void onRevokePunishment(RevokePunishmentEvent event) {
-        AdvancedBan.onPunishmentAction(event.getPunishment(), true);
+        PunishmentAction punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), true);
+        handlePunishment(punishment);
     }
 }

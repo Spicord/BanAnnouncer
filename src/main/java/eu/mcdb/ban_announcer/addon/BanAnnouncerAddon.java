@@ -26,16 +26,21 @@ import net.dv8tion.jda.api.Permission;
 
 public final class BanAnnouncerAddon extends SimpleAddon {
 
-    private BanAnnouncer ba;
+    private BanAnnouncer announcer;
 
-    public BanAnnouncerAddon(BanAnnouncer ba) {
-        super("BanAnnouncer", "ban_announcer", "Sheidy", "2.1.0", new String[] { "bareload" });
-        this.ba = ba;
+    public BanAnnouncerAddon(BanAnnouncer announcer) {
+        super("BanAnnouncer", "ban_announcer", "Sheidy", "2.3.0", new String[] { "bareload" });
+        this.announcer = announcer;
     }
 
     @Override
     public void onLoad(DiscordBot bot) {
-        ba.addBot(bot);
+        announcer.addBot(bot);
+    }
+
+    @Override
+    public void onShutdown(DiscordBot bot) {
+        announcer.removeBot(bot);
     }
 
     @Override
