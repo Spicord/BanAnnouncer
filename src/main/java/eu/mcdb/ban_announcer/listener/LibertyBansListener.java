@@ -1,5 +1,9 @@
 package eu.mcdb.ban_announcer.listener;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -148,8 +152,48 @@ public class LibertyBansListener extends PunishmentListener {
     }
 
     private String getPlayerName(UUID uuid) {
-        // TODO Auto-generated method stub
-        return "<NotImplementedYet>";
+        final String query = "select `name` from `libertybans_names` where `uuid` = ?";
+
+        try (
+            Connection conn = libertyBans.getDatabase().getConnection();
+            PreparedStatement stmt = conn.prepareStatement(query)
+        ) {
+
+            stmt.setBytes(1, getUuidBytes(uuid));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? rs.getString("name") : "<Unknown>";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "<DatabaseError>";
+    }
+
+    private byte[] getUuidBytes(UUID uuid) {
+        long mostSignificantBits = uuid.getMostSignificantBits();
+        long leastSignificantBits = uuid.getLeastSignificantBits();
+
+        byte[] uuidAsBytes = new byte[16];
+
+        uuidAsBytes[0] = (byte)(mostSignificantBits >>> 56);
+        uuidAsBytes[1] = (byte)(mostSignificantBits >>> 48);
+        uuidAsBytes[2] = (byte)(mostSignificantBits >>> 40);
+        uuidAsBytes[3] = (byte)(mostSignificantBits >>> 32);
+        uuidAsBytes[4] = (byte)(mostSignificantBits >>> 24);
+        uuidAsBytes[5] = (byte)(mostSignificantBits >>> 16);
+        uuidAsBytes[6] = (byte)(mostSignificantBits >>>  8);
+        uuidAsBytes[7] = (byte)(mostSignificantBits >>>  0);
+        uuidAsBytes[8] = (byte)(leastSignificantBits >>> 56);
+        uuidAsBytes[9] = (byte)(leastSignificantBits >>> 48);
+        uuidAsBytes[10] = (byte)(leastSignificantBits >>> 40);
+        uuidAsBytes[11] = (byte)(leastSignificantBits >>> 32);
+        uuidAsBytes[12] = (byte)(leastSignificantBits >>> 24);
+        uuidAsBytes[13] = (byte)(leastSignificantBits >>> 16);
+        uuidAsBytes[14] = (byte)(leastSignificantBits >>>  8);
+        uuidAsBytes[15] = (byte)(leastSignificantBits >>>  0);
+
+        return uuidAsBytes;
     }
 
     private static LibertyBans findLibertyBansInstance() {
