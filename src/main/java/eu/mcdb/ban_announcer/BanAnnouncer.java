@@ -172,7 +172,10 @@ public final class BanAnnouncer {
                     continue;
                 }
 
-                message = message.replace(special + key + special, value);
+                String valueEscaped = value.replace("\"", "\\\"") // Double quote
+                                           .replace("\\", "\\\\");// Backslash
+
+                message = message.replace(special + key + special, valueEscaped);
             }
             return message;
         }
