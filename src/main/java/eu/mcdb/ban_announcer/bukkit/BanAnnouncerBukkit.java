@@ -31,12 +31,13 @@ import eu.mcdb.ban_announcer.bukkit.listener.BetterJailsListener;
 import eu.mcdb.ban_announcer.bukkit.listener.EssentialsJailListener;
 import eu.mcdb.ban_announcer.bukkit.listener.MaxBansListener;
 import eu.mcdb.ban_announcer.config.Config;
-import eu.mcdb.ban_announcer.listener.LibertyBansListener;
+import eu.mcdb.ban_announcer.extension.Extension;
 import eu.mcdb.ban_announcer.listener.LiteBansListener;
 
 public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin {
 
     private BanAnnouncer announcer;
+    private PunishmentListeners pm;
 
     @Override
     public void onEnable() {
@@ -48,16 +49,22 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
 
         this.announcer = new BanAnnouncer(config, spicord);
 
-        PunishmentListeners pm = new PunishmentListeners(getLogger());
+        this.announcer.loadExtensions(new File(getDataFolder(), "extensions"));
+
+        pm = new PunishmentListeners(getLogger());
 
         // General punishments
         pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanListener(this)   , true, "me.leoko.advancedban.Universal");
         pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansListener(this)      , true, "litebans.api.Events");
         pm.addNew("MaxBansPlus", "maxbans"    , () -> new MaxBansListener(this)       , true, "org.maxgamer.maxbans.MaxBansPlus");
-        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansListener(this)   , true, "space.arim.libertybans.api.LibertyBans");
+
         // Jail
         pm.addNew("BetterJails", "betterjails", () -> new BetterJailsListener(this)   , false, "com.github.fefo.betterjails.api.BetterJails");
         pm.addNew("EssentialsX", "essentials" , () -> new EssentialsJailListener(this), false, "net.ess3.api.events.JailStatusChangeEvent");
+
+        for (Extension ext : announcer.getExtensions()) {
+            pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
+        }
 
         String pun = config.getPunishmentManager().toLowerCase();
 
@@ -86,6 +93,9 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
 
     @Override
     public void onDisable() {
+        if (pm != null) {
+            pm.stopAllListeners();
+        }
         if (announcer != null) {
             announcer.disable();
             announcer = null;

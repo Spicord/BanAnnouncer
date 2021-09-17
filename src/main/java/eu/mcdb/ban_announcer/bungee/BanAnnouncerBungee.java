@@ -17,6 +17,8 @@
 
 package eu.mcdb.ban_announcer.bungee;
 
+import java.io.File;
+
 import org.spicord.Spicord;
 import org.spicord.SpicordLoader;
 import eu.mcdb.ban_announcer.BanAnnouncer;
@@ -24,13 +26,14 @@ import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentListeners;
 import eu.mcdb.ban_announcer.bungee.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
-import eu.mcdb.ban_announcer.listener.LibertyBansListener;
+import eu.mcdb.ban_announcer.extension.Extension;
 import eu.mcdb.ban_announcer.listener.LiteBansListener;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlugin {
 
     private BanAnnouncer announcer;
+    private PunishmentListeners pm;
 
     @Override
     public void onEnable() {
@@ -42,12 +45,17 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
         this.announcer = new BanAnnouncer(config, spicord);
 
-        PunishmentListeners pm = new PunishmentListeners(getLogger());
+        this.announcer.loadExtensions(new File(getDataFolder(), "extensions"));
+
+        pm = new PunishmentListeners(getLogger());
 
         // General punishments
-        pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanListener(this)   , true, "me.leoko.advancedban.Universal");
-        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansListener(this)      , true, "litebans.api.Events");
-        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansListener(this)   , true, "space.arim.libertybans.api.LibertyBans");
+        pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanListener(this), true, "me.leoko.advancedban.Universal");
+        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansListener(this)   , true, "litebans.api.Events");
+
+        for (Extension ext : announcer.getExtensions()) {
+            pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
+        }
 
         String pun = config.getPunishmentManager().toLowerCase();
 
@@ -70,6 +78,9 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
     @Override
     public void onDisable() {
+        if (pm != null) {
+            pm.stopAllListeners();
+        }
         if (announcer != null) {
             announcer.disable();
             announcer = null;

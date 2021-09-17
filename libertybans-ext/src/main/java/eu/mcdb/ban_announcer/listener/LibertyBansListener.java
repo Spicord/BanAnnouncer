@@ -1,16 +1,13 @@
 package eu.mcdb.ban_announcer.listener;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentListener;
-import eu.mcdb.ban_announcer.utils.TimeUtils;
 import space.arim.libertybans.api.AddressVictim;
 import space.arim.libertybans.api.LibertyBans;
 import space.arim.libertybans.api.Operator;
@@ -26,6 +23,7 @@ import space.arim.omnibus.Omnibus;
 import space.arim.omnibus.OmnibusProvider;
 import space.arim.omnibus.events.EventBus;
 import space.arim.omnibus.events.RegisteredListener;
+import space.arim.omnibus.util.concurrent.CentralisedFuture;
 
 public class LibertyBansListener extends PunishmentListener {
 
@@ -89,7 +87,7 @@ public class LibertyBansListener extends PunishmentListener {
         if (punishment.isPermanent()) {
             punishment.setDuration("permanent");
         } else {
-            punishment.setDuration(TimeUtils.parseMillis(pun.getEndDateSeconds() * 1000));
+            punishment.setDuration(libertyBans.getFormatter().formatDuration(Duration.ofSeconds(pun.getEndDateSeconds() - pun.getStartDateSeconds())));
         }
 
         switch (pun.getType()) {
@@ -152,48 +150,18 @@ public class LibertyBansListener extends PunishmentListener {
     }
 
     private String getPlayerName(UUID uuid) {
-        final String query = "select `name` from `libertybans_names` where `uuid` = ?";
+        CentralisedFuture<Optional<String>> lookup = libertyBans.getUserResolver().lookupName(uuid);
 
-        try (
-            Connection conn = libertyBans.getDatabase().getConnection();
-            PreparedStatement stmt = conn.prepareStatement(query)
-        ) {
-
-            stmt.setBytes(1, getUuidBytes(uuid));
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next() ? rs.getString("name") : "<Unknown>";
+        try {
+            Optional<String> optional = lookup.get();
+            if (optional.isPresent()) {
+                return optional.get();
             }
-        } catch (SQLException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        return "<DatabaseError>";
-    }
 
-    private byte[] getUuidBytes(UUID uuid) {
-        long mostSignificantBits = uuid.getMostSignificantBits();
-        long leastSignificantBits = uuid.getLeastSignificantBits();
-
-        byte[] uuidAsBytes = new byte[16];
-
-        uuidAsBytes[0] = (byte)(mostSignificantBits >>> 56);
-        uuidAsBytes[1] = (byte)(mostSignificantBits >>> 48);
-        uuidAsBytes[2] = (byte)(mostSignificantBits >>> 40);
-        uuidAsBytes[3] = (byte)(mostSignificantBits >>> 32);
-        uuidAsBytes[4] = (byte)(mostSignificantBits >>> 24);
-        uuidAsBytes[5] = (byte)(mostSignificantBits >>> 16);
-        uuidAsBytes[6] = (byte)(mostSignificantBits >>>  8);
-        uuidAsBytes[7] = (byte)(mostSignificantBits >>>  0);
-        uuidAsBytes[8] = (byte)(leastSignificantBits >>> 56);
-        uuidAsBytes[9] = (byte)(leastSignificantBits >>> 48);
-        uuidAsBytes[10] = (byte)(leastSignificantBits >>> 40);
-        uuidAsBytes[11] = (byte)(leastSignificantBits >>> 32);
-        uuidAsBytes[12] = (byte)(leastSignificantBits >>> 24);
-        uuidAsBytes[13] = (byte)(leastSignificantBits >>> 16);
-        uuidAsBytes[14] = (byte)(leastSignificantBits >>>  8);
-        uuidAsBytes[15] = (byte)(leastSignificantBits >>>  0);
-
-        return uuidAsBytes;
+        return "<Unknown>";
     }
 
     private static LibertyBans findLibertyBansInstance() {

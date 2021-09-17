@@ -19,6 +19,8 @@ package eu.mcdb.ban_announcer;
 
 import static eu.mcdb.ban_announcer.PunishmentAction.Type.*;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +33,9 @@ import java.util.logging.Logger;
 import eu.mcdb.ban_announcer.addon.BanAnnouncerAddon;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.config.Messages;
+import eu.mcdb.ban_announcer.extension.Extension;
+import eu.mcdb.ban_announcer.extension.ExtensionClassLoader;
+
 import org.spicord.Spicord;
 import org.spicord.bot.DiscordBot;
 import org.spicord.embed.Embed;
@@ -39,6 +44,8 @@ import lombok.Getter;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 public final class BanAnnouncer {
+
+    private Set<Extension> allExtensions = new HashSet<Extension>(0);
 
     @Getter private Config config;
     @Getter private Logger logger;
@@ -132,12 +139,15 @@ public final class BanAnnouncer {
     }
 
     public void disable() {
+        for (Extension ext : allExtensions) {
+            ext.unload();
+        }
+        allExtensions.clear();
         callbacks.clear();
         bots.clear();
         enabled = false;
         config = null;
         callbacks = null;
-        bots = null;
     }
 
     private class MessageFormatter {
@@ -179,5 +189,39 @@ public final class BanAnnouncer {
             }
             return message;
         }
+    }
+
+    public Set<Extension> loadExtensions(File folder) {
+        if (folder.mkdirs()) {
+            return Collections.emptySet();
+        }
+
+        File[] files = folder.listFiles((d, name) -> name.endsWith(".jar")||name.endsWith(".ext"));
+
+        Set<Extension> extensions = new HashSet<>(files.length, 1.0f);
+
+        for (File file : files) {
+            @SuppressWarnings("resource")
+            ExtensionClassLoader loader = new ExtensionClassLoader(file);
+
+            Extension ext = loader.getExtension();
+
+            if (ext == null) {
+                loader.close();
+                continue; // TODO: warning?
+            }
+
+            extensions.add(ext);
+
+            logger.info("Loaded " + ext.getName() + " extension.");
+        }
+
+        allExtensions.addAll(extensions);
+
+        return extensions;
+    }
+
+    public Set<Extension> getExtensions() {
+        return allExtensions;
     }
 }
