@@ -29,7 +29,7 @@ public final class BanAnnouncerAddon extends SimpleAddon {
     private BanAnnouncer announcer;
 
     public BanAnnouncerAddon(BanAnnouncer announcer) {
-        super("BanAnnouncer", "ban_announcer", "Sheidy", "2.3.0", new String[] { "bareload" });
+        super("BanAnnouncer", "ban_announcer", "Sheidy", "2.4.0", new String[] { "bareload" });
         this.announcer = announcer;
     }
 
