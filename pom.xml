@@ -5,7 +5,7 @@
 
     <groupId>eu.mcdb</groupId>
     <artifactId>ban-announcer</artifactId>
-    <version>2.4.0</version>
+    <version>2.5.0</version>
     <name>BanAnnouncer</name>
 
     <repositories>
@@ -18,6 +18,10 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
         <repository>
+            <id>velocity-repo</id>
+            <url>https://repo.velocitypowered.com/snapshots/</url>
+        </repository>
+        <repository>
             <id>jcenter</id>
             <url>https://jcenter.bintray.com</url>
         </repository>
@@ -25,6 +29,11 @@
             <!-- Spicord, LiteBansAPI, AdvancedBan and MaxBansPlus -->
             <id>spicord-repo</id>
             <url>https://repo.spicord.org/</url>
+        </repository>
+        <repository>
+            <!-- LibertyBans -->
+            <id>arim-mvn-agpl3</id>
+            <url>https://mvn-repo.arim.space/affero-gpl3/</url>
         </repository>
         <repository>
             <!-- BetterJails -->
@@ -52,6 +61,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.velocitypowered</groupId>
+            <artifactId>velocity-api</artifactId>
+            <version>3.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.spicord</groupId>
             <artifactId>spicord-common</artifactId>
             <version>4.0.0</version>
@@ -67,6 +82,12 @@
             <groupId>org.spicord</groupId>
             <artifactId>JDA</artifactId>
             <version>4.2.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>space.arim.libertybans</groupId>
+            <artifactId>bans-api</artifactId>
+            <version>0.7.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -108,6 +129,7 @@
     </dependencies>
 
     <properties>
+        <maven.compiler.release>1.8</maven.compiler.release>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -32,6 +32,7 @@ import eu.mcdb.ban_announcer.bukkit.listener.EssentialsJailListener;
 import eu.mcdb.ban_announcer.bukkit.listener.MaxBansListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.extension.Extension;
+import eu.mcdb.ban_announcer.listener.LibertyBansListener;
 import eu.mcdb.ban_announcer.listener.LiteBansListener;
 
 public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin {
@@ -57,6 +58,7 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
         pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanListener(this)   , true, "me.leoko.advancedban.Universal");
         pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansListener(this)      , true, "litebans.api.Events");
         pm.addNew("MaxBansPlus", "maxbans"    , () -> new MaxBansListener(this)       , true, "org.maxgamer.maxbans.MaxBansPlus");
+        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansListener(this)   , true, "space.arim.libertybans.api.LibertyBans");
 
         // Jail
         pm.addNew("BetterJails", "betterjails", () -> new BetterJailsListener(this)   , false, "com.github.fefo.betterjails.api.BetterJails");

@@ -1,7 +1,0 @@
-{
-"name":"LibertyBans",
-"key":"libertybans",
-"class":"eu.mcdb.ban_announcer.listener.LibertyBansListener",
-"requiredClass":"space.arim.libertybans.api.LibertyBans",
-"isJailManager":"false"
-}

@@ -27,6 +27,7 @@ import eu.mcdb.ban_announcer.PunishmentListeners;
 import eu.mcdb.ban_announcer.bungee.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.extension.Extension;
+import eu.mcdb.ban_announcer.listener.LibertyBansListener;
 import eu.mcdb.ban_announcer.listener.LiteBansListener;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -52,6 +53,7 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
         // General punishments
         pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanListener(this), true, "me.leoko.advancedban.Universal");
         pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansListener(this)   , true, "litebans.api.Events");
+        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansListener(this), true, "space.arim.libertybans.api.LibertyBans");
 
         for (Extension ext : announcer.getExtensions()) {
             pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
