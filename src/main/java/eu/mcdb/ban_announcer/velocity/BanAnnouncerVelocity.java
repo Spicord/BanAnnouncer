@@ -18,6 +18,7 @@ import com.velocitypowered.api.proxy.ProxyServer;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentListeners;
+import eu.mcdb.ban_announcer.ReloadCommand;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.extension.Extension;
 import eu.mcdb.ban_announcer.listener.LibertyBansListener;
@@ -63,6 +64,8 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
 
     private void onSpicordLoad(Spicord spicord) {
         config = new Config(this);
+
+        new ReloadCommand().register(this);
 
         this.announcer = new BanAnnouncer(config, spicord);
 

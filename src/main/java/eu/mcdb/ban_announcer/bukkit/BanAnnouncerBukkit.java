@@ -26,6 +26,7 @@ import org.spicord.SpicordLoader;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentListeners;
+import eu.mcdb.ban_announcer.ReloadCommand;
 import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.bukkit.listener.BetterJailsListener;
 import eu.mcdb.ban_announcer.bukkit.listener.EssentialsJailListener;
@@ -47,6 +48,8 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
 
     private void onSpicordLoad(Spicord spicord) {
         Config config = new Config(this);
+
+        new ReloadCommand().register(this);
 
         this.announcer = new BanAnnouncer(config, spicord);
 

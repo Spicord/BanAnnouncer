@@ -24,6 +24,7 @@ import org.spicord.SpicordLoader;
 import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentListeners;
+import eu.mcdb.ban_announcer.ReloadCommand;
 import eu.mcdb.ban_announcer.bungee.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.extension.Extension;
@@ -43,6 +44,8 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
     private void onSpicordLoad(Spicord spicord) {
         Config config = new Config(this);
+
+        new ReloadCommand().register(this);
 
         this.announcer = new BanAnnouncer(config, spicord);
 
