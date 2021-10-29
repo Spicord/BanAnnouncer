@@ -39,6 +39,7 @@ messages:
 #     advancedban = Use AdvancedBan
 #     litebans    = Use LiteBans
 #     maxbans     = Use MaxBansPlus
+#     libertybans = Use LibertyBans
 punishment-manager: auto
 
 # The plugin used for manage the jails (spigot-only)
