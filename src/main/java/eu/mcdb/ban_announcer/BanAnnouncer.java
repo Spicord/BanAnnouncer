@@ -41,6 +41,7 @@ import org.spicord.bot.DiscordBot;
 import org.spicord.embed.Embed;
 import org.spicord.embed.EmbedSender;
 import lombok.Getter;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
 public final class BanAnnouncer {
@@ -52,13 +53,12 @@ public final class BanAnnouncer {
     @Getter private boolean enabled = true;
 
     private Map<PunishmentAction.Type, Function<PunishmentAction, Embed>> callbacks;
-    private Set<DiscordBot> bots;
+    private DiscordBot bot;
 
     public BanAnnouncer(Config config, Spicord spicord) {
         this.config = config;
         this.logger = config.getLogger();
 
-        this.bots = new HashSet<>();
         this.callbacks = new EnumMap<>(PunishmentAction.Type.class);
 
         BiFunction<PunishmentAction, Embed, Embed> builder;
@@ -113,29 +113,29 @@ public final class BanAnnouncer {
             return;
         }
 
-        bots.stream().filter(DiscordBot::isReady).map(DiscordBot::getJda).forEach(jda -> {
-            config.getChannelsToAnnounce().forEach(channelId -> {
-                MessageChannel channel = jda.getTextChannelById(channelId);
+        JDA jda = bot.getJda();
 
-                if (channel == null) {
-                    logger.severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");
-                } else {
-                    EmbedSender.prepare(channel, message).queue(success -> {
-                        logger.info("The punishment message was sent.");
-                    }, fail -> {
-                        logger.warning("Couldn't send the punishment message: " + fail.getMessage());
-                    });
-                }
+        long channelId = config.getChannelsToAnnounce().get(0);
+
+        MessageChannel channel = jda.getTextChannelById(channelId);
+
+        if (channel == null) {
+            logger.severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");
+        } else {
+            EmbedSender.prepare(channel, message).queue(success -> {
+                logger.info("The punishment message was sent.");
+            }, fail -> {
+                logger.warning("Couldn't send the punishment message: " + fail.getMessage());
             });
-        });
+        }
     }
 
-    public void addBot(DiscordBot bot) {
-        bots.add(bot);
+    public void setBot(DiscordBot bot) {
+        this.bot = bot;
     }
 
     public void removeBot(DiscordBot bot) {
-        bots.remove(bot);
+        this.bot = null;
     }
 
     public void disable() {
@@ -144,7 +144,7 @@ public final class BanAnnouncer {
         }
         allExtensions.clear();
         callbacks.clear();
-        bots.clear();
+        bot = null;
         enabled = false;
         config = null;
         callbacks = null;
