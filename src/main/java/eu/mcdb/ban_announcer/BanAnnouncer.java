@@ -22,10 +22,8 @@ import static eu.mcdb.ban_announcer.PunishmentAction.Type.*;
 import java.io.File;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -148,47 +146,6 @@ public final class BanAnnouncer {
         enabled = false;
         config = null;
         callbacks = null;
-    }
-
-    private class MessageFormatter {
-
-        private final Map<String, String> map;
-        private final char special;
-
-        public MessageFormatter(char c) {
-            this.map = new HashMap<String, String>();
-            this.special = c;
-        }
-
-        public MessageFormatter() {
-            this('%');
-        }
-
-        public MessageFormatter setString(String key, String value) {
-            map.put(key, value);
-            return this;
-        }
-
-        public Embed format(Embed embed) {
-            return embed == null ? null : Embed.fromJson(format(embed.toJson()));
-        }
-
-        public String format(String message) {
-            for (Entry<String, String> entry : map.entrySet()) {
-                String key = entry.getKey();
-                String value = entry.getValue();
-
-                if (value == null) {
-                    continue;
-                }
-
-                String valueEscaped = value.replace("\"", "\\\"") // Double quote
-                                           .replace("\\", "\\\\");// Backslash
-
-                message = message.replace(special + key + special, valueEscaped);
-            }
-            return message;
-        }
     }
 
     public Set<Extension> loadExtensions(File folder) {
