@@ -27,6 +27,7 @@ import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentListeners;
 import eu.mcdb.ban_announcer.ReloadCommand;
+import eu.mcdb.ban_announcer.addon.BanAnnouncerAddon;
 import eu.mcdb.ban_announcer.bukkit.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.bukkit.listener.BetterJailsListener;
 import eu.mcdb.ban_announcer.bukkit.listener.EssentialsJailListener;
@@ -84,6 +85,8 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
         if (!"off".equals(jail)) { // Jail enabled
             pm.startListener(jail);
         }
+
+        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
     @Override
@@ -105,5 +108,10 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
             announcer.disable();
             announcer = null;
         }
+    }
+
+    @Override
+    public String getVersion() {
+        return getDescription().getVersion();
     }
 }

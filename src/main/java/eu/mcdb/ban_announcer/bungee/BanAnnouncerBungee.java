@@ -25,6 +25,7 @@ import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentListeners;
 import eu.mcdb.ban_announcer.ReloadCommand;
+import eu.mcdb.ban_announcer.addon.BanAnnouncerAddon;
 import eu.mcdb.ban_announcer.bungee.listener.AdvancedBanListener;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.extension.Extension;
@@ -75,6 +76,8 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
         if (!"off".equals(jail)) { // Jail enabled
             getLogger().warning("Jails are not supported on BungeeCord!");
         }
+
+        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
     public BanAnnouncer getAnnouncer() {
@@ -90,5 +93,10 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
             announcer.disable();
             announcer = null;
         }
+    }
+
+    @Override
+    public String getVersion() {
+        return getDescription().getVersion();
     }
 }

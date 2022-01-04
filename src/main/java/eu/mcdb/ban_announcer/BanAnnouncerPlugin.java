@@ -12,4 +12,6 @@ public interface BanAnnouncerPlugin {
     public File getFile();
 
     public BanAnnouncer getAnnouncer();
+
+    public String getVersion();
 }

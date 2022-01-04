@@ -9,7 +9,6 @@ import org.spicord.reflect.ReflectUtils;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
-import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
@@ -19,6 +18,7 @@ import eu.mcdb.ban_announcer.BanAnnouncer;
 import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentListeners;
 import eu.mcdb.ban_announcer.ReloadCommand;
+import eu.mcdb.ban_announcer.addon.BanAnnouncerAddon;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.extension.Extension;
 import eu.mcdb.ban_announcer.listener.LibertyBansListener;
@@ -26,7 +26,7 @@ import eu.mcdb.ban_announcer.listener.LibertyBansListener;
 @Plugin(
     id = "ban_announcer",
     name = "BanAnnouncer",
-    version = "2.5.0",
+    version = "2.5.2",
     authors = { "Sheidy" },
     dependencies = {
         @Dependency(id = "spicord", optional = false),
@@ -45,23 +45,6 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
         SpicordLoader.addStartupListener(this::onSpicordLoad);
     }
 
-    @Subscribe
-    public void onInitialize(ProxyInitializeEvent event) {
-        String pun = config.getPunishmentManager().toLowerCase();
-
-        if ("auto".equals(pun)) {
-            pm.autoDetect();
-        } else {
-            pm.startListener(pun);
-        }
-
-        String jail = config.getJailManager().toLowerCase();
-
-        if (!"off".equals(jail)) { // Jail enabled
-            pm.startListener(jail);
-        }
-    }
-
     private void onSpicordLoad(Spicord spicord) {
         config = new Config(this);
 
@@ -78,6 +61,22 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
         for (Extension ext : announcer.getExtensions()) {
             pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
         }
+
+        String pun = config.getPunishmentManager().toLowerCase();
+
+        if ("auto".equals(pun)) {
+            pm.autoDetect();
+        } else {
+            pm.startListener(pun);
+        }
+
+        String jail = config.getJailManager().toLowerCase();
+
+        if (!"off".equals(jail)) { // Jail enabled
+            pm.startListener(jail);
+        }
+
+        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
     @Override
@@ -99,5 +98,14 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
             announcer.disable();
             announcer = null;
         }
+    }
+
+    @Override
+    public String getVersion() {
+        Plugin info = BanAnnouncerVelocity.class.getAnnotation(Plugin.class);
+        if (info == null) {
+            return "unknown";
+        }
+        return info.version();
     }
 }

@@ -90,8 +90,6 @@ public final class BanAnnouncer {
         callbacks.put(TEMPBANIP, callbacks.get(BANIP));
         callbacks.put(TEMPMUTE,  callbacks.get(MUTE));
         callbacks.put(TEMPWARN,  callbacks.get(WARN));
-
-        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
     public void handlePunishmentAction(PunishmentAction punishment) {
