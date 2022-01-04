@@ -21,14 +21,15 @@ import org.spicord.api.addon.SimpleAddon;
 import org.spicord.bot.DiscordBot;
 
 import eu.mcdb.ban_announcer.BanAnnouncer;
+import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 
 public final class BanAnnouncerAddon extends SimpleAddon {
 
     private BanAnnouncer announcer;
 
-    public BanAnnouncerAddon(BanAnnouncer announcer) {
-        super("BanAnnouncer", "ban_announcer", "Sheidy", "2.5.0");
-        this.announcer = announcer;
+    public BanAnnouncerAddon(BanAnnouncerPlugin plugin) {
+        super("BanAnnouncer", "ban_announcer", "Sheidy", plugin.getVersion());
+        this.announcer = plugin.getAnnouncer();
     }
 
     @Override
