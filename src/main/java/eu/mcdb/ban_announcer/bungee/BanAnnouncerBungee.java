@@ -63,18 +63,18 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
             pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
         }
 
-        String pun = config.getPunishmentManager().toLowerCase();
+        final String pun = config.getPunishmentManager().toLowerCase();
 
         if ("auto".equals(pun)) {
             pm.autoDetect();
         } else {
-            pm.startListener(pun);
+            pm.startPunishListener(pun);
         }
 
-        String jail = config.getJailManager().toLowerCase();
+        final String jail = config.getJailManager().toLowerCase();
 
         if (!"off".equals(jail)) { // Jail enabled
-            getLogger().warning("Jails are not supported on BungeeCord!");
+            pm.startJailListener(jail);
         }
 
         spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
