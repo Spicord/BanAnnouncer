@@ -67,13 +67,13 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
         if ("auto".equals(pun)) {
             pm.autoDetect();
         } else {
-            pm.startListener(pun);
+            pm.startPunishListener(pun);
         }
 
         String jail = config.getJailManager().toLowerCase();
 
         if (!"off".equals(jail)) { // Jail enabled
-            pm.startListener(jail);
+            pm.startJailListener(jail);
         }
 
         spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));

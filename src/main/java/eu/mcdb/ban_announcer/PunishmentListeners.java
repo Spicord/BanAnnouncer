@@ -42,7 +42,7 @@ public class PunishmentListeners {
         logger.severe("[AutoDetect] No compatible plugin found. BanAnnouncer will not work!.");
     }
 
-    public void startListener(String key) {
+    public void startPunishListener(String key) {
         if (punishListeners.containsKey(key)) {
             PunishmentManagerInfo info = punishListeners.get(key);
 
@@ -56,7 +56,24 @@ public class PunishmentListeners {
                 logger.severe("You choose " + info.getName() + " but you don't have it installed, BanAnnouncer will not work!.");
             }
         } else {
-            
+            logger.severe("You choose " + key + " but I don't know what that is!");
+        }
+    }
+    public void startJailListener(String key) {
+        if (jailListeners.containsKey(key)) {
+            PunishmentManagerInfo info = jailListeners.get(key);
+
+            if (isClassPresent(info.getClassToDetect())) {
+                PunishmentListener listener = info.newInstance();
+                activeListeners.add(new ActiveListenerEntry(info, listener));
+                listener.register();
+
+                logger.info("Using " + info.getName() + " as the jail manager.");
+            } else {
+                logger.severe("You choose " + info.getName() + " but you don't have it installed, BanAnnouncer will not work!.");
+            }
+        } else {
+            logger.severe("You choose " + key + " but I don't know what that is!");
         }
     }
 
