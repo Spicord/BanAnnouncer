@@ -73,7 +73,7 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
         final String jail = config.getJailManager().toLowerCase();
 
-        if (!"off".equals(jail)) { // Jail enabled
+        if (config.isJailManagerEnabled()) { // Jail enabled
             pm.startJailListener(jail);
         }
 

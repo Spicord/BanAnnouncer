@@ -66,6 +66,10 @@ public class Config {
         this.loadConfig(false);
     }
 
+    public boolean isJailManagerEnabled() {
+        return !("off".equals(jailManager) || "false".equals(jailManager));
+    }
+
     public void reload() {
         this.loadConfig(true);
     }
