@@ -82,7 +82,7 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
 
         String jail = config.getJailManager().toLowerCase();
 
-        if (!("off".equals(jail) || "false".equals(jail))) { // Jail enabled
+        if (config.isJailManagerEnabled()) { // Jail enabled
             pm.startJailListener(jail);
         }
 
