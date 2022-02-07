@@ -29,7 +29,7 @@ public class EssentialsJailListener extends BukkitPunishmentListener {
             punishment.setType(gotJailed ? Type.JAIL : Type.UNJAIL);
             punishment.setJail(user.getJail());
             punishment.setPlayer(user.getName());
-            punishment.setOperator(staff.getName());
+            punishment.setOperator(staff == null ? getAnnouncer().getConfig().getConsoleName() : staff.getName());
 
             handlePunishment(punishment);
         }, 20);
