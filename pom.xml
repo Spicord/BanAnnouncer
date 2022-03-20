@@ -87,7 +87,7 @@
         <dependency>
             <groupId>space.arim.libertybans</groupId>
             <artifactId>bans-api</artifactId>
-            <version>0.7.6</version>
+            <version>1.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

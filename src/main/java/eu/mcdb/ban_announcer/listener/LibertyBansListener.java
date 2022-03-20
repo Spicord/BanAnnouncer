@@ -9,6 +9,7 @@ import eu.mcdb.ban_announcer.BanAnnouncerPlugin;
 import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentListener;
 import space.arim.libertybans.api.AddressVictim;
+import space.arim.libertybans.api.CompositeVictim;
 import space.arim.libertybans.api.LibertyBans;
 import space.arim.libertybans.api.Operator;
 import space.arim.libertybans.api.Operator.OperatorType;
@@ -139,6 +140,9 @@ public class LibertyBansListener extends PunishmentListener {
         }
         if (victim.getType() == VictimType.ADDRESS) {
             return ((AddressVictim) victim).getAddress().toInetAddress().getHostAddress();
+        }
+        if (victim.getType() == VictimType.COMPOSITE) {
+            return getPlayerName(((CompositeVictim) victim).getUUID());
         }
         return "<Unknown>";
     }
