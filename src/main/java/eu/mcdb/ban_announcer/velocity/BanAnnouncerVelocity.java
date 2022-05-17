@@ -28,7 +28,7 @@ import eu.mcdb.ban_announcer.listener.LiteBansListener;
 @Plugin(
     id = "ban_announcer",
     name = "BanAnnouncer",
-    version = "2.5.2",
+    version = "2.6.1",
     authors = { "Sheidy" },
     dependencies = {
         @Dependency(id = "spicord", optional = false),
