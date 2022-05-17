@@ -108,6 +108,11 @@ public final class BanAnnouncer {
             return;
         }
 
+        if (bot == null || bot.getJda() == null) {
+            logger.warning("BanAnnouncer does not have access to an active bot.");
+            return;
+        }
+
         JDA jda = bot.getJda();
 
         long channelId = config.getChannelsToAnnounce().get(0);
