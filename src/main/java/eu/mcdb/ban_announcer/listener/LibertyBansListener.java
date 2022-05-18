@@ -79,7 +79,7 @@ public class LibertyBansListener extends PunishmentListener {
                 ? getAnnouncer().getConfig().getConsoleName()
                 : getOperatorName(operator);
 
-        punishment.setId(Integer.toString(pun.getID()));
+        punishment.setId(Long.toString(pun.getIdentifier()));
         punishment.setOperator(operatorName);
         punishment.setPlayer(getVictimName(pun.getVictim()));
         punishment.setReason(pun.getReason());
