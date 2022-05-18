@@ -23,15 +23,17 @@ import eu.mcdb.ban_announcer.addon.BanAnnouncerAddon;
 import eu.mcdb.ban_announcer.config.Config;
 import eu.mcdb.ban_announcer.extension.Extension;
 import eu.mcdb.ban_announcer.listener.LibertyBansListener;
+import eu.mcdb.ban_announcer.listener.LiteBansListener;
 
 @Plugin(
     id = "ban_announcer",
     name = "BanAnnouncer",
-    version = "2.5.2",
+    version = "2.6.1",
     authors = { "Sheidy" },
     dependencies = {
         @Dependency(id = "spicord", optional = false),
-        @Dependency(id = "libertybans", optional = true)
+        @Dependency(id = "libertybans", optional = true),
+        @Dependency(id = "litebans", optional = true)
     }
 )
 public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncerPlugin {
@@ -62,6 +64,7 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
         pm = new PunishmentListeners(getLogger());
 
         pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansListener(this), true, "space.arim.libertybans.api.LibertyBans");
+        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansListener(this)   , true, "litebans.api.Events");
 
         for (Extension ext : announcer.getExtensions()) {
             pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
