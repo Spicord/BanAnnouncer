@@ -9,6 +9,7 @@ import eu.mcdb.ban_announcer.PunishmentAction;
 import eu.mcdb.ban_announcer.PunishmentAction.Type;
 import eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit;
 import eu.mcdb.ban_announcer.bukkit.BukkitPunishmentListener;
+import eu.mcdb.ban_announcer.utils.TimeUtils;
 
 public class BetterJailsListener extends BukkitPunishmentListener {
 
@@ -45,9 +46,16 @@ public class BetterJailsListener extends BukkitPunishmentListener {
 
         PunishmentAction punishment = new PunishmentAction(released ? Type.UNJAIL : Type.JAIL);
 
+        long durationMillis = prisoner.jailedUntil().toEpochMilli() - System.currentTimeMillis();
+
         punishment.setJail(jail);
         punishment.setPlayer(player);
         punishment.setOperator(operator);
+        punishment.setDuration(TimeUtils.parseMillis(durationMillis));
+
+        if (released && durationMillis <= 0) {
+            punishment.setOperator(getPlugin().getAnnouncer().getConfig().getExpiredOperatorName());
+        }
 
         handlePunishment(punishment);
     }
