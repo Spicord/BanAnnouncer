@@ -80,16 +80,22 @@ public class LibertyBansListener extends PunishmentListener {
                 : getOperatorName(operator);
 
         punishment.setId(Long.toString(pun.getIdentifier()));
-        punishment.setOperator(operatorName);
-        punishment.setPlayer(getVictimName(pun.getVictim()));
-        punishment.setReason(pun.getReason());
-        punishment.setPermanent(pun.isPermanent());
 
-        if (punishment.isPermanent()) {
-            punishment.setDuration("permanent");
+        if (isRevoked && pun.isExpired()) {
+            punishment.setOperator(getAnnouncer().getConfig().getExpiredOperatorName());
         } else {
-            punishment.setDuration(libertyBans.getFormatter().formatDuration(Duration.ofSeconds(pun.getEndDateSeconds() - pun.getStartDateSeconds())));
+            punishment.setOperator(operatorName);
+            punishment.setReason(pun.getReason());
+            punishment.setPermanent(pun.isPermanent());
+
+            if (punishment.isPermanent()) {
+                punishment.setDuration("permanent");
+            } else {
+                punishment.setDuration(libertyBans.getFormatter().formatDuration(Duration.ofSeconds(pun.getEndDateSeconds() - pun.getStartDateSeconds())));
+            }
         }
+
+        punishment.setPlayer(getVictimName(pun.getVictim()));
 
         switch (pun.getType()) {
         case BAN:
