@@ -28,7 +28,7 @@ import eu.mcdb.ban_announcer.listener.LiteBansListener;
 @Plugin(
     id = "ban_announcer",
     name = "BanAnnouncer",
-    version = "2.6.1",
+    version = "2.6.3",
     authors = { "Sheidy" },
     dependencies = {
         @Dependency(id = "spicord", optional = false),
@@ -60,6 +60,10 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
         this.announcer = new BanAnnouncer(config, spicord);
 
         this.announcer.loadExtensions(new File(getDataFolder(), "extensions"));
+
+        if (pm != null) {
+            pm.stopAllListeners();
+        }
 
         pm = new PunishmentListeners(getLogger());
 

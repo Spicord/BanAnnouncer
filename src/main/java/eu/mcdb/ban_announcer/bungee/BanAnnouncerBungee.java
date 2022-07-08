@@ -52,6 +52,10 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
         this.announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
+        if (pm != null) {
+            pm.stopAllListeners();
+        }
+
         pm = new PunishmentListeners(getLogger());
 
         // General punishments
