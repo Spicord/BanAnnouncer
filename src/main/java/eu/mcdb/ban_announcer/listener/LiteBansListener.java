@@ -116,7 +116,7 @@ public final class LiteBansListener extends PunishmentListener {
 
             final ResultSet rs = stmt.executeQuery();
 
-            if (rs.first())
+            if (rs.next())
                 return rs.getString(1);
         } catch (SQLException e) {
             e.printStackTrace();
