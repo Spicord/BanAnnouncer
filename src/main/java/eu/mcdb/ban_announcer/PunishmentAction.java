@@ -34,6 +34,9 @@ public final class PunishmentAction {
     private boolean permanent = false;
     private Type type;
 
+    private long dateStart;
+	private long dateEnd;
+
     public PunishmentAction() {}
 
     public PunishmentAction(Type type) {
@@ -76,4 +79,12 @@ public final class PunishmentAction {
         NOTE, UNNOTE // AdvancedBan only
         ;
     }
+
+	public void setStart(long dateStart) {
+		this.dateStart = dateStart;
+	}
+
+	public void setEnd(long dateEnd) {
+		this.dateEnd = dateEnd;
+	}
 }

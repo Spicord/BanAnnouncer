@@ -49,6 +49,11 @@ public final class AdvancedBanUtil {
             punishment.setPermanent(punishment.getDuration().equals("permanent"));
         }
 
+        if (!punishment.isPermanent()) {
+        	punishment.setStart(pun.getStart());
+        	punishment.setEnd(pun.getEnd());
+        }
+
         switch (pun.getType()) {
         case KICK:
             punishment.setType(Type.KICK);

@@ -60,14 +60,30 @@ public final class BanAnnouncer {
 
         BiFunction<PunishmentAction, Embed, Embed> builder;
 
-        builder = (punishment, template) -> new MessageFormatter()
-                .setString("id",       punishment.getId())
-                .setString("player",   punishment.getPlayer())
-                .setString("staff",    punishment.getOperator())
-                .setString("reason",   punishment.getReason())
-                .setString("duration", punishment.getDuration())
-                .setString("jail",     punishment.getJail())
-                .format(template);
+        builder = (punishment, template) -> {
+        	MessageFormatter mf = new MessageFormatter()
+	            .setString("id",       punishment.getId())
+	            .setString("player",   punishment.getPlayer())
+	            .setString("staff",    punishment.getOperator())
+	            .setString("reason",   punishment.getReason())
+	            .setString("duration", punishment.getDuration())
+	            .setString("jail",     punishment.getJail())
+            ;
+
+        	if (!punishment.isPermanent()) {
+        		long startSec = punishment.getDateStart() / 1000L;
+        		long endSec = punishment.getDateEnd() / 1000L;
+
+        		for (String fmt : new String[] { "t", "T", "d", "D", "f", "F", "R" }) {
+            		mf
+	                	.setString("date_start_" + fmt, "<t:" + startSec + ":" + fmt + ">")
+	                	.setString("date_end_" + fmt,   "<t:" + endSec + ":" + fmt + ">")
+	            	;
+        		}
+        	}
+
+			return mf.format(template);
+        };
 
         Messages messages = config.getMessages();
 
