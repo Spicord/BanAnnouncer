@@ -137,6 +137,11 @@ public class LibertyBansListener extends PunishmentListener {
             break;
         }
 
+        if (!punishment.isPermanent()) {
+        	punishment.setStart(pun.getStartDateSeconds() * 1000);
+        	punishment.setEnd(pun.getEndDateSeconds() * 1000);
+        }
+
         handlePunishment(punishment);
     }
 

@@ -78,7 +78,7 @@ public final class LiteBansListener extends PunishmentListener {
             throw new IllegalStateException("Unknown punishment type '" + entry.getType() + "'.");
         }
 
-        final String name = getPlayerName(entry.getUuid());
+		final String name = getPlayerName(entry.getUuid());
 
         if (name == null) {
             throw new IllegalStateException("Couldn't fetch player name from UUID '" + entry.getUuid() + "'. The message was not sent.");
@@ -103,6 +103,11 @@ public final class LiteBansListener extends PunishmentListener {
             punishment.setPermanent(entry.isPermanent());
             punishment.setReason(entry.getReason());
             punishment.setDuration(entry.getDurationString());
+        }
+
+        if (!punishment.isPermanent()) {
+        	punishment.setStart(entry.getDateStart());
+        	punishment.setEnd(entry.getDateEnd());
         }
 
         handlePunishment(punishment);
