@@ -1,6 +1,6 @@
 name: BanAnnouncer
-author: OopsieWoopsie
-main: eu.mcdb.ban_announcer.bukkit.BanAnnouncerBukkit
+author: Tini
+main: me.tini.announcer.bukkit.BanAnnouncerBukkit
 version: ${project.version}
 depend: [Spicord]
 softdepend: [AdvancedBan, LiteBans, MaxBansPlus, Essentials, BetterJails]
