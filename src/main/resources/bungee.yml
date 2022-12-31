@@ -1,6 +1,6 @@
 name: BanAnnouncer
-author: OopsieWoopsie
-main: eu.mcdb.ban_announcer.bungee.BanAnnouncerBungee
+author: Tini
+main: me.tini.announcer.bungee.BanAnnouncerBungee
 version: ${project.version}
 depends: [Spicord]
 softdepends: [AdvancedBan, LiteBans]
