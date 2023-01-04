@@ -106,9 +106,10 @@ public final class LiteBansListener extends PunishmentListener {
             }
         } else {
             punishment.setPermanent(entry.isPermanent());
-            punishment.setReason(entry.getReason());
             punishment.setDuration(entry.getDurationString());
         }
+
+        punishment.setReason(entry.getReason());
 
         if (!punishment.isPermanent()) {
         	punishment.setStart(entry.getDateStart());
