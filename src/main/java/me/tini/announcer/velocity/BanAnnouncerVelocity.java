@@ -28,8 +28,8 @@ import me.tini.announcer.listener.LiteBansListener;
 @Plugin(
     id = "ban_announcer",
     name = "BanAnnouncer",
-    version = "2.6.3",
-    authors = { "Sheidy" },
+    version = "2.7",
+    authors = { "Tini" },
     dependencies = {
         @Dependency(id = "spicord", optional = false),
         @Dependency(id = "libertybans", optional = true),
