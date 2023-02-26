@@ -39,7 +39,7 @@ import me.tini.announcer.config.Messages;
 import me.tini.announcer.extension.Extension;
 import me.tini.announcer.extension.ExtensionClassLoader;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public final class BanAnnouncer {
 
@@ -137,7 +137,7 @@ public final class BanAnnouncer {
 
         long channelId = config.getChannelsToAnnounce().get(0);
 
-        MessageChannel channel = jda.getTextChannelById(channelId);
+        TextChannel channel = jda.getTextChannelById(channelId);
 
         if (channel == null) {
             logger.severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");
