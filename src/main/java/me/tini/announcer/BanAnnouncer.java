@@ -39,7 +39,8 @@ import me.tini.announcer.config.Messages;
 import me.tini.announcer.extension.Extension;
 import me.tini.announcer.extension.ExtensionClassLoader;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 
 public final class BanAnnouncer {
 
@@ -88,7 +89,7 @@ public final class BanAnnouncer {
 
 			return mf.format(template);
         };
-
+ 
         Messages messages = config.getMessages();
 
         callbacks.put(BAN,     p -> builder.apply(p, p.isPermanent() ? messages.getBan() : messages.getTempban()));
@@ -137,12 +138,13 @@ public final class BanAnnouncer {
 
         long channelId = config.getChannelsToAnnounce().get(0);
 
-        TextChannel channel = jda.getTextChannelById(channelId);
+        GuildChannel channel = jda.getGuildChannelById(channelId);
 
-        if (channel == null) {
+        if (channel == null || !(channel instanceof GuildMessageChannel)) {
             logger.severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");
+            return;
         } else {
-            EmbedSender.prepare(channel, message).queue(success -> {
+            EmbedSender.prepare((GuildMessageChannel) channel, message).queue(success -> {
                 logger.info("The punishment message was sent.");
             }, fail -> {
                 logger.warning("Couldn't send the punishment message: " + fail.getMessage());
