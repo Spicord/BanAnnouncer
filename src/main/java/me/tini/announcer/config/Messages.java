@@ -96,7 +96,9 @@ public final class Messages {
             final String embedName = message.substring(7, message.length() - 1).trim();
 
             return embedLoader.getEmbedByName(embedName);
-        } else if (!message.isEmpty()) {
+        }
+
+        if (!message.isEmpty()) {
             return Embed.fromString(message);
         }
 
