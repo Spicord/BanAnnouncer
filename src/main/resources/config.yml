@@ -1,7 +1,6 @@
-# The channel(s) id where the messages will be sent
+# The channel id where the messages will be sent
 # If you don't know how to get a channel id... https://www.google.com/?q=discord+how+to+get+channel+id
-channels-to-announce:
-  - 123456789012345678
+channel-to-announce: 123456789012345678
 
 # If the text is empty (nothing between the double quotes),
 #    the message will not be sent (a.k.a. the message is "disabled"), for example:

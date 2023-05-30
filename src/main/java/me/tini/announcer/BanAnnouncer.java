@@ -136,7 +136,7 @@ public final class BanAnnouncer {
 
         JDA jda = bot.getJda();
 
-        long channelId = config.getChannelsToAnnounce().get(0);
+        long channelId = config.getChannelToAnnounce();
 
         GuildChannel channel = jda.getGuildChannelById(channelId);
 

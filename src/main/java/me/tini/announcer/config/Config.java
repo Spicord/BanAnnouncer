@@ -22,9 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
+
 import org.spicord.embed.EmbedLoader;
 
 import eu.mcdb.universal.config.YamlConfiguration;
@@ -42,7 +41,7 @@ public class Config {
     private File configFile;
     @Getter private Logger logger;
 
-    @Getter private List<Long> channelsToAnnounce = new ArrayList<Long>();
+    @Getter private long channelToAnnounce;
     @Getter private Messages messages;
 
     @Getter private String jailManager;
@@ -106,12 +105,15 @@ public class Config {
                     messages = new Messages(embedLoader, config, dataFolder);
                 }
 
-                channelsToAnnounce = config.getLongList("channels-to-announce");
-                punishmentManager  = config.getString("punishment-manager", "auto");
-                jailManager        = config.getString("jail-manager", "off");
-                ignoreSilent       = config.getBoolean("ignore-silent", false);
-                consoleName        = config.getString("console-name", "Console");
-                automaticText      = config.getString("automatic", "Automatic");
+                channelToAnnounce = config.getLong(
+                    "channel-to-announce",
+                    config.getLongList("channels-to-announce").get(0)
+                );
+                punishmentManager = config.getString("punishment-manager", "auto");
+                jailManager       = config.getString("jail-manager", "off");
+                ignoreSilent      = config.getBoolean("ignore-silent", false);
+                consoleName       = config.getString("console-name", "Console");
+                automaticText     = config.getString("automatic", "Automatic");
             }
         } catch (Exception e) {
             logger.severe("This is a configuration error, NOT a plugin error, please generate a new config or fix it.");
