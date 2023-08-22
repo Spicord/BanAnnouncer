@@ -73,7 +73,8 @@ public final class BanAnnouncer {
             ;
 
         	mf.setString("litebans_server_origin", punishment.getLitebansServerOrigin());
-        	mf.setString("litebans_server_scope", punishment.getLitebansServerScope());
+            mf.setString("litebans_server_scope", punishment.getLitebansServerScope());
+            mf.setString("litebans_random_id", punishment.getLitebansRandomId());
 
         	if (!punishment.isPermanent()) {
         		long startSec = punishment.getDateStart() / 1000L;

@@ -40,7 +40,8 @@ public final class PunishmentAction {
 
 	private String litebansServerScope;
 	private String litebansServerOrigin;
-	
+	private String litebansRandomId;
+
     public PunishmentAction() {}
 
     public PunishmentAction(Type type) {
