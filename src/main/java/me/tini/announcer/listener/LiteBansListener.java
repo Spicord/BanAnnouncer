@@ -118,6 +118,7 @@ public final class LiteBansListener extends PunishmentListener {
 
         punishment.setLitebansServerOrigin(entry.getServerOrigin());
         punishment.setLitebansServerScope(entry.getServerScope());
+        punishment.setLitebansRandomId(entry.getRandomID());
 
         handlePunishment(punishment);
     }
