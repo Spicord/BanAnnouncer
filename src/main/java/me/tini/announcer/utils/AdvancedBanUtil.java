@@ -17,6 +17,9 @@
 
 package me.tini.announcer.utils;
 
+import java.math.BigInteger;
+import java.util.UUID;
+
 import me.leoko.advancedban.utils.Punishment;
 import me.leoko.advancedban.utils.PunishmentType;
 import me.tini.announcer.PunishmentAction;
@@ -35,6 +38,18 @@ public final class AdvancedBanUtil {
         punishment.setId(String.valueOf(pun.getId()));
         punishment.setOperator(operator);
         punishment.setPlayer(pun.getName());
+
+        if (pun.getUuid() != null) {
+            String uuidString = pun.getUuid();
+
+            if (uuidString.length() == 32) {
+                uuidString = undashedToDashedId(uuidString).toString();
+            }
+
+            if (uuidString.length() == 36) {
+                punishment.setPlayerId(uuidString);
+            }
+        }
 
         if (revoked) {
             if (pun.isExpired()) { // automatic
@@ -90,5 +105,12 @@ public final class AdvancedBanUtil {
         }
 
         return punishment;
+    }
+
+    private static UUID undashedToDashedId(String undashedId) {
+        return new UUID(
+            new BigInteger(undashedId.substring(0, 16), 16).longValue(),
+            new BigInteger(undashedId.substring(16), 16).longValue()
+        );
     }
 }

@@ -97,6 +97,8 @@ public class LibertyBansListener extends PunishmentListener {
 
         punishment.setPlayer(getVictimName(pun.getVictim()));
 
+        punishment.setPlayerId(getVictimId(pun.getVictim()));
+
         switch (pun.getType()) {
         case BAN:
             boolean isBanIP = pun.getVictim().getType() == VictimType.ADDRESS;
@@ -156,6 +158,16 @@ public class LibertyBansListener extends PunishmentListener {
             return getPlayerName(((CompositeVictim) victim).getUUID());
         }
         return "<Unknown>";
+    }
+
+    private String getVictimId(Victim victim) {
+        if (victim.getType() == VictimType.PLAYER) {
+            return ((PlayerVictim) victim).getUUID().toString();
+        }
+        if (victim.getType() == VictimType.COMPOSITE) {
+            return ((CompositeVictim) victim).getUUID().toString();
+        }
+        return new UUID(0, 0).toString();
     }
 
     private String getOperatorName(Operator operator) {
