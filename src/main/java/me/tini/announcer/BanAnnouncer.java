@@ -21,6 +21,7 @@ import static me.tini.announcer.PunishmentAction.Type.*;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -62,35 +63,41 @@ public final class BanAnnouncer {
         BiFunction<PunishmentAction, Embed, Embed> builder;
 
         builder = (punishment, template) -> {
-        	MessageFormatter mf = new MessageFormatter()
-	            .setString("id",       punishment.getId())
-	            .setString("player",   punishment.getPlayer())
-	            .setString("player_uuid", punishment.getPlayerId())
-	            .setString("staff",    punishment.getOperator())
-	            .setString("reason",   punishment.getReason())
-	            .setString("duration", punishment.getDuration())
-	            .setString("jail",     punishment.getJail())
+            MessageFormatter mf = new MessageFormatter()
+                .setString("id",       punishment.getId())
+                .setString("player",   punishment.getPlayer())
+                .setString("player_uuid", punishment.getPlayerId())
+                .setString("staff",    punishment.getOperator())
+                .setString("reason",   punishment.getReason())
+                .setString("duration", punishment.getDuration())
+                .setString("jail",     punishment.getJail())
             ;
 
-        	mf.setString("litebans_server_origin", punishment.getLitebansServerOrigin());
+            mf.setString("litebans_server_origin", punishment.getLitebansServerOrigin());
             mf.setString("litebans_server_scope", punishment.getLitebansServerScope());
             mf.setString("litebans_random_id", punishment.getLitebansRandomId());
 
-        	if (!punishment.isPermanent()) {
-        		long startSec = punishment.getDateStart() / 1000L;
-        		long endSec = punishment.getDateEnd() / 1000L;
+            final long startSec;
+            final long endSec;
 
-        		for (String fmt : new String[] { "t", "T", "d", "D", "f", "F", "R" }) {
-            		mf
-	                	.setString("date_start_" + fmt, "<t:" + startSec + ":" + fmt + ">")
-	                	.setString("date_end_" + fmt,   "<t:" + endSec + ":" + fmt + ">")
-	            	;
-        		}
-        	}
+            if (punishment.isPermanent()) {
+                startSec = System.currentTimeMillis() / 1000L;
+                endSec = new Date("31 Dec 9999").getTime() / 1000L;
+            } else {
+                startSec = punishment.getDateStart() / 1000L;
+                endSec = punishment.getDateEnd() / 1000L;
+            }
 
-			return mf.format(template);
+            for (String fmt : new String[] { "t", "T", "d", "D", "f", "F", "R" }) {
+                mf
+                    .setString("date_start_" + fmt, "<t:" + startSec + ":" + fmt + ">")
+                    .setString("date_end_" + fmt,   "<t:" + endSec + ":" + fmt + ">")
+                ;
+            }
+
+            return mf.format(template);
         };
- 
+
         Messages messages = config.getMessages();
 
         callbacks.put(BAN,     p -> builder.apply(p, p.isPermanent() ? messages.getBan() : messages.getTempban()));
