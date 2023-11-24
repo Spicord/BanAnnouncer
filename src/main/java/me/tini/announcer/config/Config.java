@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.spicord.embed.EmbedLoader;
@@ -105,9 +106,11 @@ public class Config {
                     messages = new Messages(embedLoader, config, dataFolder);
                 }
 
+                List<Long> oldConfigChannels = config.getLongList("channels-to-announce");
+
                 channelToAnnounce = config.getLong(
                     "channel-to-announce",
-                    config.getLongList("channels-to-announce").get(0)
+                    oldConfigChannels != null && !oldConfigChannels.isEmpty() ? oldConfigChannels.get(0) : 0L
                 );
                 punishmentManager = config.getString("punishment-manager", "auto");
                 jailManager       = config.getString("jail-manager", "off");
