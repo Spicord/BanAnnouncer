@@ -32,6 +32,15 @@ messages:
   unnote:    "{embed:unnote}"
   unjail:    "{embed:unjail}"
 
+### Discord Command ###
+# Set to true to enable the discord "/banannouncer" slash command.
+#
+# The command does NOT provides moderation tools, it is for testing
+# your embed files and reloading them without going to the console.
+#
+# Only members with permission of "BAN_MEMBERS" can use the command.
+enable-discord-command: true
+
 # The plugin used for manage the punishments
 # Possible values:
 #     auto        = Auto detect
