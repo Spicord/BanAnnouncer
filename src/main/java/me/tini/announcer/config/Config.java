@@ -51,6 +51,8 @@ public class Config {
     @Getter private String consoleName;
     @Getter private String automaticText;
 
+    @Getter private boolean useDiscordCommand;
+
     public Config(BanAnnouncerPlugin plugin) {
         instance = this;
         this.dataFolder = plugin.getDataFolder();
@@ -117,6 +119,7 @@ public class Config {
                 ignoreSilent      = config.getBoolean("ignore-silent", false);
                 consoleName       = config.getString("console-name", "Console");
                 automaticText     = config.getString("automatic", "Automatic");
+                useDiscordCommand = config.getBoolean("enable-discord-command", true);
             }
         } catch (Exception e) {
             logger.severe("This is a configuration error, NOT a plugin error, please generate a new config or fix it.");

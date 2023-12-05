@@ -127,8 +127,12 @@ public final class BanAnnouncer {
             return;
         }
 
-        Embed embed = callbacks.get(punishment.getType()).apply(punishment);
+        Embed embed = buildEmbed(punishment);
         sendDiscordMessage(embed);
+    }
+
+    public Embed buildEmbed(PunishmentAction punishment) {
+        return callbacks.get(punishment.getType()).apply(punishment);
     }
 
     private void sendDiscordMessage(Embed message) {
