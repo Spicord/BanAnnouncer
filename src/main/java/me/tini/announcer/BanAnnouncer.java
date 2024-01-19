@@ -76,6 +76,8 @@ public final class BanAnnouncer {
             mf.setString("litebans_server_origin", punishment.getLitebansServerOrigin());
             mf.setString("litebans_server_scope", punishment.getLitebansServerScope());
             mf.setString("litebans_random_id", punishment.getLitebansRandomId());
+            mf.setString("litebans_removal_reason", punishment.getLitebansRemovalReason());
+            mf.setString("litebans_removed_by_name", punishment.getLitebansRemovedByName());
 
             final long startSec;
             final long endSec;
