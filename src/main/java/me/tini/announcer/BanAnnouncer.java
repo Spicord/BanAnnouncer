@@ -23,8 +23,10 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -34,6 +36,7 @@ import org.spicord.Spicord;
 import org.spicord.bot.DiscordBot;
 import org.spicord.embed.Embed;
 import org.spicord.embed.EmbedSender;
+
 import lombok.Getter;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.config.Messages;
@@ -54,6 +57,8 @@ public final class BanAnnouncer {
     private Map<PunishmentAction.Type, Function<PunishmentAction, Embed>> callbacks;
     private DiscordBot bot;
 
+    private Map<String, Function<PunishmentAction, String>> allPlaceholders = new HashMap<>();
+
     public BanAnnouncer(Config config, Spicord spicord) {
         this.config = config;
         this.logger = config.getLogger();
@@ -62,39 +67,54 @@ public final class BanAnnouncer {
 
         BiFunction<PunishmentAction, Embed, Embed> builder;
 
+        allPlaceholders.put("id",          punishment -> punishment.getId());
+        allPlaceholders.put("player",      punishment -> punishment.getPlayer());
+        allPlaceholders.put("player_uuid", punishment -> punishment.getPlayerId());
+        allPlaceholders.put("staff",       punishment -> punishment.getOperator());
+        allPlaceholders.put("reason",      punishment -> punishment.getReason());
+        allPlaceholders.put("duration",    punishment -> punishment.getDuration());
+        allPlaceholders.put("jail",        punishment -> punishment.getJail());
+
+        allPlaceholders.put("litebans_server_origin",   punishment -> punishment.getLitebansServerOrigin());
+        allPlaceholders.put("litebans_server_scope",    punishment -> punishment.getLitebansServerScope());
+        allPlaceholders.put("litebans_random_id",       punishment -> punishment.getLitebansRandomId());
+        allPlaceholders.put("litebans_removal_reason",  punishment -> punishment.getLitebansRemovalReason());
+        allPlaceholders.put("litebans_removed_by_name", punishment -> punishment.getLitebansRemovedByName());
+
+        for (String fmt : new String[] { "t", "T", "d", "D", "f", "F", "R" }) {
+            allPlaceholders.put("date_start_" + fmt, punishment -> {
+                final long seconds;
+
+                if (punishment.isPermanent()) {
+                    seconds = System.currentTimeMillis() / 1000L;
+                } else {
+                    seconds = punishment.getDateStart() / 1000L;
+                }
+
+                return "<t:" + seconds + ":" + fmt + ">";
+            });
+
+            allPlaceholders.put("date_end_" + fmt, punishment -> {
+                final long seconds;
+
+                if (punishment.isPermanent()) {
+                    seconds = dateToMillis("31 Dec 9999") / 1000L;
+                } else {
+                    seconds = punishment.getDateEnd() / 1000L;
+                }
+
+                return "<t:" + seconds + ":" + fmt + ">";
+            });
+        }
+
         builder = (punishment, template) -> {
-            MessageFormatter mf = new MessageFormatter()
-                .setString("id",       punishment.getId())
-                .setString("player",   punishment.getPlayer())
-                .setString("player_uuid", punishment.getPlayerId())
-                .setString("staff",    punishment.getOperator())
-                .setString("reason",   punishment.getReason())
-                .setString("duration", punishment.getDuration())
-                .setString("jail",     punishment.getJail())
-            ;
+            MessageFormatter mf = new MessageFormatter();
 
-            mf.setString("litebans_server_origin", punishment.getLitebansServerOrigin());
-            mf.setString("litebans_server_scope", punishment.getLitebansServerScope());
-            mf.setString("litebans_random_id", punishment.getLitebansRandomId());
-            mf.setString("litebans_removal_reason", punishment.getLitebansRemovalReason());
-            mf.setString("litebans_removed_by_name", punishment.getLitebansRemovedByName());
+            for (Entry<String, Function<PunishmentAction, String>> placeholders : allPlaceholders.entrySet()) {
+                String placeholder = placeholders.getKey();
+                String value = placeholders.getValue().apply(punishment);
 
-            final long startSec;
-            final long endSec;
-
-            if (punishment.isPermanent()) {
-                startSec = System.currentTimeMillis() / 1000L;
-                endSec = new Date("31 Dec 9999").getTime() / 1000L;
-            } else {
-                startSec = punishment.getDateStart() / 1000L;
-                endSec = punishment.getDateEnd() / 1000L;
-            }
-
-            for (String fmt : new String[] { "t", "T", "d", "D", "f", "F", "R" }) {
-                mf
-                    .setString("date_start_" + fmt, "<t:" + startSec + ":" + fmt + ">")
-                    .setString("date_end_" + fmt,   "<t:" + endSec + ":" + fmt + ">")
-                ;
+                mf.setString(placeholder, value);
             }
 
             return mf.format(template);
@@ -218,5 +238,14 @@ public final class BanAnnouncer {
 
     public Set<Extension> getExtensions() {
         return allExtensions;
+    }
+
+    public void registerPlaceholder(String placeholder, Function<PunishmentAction, String> provider) {
+        allPlaceholders.put(placeholder, provider);
+    }
+
+    @SuppressWarnings("deprecation")
+    private long dateToMillis(String date) {
+        return new Date(date).getTime();
     }
 }
