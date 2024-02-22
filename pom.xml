@@ -22,6 +22,10 @@
             <url>https://repo.velocitypowered.com/snapshots/</url>
         </repository>
         <repository>
+            <id>sponge-repo</id>
+            <url>https://repo.spongepowered.org/maven/</url>
+        </repository>
+        <repository>
             <id>jcenter</id>
             <url>https://jcenter.bintray.com</url>
         </repository>
@@ -67,9 +71,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.spongepowered</groupId>
+            <artifactId>spongeapi</artifactId>
+            <version>8.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.spicord</groupId>
             <artifactId>spicord-common</artifactId>
-            <version>5.3.0</version>
+            <version>5.3.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -144,6 +154,14 @@
                 <includes>
                     <include>**/*</include>
                 </includes>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>sponge_plugins.json</include>
+                </includes>
+                <targetPath>META-INF</targetPath>
             </resource>
         </resources>
         <sourceDirectory>src/main/java</sourceDirectory>

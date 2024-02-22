@@ -15,7 +15,10 @@ public class ExtensionClassLoader extends URLClassLoader {
     private static final Gson GSON = new Gson();
 
     public ExtensionClassLoader(File file) {
-        super(new URL[]{getURL(file)}, ExtensionClassLoader.class.getClassLoader());
+        super(
+            new URL[] { fileToUrl(file) },
+            ExtensionClassLoader.class.getClassLoader()
+        );
     }
 
     public Extension getExtension() {
@@ -38,7 +41,7 @@ public class ExtensionClassLoader extends URLClassLoader {
         } catch (IOException e) {}
     }
 
-    private static URL getURL(File file) {
+    private static URL fileToUrl(File file) {
         try {
             return file.toURI().toURL();
         } catch (MalformedURLException e) {
