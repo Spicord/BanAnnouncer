@@ -1,0 +1,41 @@
+{
+    "loader": {
+        "name": "java_plain",
+        "version": "1.0"
+    },
+    "license": "AGPL-3.0",
+    "plugins": [
+        {
+            "id": "banannouncer",
+            "name": "BanAnnouncer",
+            "version": "${project.version}",
+            "entrypoint": "me.tini.announcer.sponge.BanAnnouncerSponge",
+            "description": "Announce the Minecraft bans on your Discord server.",
+            "links": {
+                "homepage": "https://github.com/Spicord/BanAnnouncer",
+                "source": "https://github.com/Spicord/BanAnnouncer",
+                "issues": "https://github.com/Spicord/BanAnnouncer/issues"
+            },
+            "contributors": [
+                {
+                    "name": "Tini",
+                    "description": "Lead Developer"
+                }
+            ],
+            "dependencies": [
+                {
+                    "id": "spicord",
+                    "version": "[5.3.1,)",
+                    "load-order": "after",
+                    "optional": false
+                },
+                {
+                    "id": "libertybans",
+                    "version": "[1.0.4,)",
+                    "load-order": "after",
+                    "optional": true
+                }
+            ]
+        }
+    ]
+}

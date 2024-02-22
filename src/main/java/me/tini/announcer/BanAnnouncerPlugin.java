@@ -1,17 +1,11 @@
 package me.tini.announcer;
 
-import java.io.File;
-import java.util.logging.Logger;
+import org.spicord.plugin.PluginInterface;
 
-public interface BanAnnouncerPlugin {
-
-    public Logger getLogger();
-
-    public File getDataFolder();
-
-    public File getFile();
+public interface BanAnnouncerPlugin extends PluginInterface {
 
     public BanAnnouncer getAnnouncer();
 
     public String getVersion();
+
 }
