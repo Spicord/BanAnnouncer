@@ -14,8 +14,8 @@ import org.spongepowered.api.event.network.PardonIpEvent;
 import org.spongepowered.api.event.user.BanUserEvent;
 import org.spongepowered.api.event.user.PardonUserEvent;
 
-import me.tini.announcer.PunishmentAction;
-import me.tini.announcer.PunishmentAction.Type;
+import me.tini.announcer.PunishmentInfo;
+import me.tini.announcer.PunishmentInfo.Type;
 import me.tini.announcer.sponge.BanAnnouncerSponge;
 import me.tini.announcer.sponge.SpongePunishmentListener;
 import net.kyori.adventure.text.Component;
@@ -32,7 +32,7 @@ public class VanillaListener extends SpongePunishmentListener {
         Player player = event.player();
         Component messageComponent = event.message();
 
-        PunishmentAction pun = new PunishmentAction(Type.KICK);
+        PunishmentInfo pun = new PunishmentInfo(Type.KICK);
 
         pun.setPlayer(player.name());
         pun.setPlayerId(player.uniqueId().toString());
@@ -58,7 +58,7 @@ public class VanillaListener extends SpongePunishmentListener {
     public void onBanUser(BanUserEvent event) {
         User player = event.user();
 
-        PunishmentAction pun = new PunishmentAction(Type.BAN);
+        PunishmentInfo pun = new PunishmentInfo(Type.BAN);
 
         pun.setPlayer(player.name());
         pun.setPlayerId(player.uniqueId().toString());
@@ -80,7 +80,7 @@ public class VanillaListener extends SpongePunishmentListener {
     public void onBanUser(PardonUserEvent event) {
         User player = event.user();
 
-        PunishmentAction pun = new PunishmentAction(Type.UNBAN);
+        PunishmentInfo pun = new PunishmentInfo(Type.UNBAN);
 
         pun.setPlayer(player.name());
         pun.setPlayerId(player.uniqueId().toString());
@@ -100,7 +100,7 @@ public class VanillaListener extends SpongePunishmentListener {
     public void onBanIp(BanIpEvent event) {
         InetAddress address = event.ban().address();
 
-        PunishmentAction pun = new PunishmentAction(Type.BANIP);
+        PunishmentInfo pun = new PunishmentInfo(Type.BANIP);
 
         pun.setPlayer(censorIp(address));
 
@@ -121,7 +121,7 @@ public class VanillaListener extends SpongePunishmentListener {
     public void onPardonIp(PardonIpEvent event) {
         InetAddress address = event.ban().address();
 
-        PunishmentAction pun = new PunishmentAction(Type.UNBANIP);
+        PunishmentInfo pun = new PunishmentInfo(Type.UNBANIP);
 
         pun.setPlayer(censorIp(address));
 

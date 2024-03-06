@@ -26,9 +26,9 @@ import litebans.api.Entry;
 import litebans.api.Events;
 import litebans.api.Events.Listener;
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.PunishmentAction;
+import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.PunishmentListener;
-import me.tini.announcer.PunishmentAction.Type;
+import me.tini.announcer.PunishmentInfo.Type;
 
 public final class LiteBansListener extends PunishmentListener {
 
@@ -54,7 +54,7 @@ public final class LiteBansListener extends PunishmentListener {
     }
 
     public void handleEntry(final Entry entry, final boolean revoked) {
-        final PunishmentAction punishment = new PunishmentAction();
+        final PunishmentInfo punishment = new PunishmentInfo();
 
         punishment.setId(String.valueOf(entry.getId()));
 

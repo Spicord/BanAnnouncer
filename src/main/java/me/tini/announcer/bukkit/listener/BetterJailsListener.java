@@ -5,8 +5,8 @@ import com.github.fefo.betterjails.api.event.prisoner.PlayerImprisonEvent;
 import com.github.fefo.betterjails.api.event.prisoner.PrisonerReleaseEvent;
 import com.github.fefo.betterjails.api.model.prisoner.Prisoner;
 
-import me.tini.announcer.PunishmentAction;
-import me.tini.announcer.PunishmentAction.Type;
+import me.tini.announcer.PunishmentInfo;
+import me.tini.announcer.PunishmentInfo.Type;
 import me.tini.announcer.bukkit.BanAnnouncerBukkit;
 import me.tini.announcer.bukkit.BukkitPunishmentListener;
 import me.tini.announcer.utils.TimeUtils;
@@ -44,7 +44,7 @@ public class BetterJailsListener extends BukkitPunishmentListener {
         String player = prisoner.name();
         String operator = prisoner.jailedBy();
 
-        PunishmentAction punishment = new PunishmentAction(released ? Type.UNJAIL : Type.JAIL);
+        PunishmentInfo punishment = new PunishmentInfo(released ? Type.UNJAIL : Type.JAIL);
 
         long durationMillis = prisoner.jailedUntil().toEpochMilli() - System.currentTimeMillis();
 

@@ -21,7 +21,7 @@ import org.bukkit.event.EventHandler;
 
 import me.leoko.advancedban.bukkit.event.PunishmentEvent;
 import me.leoko.advancedban.bukkit.event.RevokePunishmentEvent;
-import me.tini.announcer.PunishmentAction;
+import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.bukkit.BanAnnouncerBukkit;
 import me.tini.announcer.bukkit.BukkitPunishmentListener;
 import me.tini.announcer.utils.AdvancedBanUtil;
@@ -34,13 +34,13 @@ public final class AdvancedBanListener extends BukkitPunishmentListener {
 
     @EventHandler
     public void onPunishment(PunishmentEvent event) {
-        PunishmentAction punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), false);
+        PunishmentInfo punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), false);
         handlePunishment(punishment);
     }
 
     @EventHandler
     public void onRevokePunishment(RevokePunishmentEvent event) {
-        PunishmentAction punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), true);
+        PunishmentInfo punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), true);
         handlePunishment(punishment);
     }
 }

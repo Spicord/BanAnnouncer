@@ -28,7 +28,7 @@ import org.spicord.embed.Embed;
 
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.PunishmentAction;
+import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.config.Config;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -83,9 +83,9 @@ public final class BanAnnouncerAddon extends SimpleAddon {
 
                         String embedName = nameOption.getAsString();
 
-                        final PunishmentAction.Type type;
+                        final PunishmentInfo.Type type;
                         try {
-                            type = PunishmentAction.Type.valueOf(embedName.toUpperCase());
+                            type = PunishmentInfo.Type.valueOf(embedName.toUpperCase());
                         } catch (IllegalArgumentException e) {
                             event.reply("The specified embed does not exists")
                                 .setEphemeral(true)
@@ -93,7 +93,7 @@ public final class BanAnnouncerAddon extends SimpleAddon {
                             return;
                         }
 
-                        PunishmentAction action = new PunishmentAction(type);
+                        PunishmentInfo action = new PunishmentInfo(type);
                         action.setId("0");
                         action.setPlayer("Wumpus");
                         action.setPlayerId(new UUID(0, 0).toString());
@@ -132,7 +132,7 @@ public final class BanAnnouncerAddon extends SimpleAddon {
                     })
                     .setCompleter(event -> {
                         List<String> list = new ArrayList<>();
-                        for (PunishmentAction.Type type : PunishmentAction.Type.values()) {
+                        for (PunishmentInfo.Type type : PunishmentInfo.Type.values()) {
                             list.add(type.name().toLowerCase());
                         }
                         event.replyChoiceStrings(list).queue();

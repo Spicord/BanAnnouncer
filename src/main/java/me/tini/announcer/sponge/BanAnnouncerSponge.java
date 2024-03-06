@@ -126,6 +126,11 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
     }
 
     @Override
+    public PunishmentListeners getPunishmentListeners() {
+        return pm;
+    }
+
+    @Override
     public String getVersion() {
         ArtifactVersion version = pluginContainer.metadata().version();
 

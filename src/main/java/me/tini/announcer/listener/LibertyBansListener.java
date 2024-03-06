@@ -6,7 +6,7 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.PunishmentAction;
+import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.PunishmentListener;
 import space.arim.libertybans.api.AddressVictim;
 import space.arim.libertybans.api.CompositeVictim;
@@ -71,7 +71,7 @@ public class LibertyBansListener extends PunishmentListener {
     }
 
     private void handle(Operator operator, Punishment pun, boolean isRevoked) {
-        PunishmentAction punishment = new PunishmentAction();
+        PunishmentInfo punishment = new PunishmentInfo();
 
         boolean isConsole = operator.getType() == OperatorType.CONSOLE;
 
@@ -105,34 +105,34 @@ public class LibertyBansListener extends PunishmentListener {
 
             if (isBanIP) {
                 if (isRevoked) {
-                    punishment.setType(PunishmentAction.Type.UNBANIP);
+                    punishment.setType(PunishmentInfo.Type.UNBANIP);
                 } else {
-                    punishment.setType(punishment.isPermanent() ? PunishmentAction.Type.BANIP : PunishmentAction.Type.TEMPBANIP);
+                    punishment.setType(punishment.isPermanent() ? PunishmentInfo.Type.BANIP : PunishmentInfo.Type.TEMPBANIP);
                 }
             } else {
                 if (isRevoked) {
-                    punishment.setType(PunishmentAction.Type.UNBAN);
+                    punishment.setType(PunishmentInfo.Type.UNBAN);
                 } else {
-                    punishment.setType(punishment.isPermanent() ? PunishmentAction.Type.BAN : PunishmentAction.Type.TEMPBAN);
+                    punishment.setType(punishment.isPermanent() ? PunishmentInfo.Type.BAN : PunishmentInfo.Type.TEMPBAN);
                 }
             }
 
             break;
         case KICK:
-            punishment.setType(PunishmentAction.Type.KICK);
+            punishment.setType(PunishmentInfo.Type.KICK);
             break;
         case MUTE:
             if (isRevoked) {
-                punishment.setType(PunishmentAction.Type.UNMUTE);
+                punishment.setType(PunishmentInfo.Type.UNMUTE);
             } else {
-                punishment.setType(punishment.isPermanent() ? PunishmentAction.Type.MUTE : PunishmentAction.Type.TEMPMUTE);
+                punishment.setType(punishment.isPermanent() ? PunishmentInfo.Type.MUTE : PunishmentInfo.Type.TEMPMUTE);
             }
             break;
         case WARN:
             if (isRevoked) {
-                punishment.setType(PunishmentAction.Type.UNWARN);
+                punishment.setType(PunishmentInfo.Type.UNWARN);
             } else {
-                punishment.setType(punishment.isPermanent() ? PunishmentAction.Type.WARN : PunishmentAction.Type.TEMPWARN);
+                punishment.setType(punishment.isPermanent() ? PunishmentInfo.Type.WARN : PunishmentInfo.Type.TEMPWARN);
             }
             break;
         default:

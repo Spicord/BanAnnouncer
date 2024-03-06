@@ -8,8 +8,8 @@ public abstract class PunishmentListener {
         this.announcer = announcer;
     }
 
-    public final void handlePunishment(PunishmentAction punishment) {
-        announcer.handlePunishmentAction(punishment);
+    public final void handlePunishment(PunishmentInfo punishment) {
+        announcer.handlePunishment(punishment);
     }
 
     public BanAnnouncer getAnnouncer() {

@@ -34,8 +34,8 @@ import org.maxgamer.maxbans.event.WarnUserEvent;
 import org.maxgamer.maxbans.orm.Restriction;
 import org.maxgamer.maxbans.util.TemporalDuration;
 
-import me.tini.announcer.PunishmentAction;
-import me.tini.announcer.PunishmentAction.Type;
+import me.tini.announcer.PunishmentInfo;
+import me.tini.announcer.PunishmentInfo.Type;
 import me.tini.announcer.bukkit.BanAnnouncerBukkit;
 import me.tini.announcer.bukkit.BukkitPunishmentListener;
 
@@ -57,7 +57,7 @@ public class MaxBansListener extends BukkitPunishmentListener {
 
     @EventHandler
     public void onKickUser(KickUserEvent event) {
-        final PunishmentAction punishment = new PunishmentAction(Type.KICK);
+        final PunishmentInfo punishment = new PunishmentInfo(Type.KICK);
         final String staff = event.getSource().getName();
         final String player = event.getTarget().getName();
 
@@ -102,7 +102,7 @@ public class MaxBansListener extends BukkitPunishmentListener {
     // missing UnwarnUserEvent
 
     private void handleRestriction(MaxBansRestrictEvent<?> event, Restriction restriction, Type perm, Type temp) {
-        final PunishmentAction punishment = new PunishmentAction();
+        final PunishmentInfo punishment = new PunishmentInfo();
 
         punishment.setPlayer(event.getTarget().getName());
         punishment.setOperator(event.isPlayerAdministered() ? event.getAdmin().getName() : "Console");
@@ -115,7 +115,7 @@ public class MaxBansListener extends BukkitPunishmentListener {
     }
 
     private void handleRevokedRestriction(MaxBansRestrictEvent<?> event, Type type) {
-        final PunishmentAction punishment = new PunishmentAction(type);
+        final PunishmentInfo punishment = new PunishmentInfo(type);
 
         punishment.setPlayer(event.getTarget().getName());
         punishment.setOperator(event.isPlayerAdministered() ? event.getAdmin().getName() : "Console");

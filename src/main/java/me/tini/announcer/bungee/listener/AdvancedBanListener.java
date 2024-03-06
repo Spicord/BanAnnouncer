@@ -19,7 +19,7 @@ package me.tini.announcer.bungee.listener;
 
 import me.leoko.advancedban.bungee.event.PunishmentEvent;
 import me.leoko.advancedban.bungee.event.RevokePunishmentEvent;
-import me.tini.announcer.PunishmentAction;
+import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.bungee.BanAnnouncerBungee;
 import me.tini.announcer.bungee.BungeePunishmentListener;
 import me.tini.announcer.utils.AdvancedBanUtil;
@@ -33,13 +33,13 @@ public final class AdvancedBanListener extends BungeePunishmentListener {
 
     @EventHandler
     public void onPunishment(PunishmentEvent event) {
-        PunishmentAction punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), false);
+        PunishmentInfo punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), false);
         handlePunishment(punishment);
     }
 
     @EventHandler
     public void onRevokePunishment(RevokePunishmentEvent event) {
-        PunishmentAction punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), true);
+        PunishmentInfo punishment = AdvancedBanUtil.convertPunishment(getAnnouncer().getConfig(), event.getPunishment(), true);
         handlePunishment(punishment);
     }
 }

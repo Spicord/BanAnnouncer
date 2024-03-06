@@ -17,7 +17,7 @@
 
 package me.tini.announcer;
 
-import static me.tini.announcer.PunishmentAction.Type.*;
+import static me.tini.announcer.PunishmentInfo.Type.*;
 
 import java.io.File;
 import java.util.Collections;
@@ -54,18 +54,18 @@ public final class BanAnnouncer {
     @Getter private Logger logger;
     @Getter private boolean enabled = true;
 
-    private Map<PunishmentAction.Type, Function<PunishmentAction, Embed>> callbacks;
+    private Map<PunishmentInfo.Type, Function<PunishmentInfo, Embed>> callbacks;
     private DiscordBot bot;
 
-    private Map<String, Function<PunishmentAction, String>> allPlaceholders = new HashMap<>();
+    private Map<String, Function<PunishmentInfo, String>> allPlaceholders = new HashMap<>();
 
     public BanAnnouncer(Config config, Spicord spicord) {
         this.config = config;
         this.logger = config.getLogger();
 
-        this.callbacks = new EnumMap<>(PunishmentAction.Type.class);
+        this.callbacks = new EnumMap<>(PunishmentInfo.Type.class);
 
-        BiFunction<PunishmentAction, Embed, Embed> builder;
+        BiFunction<PunishmentInfo, Embed, Embed> builder;
 
         allPlaceholders.put("id",          punishment -> punishment.getId());
         allPlaceholders.put("player",      punishment -> punishment.getPlayer());
@@ -110,7 +110,7 @@ public final class BanAnnouncer {
         builder = (punishment, template) -> {
             MessageFormatter mf = new MessageFormatter();
 
-            for (Entry<String, Function<PunishmentAction, String>> placeholders : allPlaceholders.entrySet()) {
+            for (Entry<String, Function<PunishmentInfo, String>> placeholders : allPlaceholders.entrySet()) {
                 String placeholder = placeholders.getKey();
                 String value = placeholders.getValue().apply(punishment);
 
@@ -142,7 +142,7 @@ public final class BanAnnouncer {
         callbacks.put(TEMPWARN,  callbacks.get(WARN));
     }
 
-    public void handlePunishmentAction(PunishmentAction punishment) {
+    public void handlePunishment(PunishmentInfo punishment) {
         if (!enabled) {
             logger.warning("BanAnnouncer is not enabled, ignoring punishment.");
             logger.warning(punishment.toString());
@@ -153,7 +153,7 @@ public final class BanAnnouncer {
         sendDiscordMessage(embed);
     }
 
-    public Embed buildEmbed(PunishmentAction punishment) {
+    public Embed buildEmbed(PunishmentInfo punishment) {
         return callbacks.get(punishment.getType()).apply(punishment);
     }
 
@@ -240,7 +240,7 @@ public final class BanAnnouncer {
         return allExtensions;
     }
 
-    public void registerPlaceholder(String placeholder, Function<PunishmentAction, String> provider) {
+    public void registerPlaceholder(String placeholder, Function<PunishmentInfo, String> provider) {
         allPlaceholders.put(placeholder, provider);
     }
 

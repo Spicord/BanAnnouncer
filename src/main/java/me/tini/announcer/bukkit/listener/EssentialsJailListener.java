@@ -2,8 +2,8 @@ package me.tini.announcer.bukkit.listener;
 
 import org.bukkit.event.EventHandler;
 
-import me.tini.announcer.PunishmentAction;
-import me.tini.announcer.PunishmentAction.Type;
+import me.tini.announcer.PunishmentInfo;
+import me.tini.announcer.PunishmentInfo.Type;
 import me.tini.announcer.bukkit.BanAnnouncerBukkit;
 import me.tini.announcer.bukkit.BukkitPunishmentListener;
 import net.ess3.api.IUser;
@@ -24,7 +24,7 @@ public class EssentialsJailListener extends BukkitPunishmentListener {
         IUser staff = event.getController();
 
         getPlugin().getServer().getScheduler().scheduleSyncDelayedTask(getPlugin(), () -> {
-            PunishmentAction punishment = new PunishmentAction();
+            PunishmentInfo punishment = new PunishmentInfo();
 
             punishment.setType(gotJailed ? Type.JAIL : Type.UNJAIL);
             punishment.setJail(user.getJail());

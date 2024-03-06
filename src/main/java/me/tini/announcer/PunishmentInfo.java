@@ -23,7 +23,7 @@ import lombok.ToString;
 
 @ToString
 @Data
-public final class PunishmentAction {
+public final class PunishmentInfo {
 
     private String id;
     private String player;
@@ -44,9 +44,9 @@ public final class PunishmentAction {
 	private String litebansRemovalReason;
 	private String litebansRemovedByName;
 
-    public PunishmentAction() {}
+    public PunishmentInfo() {}
 
-    public PunishmentAction(Type type) {
+    public PunishmentInfo(Type type) {
         this.type = type;
     }
 

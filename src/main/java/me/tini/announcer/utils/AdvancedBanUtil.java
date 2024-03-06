@@ -22,14 +22,14 @@ import java.util.UUID;
 
 import me.leoko.advancedban.utils.Punishment;
 import me.leoko.advancedban.utils.PunishmentType;
-import me.tini.announcer.PunishmentAction;
-import me.tini.announcer.PunishmentAction.Type;
+import me.tini.announcer.PunishmentInfo;
+import me.tini.announcer.PunishmentInfo.Type;
 import me.tini.announcer.config.Config;
 
 public final class AdvancedBanUtil {
 
-    public static PunishmentAction convertPunishment(Config config, final Punishment pun, final boolean revoked) {
-        PunishmentAction punishment = new PunishmentAction();
+    public static PunishmentInfo convertPunishment(Config config, final Punishment pun, final boolean revoked) {
+        PunishmentInfo punishment = new PunishmentInfo();
 
         String operator = "Console".equalsIgnoreCase(pun.getOperator())
                 ? config.getConsoleName()

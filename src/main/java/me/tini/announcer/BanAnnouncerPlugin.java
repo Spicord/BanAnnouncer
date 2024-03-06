@@ -4,8 +4,10 @@ import org.spicord.plugin.PluginInterface;
 
 public interface BanAnnouncerPlugin extends PluginInterface {
 
-    public BanAnnouncer getAnnouncer();
+    BanAnnouncer getAnnouncer();
 
-    public String getVersion();
+    PunishmentListeners getPunishmentListeners();
+
+    String getVersion();
 
 }

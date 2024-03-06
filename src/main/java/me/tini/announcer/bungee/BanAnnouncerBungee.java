@@ -90,6 +90,11 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
     }
 
     @Override
+    public PunishmentListeners getPunishmentListeners() {
+        return pm;
+    }
+
+    @Override
     public void onDisable() {
         if (pm != null) {
             pm.stopAllListeners();

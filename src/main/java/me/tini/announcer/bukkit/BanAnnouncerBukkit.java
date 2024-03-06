@@ -99,6 +99,11 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
     }
 
     @Override
+    public PunishmentListeners getPunishmentListeners() {
+        return pm;
+    }
+
+    @Override
     public File getFile() {
         return super.getFile();
     }

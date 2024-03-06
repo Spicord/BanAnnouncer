@@ -101,6 +101,11 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
         return announcer;
     }
 
+    @Override
+    public PunishmentListeners getPunishmentListeners() {
+        return pm;
+    }
+
     @Subscribe
     public void onShutdown(ProxyShutdownEvent event) {
         if (pm != null) {
