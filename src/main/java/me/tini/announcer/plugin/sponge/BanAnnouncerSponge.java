@@ -17,12 +17,9 @@ import com.google.inject.Inject;
 
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.PunishmentListeners;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
-import me.tini.announcer.extension.ExtensionInfo;
-import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.spongevanilla.SpongeVanillaExtension;
 
@@ -34,7 +31,6 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
     private final PluginContainer pluginContainer;
 
     private BanAnnouncer announcer;
-    private PunishmentListeners pm;
 
     @Inject
     public BanAnnouncerSponge(
@@ -64,46 +60,19 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
 
         new ReloadCommand().register(this);
 
-        this.announcer = new BanAnnouncer(config, spicord);
+        announcer = new BanAnnouncer(config, spicord, this);
 
-        this.announcer.loadExtensions(new File(getDataFolder(), "extensions"));
+        announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
-        if (pm != null) {
-            pm.stopAllListeners();
-        }
+        announcer.registerExtension("LibertyBans", "libertybans", () -> new LibertyBansExtension(this)  , "space.arim.libertybans.api.LibertyBans");
+        announcer.registerExtension("Sponge"     , "sponge"     , () -> new SpongeVanillaExtension(this), "org.spongepowered.api.Game");
 
-        pm = new PunishmentListeners(getLogger());
-
-        // General punishments
-        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
-        pm.addNew("Sponge", "sponge", () -> new SpongeVanillaExtension(this), true, "org.spongepowered.api.Game");
-
-        for (ExtensionContainer loader : announcer.getExtensions()) {
-            ExtensionInfo ext = loader.getInfo();
-            pm.addNew(ext.getName(), ext.getKey(), loader.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
-        }
-
-        String pun = config.getPunishmentManager().toLowerCase();
-
-        if ("auto".equals(pun)) {
-            pm.autoDetect();
-        } else {
-            pm.startPunishListener(pun);
-        }
-
-        String jail = config.getJailManager().toLowerCase();
-
-        if (config.isJailManagerEnabled()) { // Jail enabled
-            pm.startJailListener(jail);
-        }
+        announcer.enableExtensions();
 
         spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
     public void onDisable() {
-        if (pm != null) {
-            pm.stopAllListeners();
-        }
         if (announcer != null) {
             announcer.disable();
             announcer = null;
@@ -113,11 +82,6 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
     @Override
     public BanAnnouncer getAnnouncer() {
         return announcer;
-    }
-
-    @Override
-    public PunishmentListeners getPunishmentListeners() {
-        return pm;
     }
 
     @Override

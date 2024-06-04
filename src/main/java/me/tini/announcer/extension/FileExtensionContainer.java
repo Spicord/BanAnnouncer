@@ -43,7 +43,7 @@ public class FileExtensionContainer extends ExtensionContainer {
 
         return () -> {
             try {
-                Class<?> listenerClass = loader.loadClass(info.getClassName());
+                Class<?> listenerClass = loader.loadClass(info.getMainClass());
                 Constructor<?> constructor = listenerClass.getConstructor(BanAnnouncerPlugin.class);
                 Object ins = constructor.newInstance(plugin);
 

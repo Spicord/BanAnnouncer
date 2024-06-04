@@ -17,12 +17,9 @@ import com.velocitypowered.api.proxy.ProxyServer;
 
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.PunishmentListeners;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
-import me.tini.announcer.extension.ExtensionInfo;
-import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 
@@ -40,7 +37,6 @@ import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncerPlugin {
 
     private BanAnnouncer announcer;
-    private PunishmentListeners pm;
     private Config config;
 
     @Inject
@@ -58,37 +54,14 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
 
         new ReloadCommand().register(this);
 
-        this.announcer = new BanAnnouncer(config, spicord);
+        announcer = new BanAnnouncer(config, spicord, this);
 
-        this.announcer.loadExtensions(new File(getDataFolder(), "extensions"));
+        announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
-        if (pm != null) {
-            pm.stopAllListeners();
-        }
+        announcer.registerExtension("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , "litebans.api.Events");
+        announcer.registerExtension("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), "space.arim.libertybans.api.LibertyBans");
 
-        pm = new PunishmentListeners(getLogger());
-
-        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
-        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , true, "litebans.api.Events");
-
-        for (ExtensionContainer loader : announcer.getExtensions()) {
-            ExtensionInfo info = loader.getInfo();
-            pm.addNew(info.getName(), info.getKey(), loader.getInstanceSupplier(this), info.isPunishmentManager(), info.getRequiredClass());
-        }
-
-        String pun = config.getPunishmentManager().toLowerCase();
-
-        if ("auto".equals(pun)) {
-            pm.autoDetect();
-        } else {
-            pm.startPunishListener(pun);
-        }
-
-        String jail = config.getJailManager().toLowerCase();
-
-        if (config.isJailManagerEnabled()) { // Jail enabled
-            pm.startJailListener(jail);
-        }
+        announcer.enableExtensions();
 
         spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
@@ -103,16 +76,8 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
         return announcer;
     }
 
-    @Override
-    public PunishmentListeners getPunishmentListeners() {
-        return pm;
-    }
-
     @Subscribe
     public void onShutdown(ProxyShutdownEvent event) {
-        if (pm != null) {
-            pm.stopAllListeners();
-        }
         if (announcer != null) {
             announcer.disable();
             announcer = null;

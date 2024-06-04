@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.spicord.embed.EmbedLoader;
@@ -40,18 +42,20 @@ public class Config {
     private File dataFolder;
     private EmbedLoader embedLoader;
     private File configFile;
-    @Getter private Logger logger;
+    private Logger logger;
 
     @Getter private long channelToAnnounce;
     @Getter private Messages messages;
 
-    @Getter private String jailManager;
-    @Getter private String punishmentManager;
     @Getter private boolean ignoreSilent;
     @Getter private String consoleName;
     @Getter private String automaticText;
 
     @Getter private boolean useDiscordCommand;
+
+    @Getter private boolean autoDetect;
+
+    @Getter private Set<String> enabledExtensions;
 
     public Config(BanAnnouncerPlugin plugin) {
         instance = this;
@@ -66,10 +70,6 @@ public class Config {
 
         this.configFile = new File(dataFolder, "config.yml");
         this.loadConfig(false);
-    }
-
-    public boolean isJailManagerEnabled() {
-        return !("off".equals(jailManager) || "false".equals(jailManager));
     }
 
     public void reload() {
@@ -114,8 +114,30 @@ public class Config {
                     "channel-to-announce",
                     oldConfigChannels != null && !oldConfigChannels.isEmpty() ? oldConfigChannels.get(0) : 0L
                 );
-                punishmentManager = config.getString("punishment-manager", "auto");
-                jailManager       = config.getString("jail-manager", "off");
+
+                String punishmentManager = config.getString("punishment-manager", "auto");
+                String jailManager       = config.getString("jail-manager", "off");
+
+                Set<String> legacyEnabled = new HashSet<>();
+
+                if (punishmentManager != null) {
+                    if ("auto".equals(punishmentManager)) {
+                        this.autoDetect = true;
+                    } else {
+                        legacyEnabled.add(jailManager);
+                    }
+                }
+                if (jailManager != null) {
+                    if (!"off".equals(jailManager)) {
+                        legacyEnabled.add(jailManager);
+                    }
+                }
+                List<String> enabledExt = config.getStringList("enabled-extensions");
+                if (enabledExt != null) {
+                    legacyEnabled.addAll(enabledExt);
+                }
+                this.enabledExtensions = legacyEnabled;
+
                 ignoreSilent      = config.getBoolean("ignore-silent", false);
                 consoleName       = config.getString("console-name", "Console");
                 automaticText     = config.getString("automatic", "Automatic");

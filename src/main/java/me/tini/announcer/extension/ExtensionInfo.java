@@ -6,26 +6,32 @@ public class ExtensionInfo {
 
     private String name;
 
-    private String key;
+    @SerializedName(value = "id", alternate = { "key" })
+    private String id;
 
     @SerializedName("class")
     private String clazz;
 
     private String requiredClass;
 
-    private boolean isPunishmentManager;
+    //###################################
+    private boolean isPunishmentManager, isJailManager;
+    //###################################
 
-    private boolean isJailManager;
+    public ExtensionInfo(String name, String id, String mainClass, String requiredClass) {
+        this.name = name;
+        this.id = id;
+    }
 
     public String getName() {
         return name;
     }
 
-    public String getKey() {
-        return key;
+    public String getId() {
+        return id;
     }
 
-    public String getClassName() {
+    public String getMainClass() {
         return clazz;
     }
 
@@ -33,11 +39,7 @@ public class ExtensionInfo {
         return requiredClass;
     }
 
-    public boolean isPunishmentManager() {
-        return isPunishmentManager;
-    }
-
-    public boolean isJailManager() {
-        return isJailManager;
+    public boolean hasPunishmentManager() {
+        return isPunishmentManager || isJailManager;
     }
 }

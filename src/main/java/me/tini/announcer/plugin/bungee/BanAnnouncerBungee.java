@@ -24,12 +24,9 @@ import org.spicord.SpicordLoader;
 
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.PunishmentListeners;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
-import me.tini.announcer.extension.ExtensionInfo;
-import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtension;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
@@ -38,7 +35,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlugin {
 
     private BanAnnouncer announcer;
-    private PunishmentListeners pm;
 
     @Override
     public void onEnable() {
@@ -50,39 +46,15 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
         new ReloadCommand().register(this);
 
-        this.announcer = new BanAnnouncer(config, spicord);
+        announcer = new BanAnnouncer(config, spicord, this);
 
-        this.announcer.loadExtensions(new File(getDataFolder(), "extensions"));
+        announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
-        if (pm != null) {
-            pm.stopAllListeners();
-        }
+        announcer.registerExtension("AdvancedBan", "advancedban", () -> new AdvancedBanExtension(this), "me.leoko.advancedban.Universal");
+        announcer.registerExtension("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , "litebans.api.Events");
+        announcer.registerExtension("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), "space.arim.libertybans.api.LibertyBans");
 
-        pm = new PunishmentListeners(getLogger());
-
-        // General punishments
-        pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanExtension(this), true, "me.leoko.advancedban.Universal");
-        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , true, "litebans.api.Events");
-        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
-
-        for (ExtensionContainer loader : announcer.getExtensions()) {
-            ExtensionInfo info = loader.getInfo();
-            pm.addNew(info.getName(), info.getKey(), loader.getInstanceSupplier(this), info.isPunishmentManager(), info.getRequiredClass());
-        }
-
-        final String pun = config.getPunishmentManager().toLowerCase();
-
-        if ("auto".equals(pun)) {
-            pm.autoDetect();
-        } else {
-            pm.startPunishListener(pun);
-        }
-
-        final String jail = config.getJailManager().toLowerCase();
-
-        if (config.isJailManagerEnabled()) { // Jail enabled
-            pm.startJailListener(jail);
-        }
+        announcer.enableExtensions();
 
         spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
@@ -92,15 +64,7 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
     }
 
     @Override
-    public PunishmentListeners getPunishmentListeners() {
-        return pm;
-    }
-
-    @Override
     public void onDisable() {
-        if (pm != null) {
-            pm.stopAllListeners();
-        }
         if (announcer != null) {
             announcer.disable();
             announcer = null;

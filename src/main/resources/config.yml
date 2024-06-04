@@ -38,24 +38,25 @@ messages:
 # The command does NOT provides moderation tools, it is for testing
 # your embed files and reloading them without going to the console.
 #
-# Only members with permission of "BAN_MEMBERS" can use the command.
+# Only members with the "BAN_MEMBERS" permission can use the command.
 enable-discord-command: true
 
-# The plugin used for manage the punishments
-# Possible values:
-#     auto        = Auto detect
-#     advancedban = Use AdvancedBan
-#     litebans    = Use LiteBans
-#     maxbans     = Use MaxBansPlus
-#     libertybans = Use LibertyBans
-punishment-manager: auto
-
-# The plugin used for manage the jails (spigot-only)
-# Possible values:
-#     off         = Do not use this
-#     essentials  = Use EssentialsX
-#     betterjails = Use BetterJails 
-jail-manager: off
+# The list of enabled extensions.
+# They can provide support for various punishment plugins or
+# provide extra functionality to BanAnnouncer.
+# 
+# You can add as many as you want.
+# 
+# (Some) Possible values:
+#     advancedban = For AdvancedBan
+#     litebans    = For LiteBans
+#     maxbans     = For MaxBansPlus
+#     libertybans = For LibertyBans
+#     essentials  = For EssentialsX Jails
+#     betterjails = For BetterJails
+enabled-extensions:
+ - advancedban
+ - essentials
 
 # If it's set to false, the punishments made
 #    with the '-s' flag of LiteBans will be sent anyways.

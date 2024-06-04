@@ -6,8 +6,9 @@ public interface BanAnnouncerPlugin extends PluginInterface {
 
     BanAnnouncer getAnnouncer();
 
-    PunishmentListeners getPunishmentListeners();
-
     String getVersion();
 
+    default void log(String msg, Object... args) {
+        getLogger().info(String.format(msg, args));
+    }
 }

@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import org.spicord.Spicord;
@@ -42,6 +43,7 @@ import me.tini.announcer.config.Config;
 import me.tini.announcer.config.Messages;
 import me.tini.announcer.extension.AbstractExtension;
 import me.tini.announcer.extension.ExtensionContainer;
+import me.tini.announcer.extension.ExtensionInfo;
 import me.tini.announcer.extension.FileExtensionContainer;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
@@ -52,6 +54,7 @@ public final class BanAnnouncer {
     private Set<ExtensionContainer> allExtensions = new HashSet<>(0);
 
     @Getter private Config config;
+    @Getter private final BanAnnouncerPlugin plugin;
     @Getter private Logger logger;
     @Getter private boolean enabled = true;
 
@@ -60,9 +63,10 @@ public final class BanAnnouncer {
 
     private Map<String, Function<PunishmentInfo, String>> allPlaceholders = new HashMap<>();
 
-    public BanAnnouncer(Config config, Spicord spicord) {
+    public BanAnnouncer(Config config, Spicord spicord, BanAnnouncerPlugin plugin) {
         this.config = config;
-        this.logger = config.getLogger();
+        this.plugin = plugin;
+        this.logger = plugin.getLogger();
 
         this.callbacks = new EnumMap<>(PunishmentInfo.Type.class);
 
@@ -221,11 +225,12 @@ public final class BanAnnouncer {
         Set<ExtensionContainer> extensions = new HashSet<>(files.length, 1.0f);
 
         for (File file : files) {
-            ExtensionContainer loader = new FileExtensionContainer(file);
+            ExtensionContainer container = new FileExtensionContainer(file);
 
-            extensions.add(loader);
+            extensions.add(container);
 
-            logger.info("Loaded '" + loader.getInfo().getName() + "' extension.");
+            ExtensionInfo info = container.getInfo();
+            plugin.log("[Extension] Loaded %s (id: %s)", info.getName(), info.getId());
         }
 
         allExtensions.addAll(extensions);
@@ -258,5 +263,28 @@ public final class BanAnnouncer {
     @SuppressWarnings("deprecation")
     private long dateToMillis(String date) {
         return new Date(date).getTime();
+    }
+
+    public void registerExtension(String name, String id, Supplier<AbstractExtension> instanceSupplier, String requiredClass) {
+        ExtensionContainer container = new ExtensionContainer(new ExtensionInfo(name, id, null, requiredClass), instanceSupplier);
+        allExtensions.add(container);
+        plugin.log("[Extension] Loaded %s (id: %s)", name, id);
+    }
+
+    public void enableExtensions() {
+        for (ExtensionContainer container : getExtensions()) {
+            ExtensionInfo info = container.getInfo();
+
+            if (config.getEnabledExtensions().contains(info.getId())) {
+                AbstractExtension instance = container.getInstanceSupplier(plugin).get();
+
+                plugin.log("[Extension] Enabled %s (id: %s)", info.getName(), info.getId());
+
+                PunishmentListener listener = instance.getPunishmentListener();
+                if (listener != null) {
+                    listener.register();
+                }
+            }
+        }
     }
 }
