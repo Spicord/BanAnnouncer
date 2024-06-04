@@ -4,6 +4,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.spicord.embed.Embed;
 
@@ -14,16 +17,18 @@ import com.google.gson.JsonObject;
 
 public class MessageFormatter {
 
-    private final Map<String, String> map;
-    private final char special;
+    private static final Pattern placeholderPattern = Pattern.compile("([%]{1}[A-Za-z0-9_]{1,}[%]{1})");
 
-    public MessageFormatter(char c) {
-        this.map = new HashMap<String, String>();
-        this.special = c;
-    }
+    private final Map<String, String> map;
+
+    private Function<String, String> otherHandler;
 
     public MessageFormatter() {
-        this('%');
+        this.map = new HashMap<String, String>();
+    }
+
+    public void setOtherPlaceholderHandler(Function<String, String> handler) {
+        this.otherHandler = handler;
     }
 
     public MessageFormatter setString(String key, String value) {
@@ -91,19 +96,20 @@ public class MessageFormatter {
     }
 
     private String setPlaceholders(String message, boolean isUrl) {
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            String key = entry.getKey();
-            String val = entry.getValue();
+        Matcher matcher = placeholderPattern.matcher(message);
+        while (matcher.find()) {
+            final String found = matcher.group();
+            final String foundNoSym = found.substring(1, found.length() - 1);
 
-            if (val == null) {
-                continue;
+            String value = map.get(foundNoSym);
+            if (value == null && otherHandler != null) {
+                value = otherHandler.apply(foundNoSym);
             }
-
             if (isUrl) {
-                val = urlencode(val);
+                value = urlencode(value);
             }
 
-            message = message.replace(special + key + special, val);
+            message = message.replace(found, value);
         }
         return message;
     }

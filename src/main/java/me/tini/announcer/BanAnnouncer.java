@@ -111,6 +111,8 @@ public final class BanAnnouncer {
         builder = (punishment, template) -> {
             MessageFormatter mf = new MessageFormatter();
 
+            mf.setOtherPlaceholderHandler(placeholder -> processPlaceholder(punishment, placeholder));
+
             for (Entry<String, Function<PunishmentInfo, String>> placeholders : allPlaceholders.entrySet()) {
                 String placeholder = placeholders.getKey();
                 String value = placeholders.getValue().apply(punishment);
