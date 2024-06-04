@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.tini.announcer.utils;
+package me.tini.announcer.extension.impl.advancedban;
 
 import java.math.BigInteger;
 import java.util.UUID;

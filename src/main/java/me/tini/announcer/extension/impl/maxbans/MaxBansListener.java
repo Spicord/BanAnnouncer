@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.tini.announcer.bukkit.listener;
+package me.tini.announcer.extension.impl.maxbans;
 
 import java.time.Duration;
 

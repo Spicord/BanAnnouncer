@@ -40,15 +40,14 @@ import org.spicord.embed.EmbedSender;
 import lombok.Getter;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.config.Messages;
-import me.tini.announcer.extension.Extension;
-import me.tini.announcer.extension.ExtensionClassLoader;
+import me.tini.announcer.extension.ExtensionLoader;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 
 public final class BanAnnouncer {
 
-    private Set<Extension> allExtensions = new HashSet<Extension>(0);
+    private Set<ExtensionLoader> allExtensions = new HashSet<>(0);
 
     @Getter private Config config;
     @Getter private Logger logger;
@@ -195,8 +194,8 @@ public final class BanAnnouncer {
     }
 
     public void disable() {
-        for (Extension ext : allExtensions) {
-            ext.unload();
+        for (ExtensionLoader ext : allExtensions) {
+            ext.close();
         }
         allExtensions.clear();
         callbacks.clear();
@@ -206,29 +205,21 @@ public final class BanAnnouncer {
         callbacks = null;
     }
 
-    public Set<Extension> loadExtensions(File folder) {
+    public Set<ExtensionLoader> loadExtensions(File folder) {
         if (folder.mkdirs()) {
             return Collections.emptySet();
         }
 
-        File[] files = folder.listFiles((d, name) -> name.endsWith(".jar")||name.endsWith(".ext"));
+        File[] files = folder.listFiles((d, name) -> name.endsWith(".jar") || name.endsWith(".ext"));
 
-        Set<Extension> extensions = new HashSet<>(files.length, 1.0f);
+        Set<ExtensionLoader> extensions = new HashSet<>(files.length, 1.0f);
 
         for (File file : files) {
-            @SuppressWarnings("resource")
-            ExtensionClassLoader loader = new ExtensionClassLoader(file);
+            ExtensionLoader loader = new ExtensionLoader(file);
 
-            Extension ext = loader.getExtension();
+            extensions.add(loader);
 
-            if (ext == null) {
-                loader.close();
-                continue; // TODO: warning?
-            }
-
-            extensions.add(ext);
-
-            logger.info("Loaded " + ext.getName() + " extension.");
+            logger.info("Loaded " + loader.getInfo().getName() + " extension.");
         }
 
         allExtensions.addAll(extensions);
@@ -236,7 +227,7 @@ public final class BanAnnouncer {
         return extensions;
     }
 
-    public Set<Extension> getExtensions() {
+    public Set<ExtensionLoader> getExtensions() {
         return allExtensions;
     }
 

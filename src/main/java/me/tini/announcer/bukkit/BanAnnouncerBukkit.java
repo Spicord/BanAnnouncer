@@ -28,14 +28,15 @@ import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.PunishmentListeners;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
-import me.tini.announcer.bukkit.listener.AdvancedBanListener;
-import me.tini.announcer.bukkit.listener.BetterJailsListener;
-import me.tini.announcer.bukkit.listener.EssentialsJailListener;
-import me.tini.announcer.bukkit.listener.MaxBansListener;
 import me.tini.announcer.config.Config;
-import me.tini.announcer.extension.Extension;
-import me.tini.announcer.listener.LibertyBansListener;
-import me.tini.announcer.listener.LiteBansListener;
+import me.tini.announcer.extension.ExtensionInfo;
+import me.tini.announcer.extension.ExtensionLoader;
+import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtension;
+import me.tini.announcer.extension.impl.betterjails.BetterJailsExtension;
+import me.tini.announcer.extension.impl.essentialsjail.EssentialsJailExtension;
+import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
+import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
+import me.tini.announcer.extension.impl.maxbans.MaxBansExtension;
 
 public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin {
 
@@ -63,17 +64,18 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
         pm = new PunishmentListeners(getLogger());
 
         // General punishments
-        pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanListener(this)   , true, "me.leoko.advancedban.Universal");
-        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansListener(this)      , true, "litebans.api.Events");
-        pm.addNew("MaxBansPlus", "maxbans"    , () -> new MaxBansListener(this)       , true, "org.maxgamer.maxbans.MaxBansPlus");
-        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansListener(this)   , true, "space.arim.libertybans.api.LibertyBans");
+        pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanExtension(this), true, "me.leoko.advancedban.Universal");
+        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , true, "litebans.api.Events");
+        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
+        pm.addNew("MaxBansPlus", "maxbans"    , () -> new MaxBansExtension(this)    , true, "org.maxgamer.maxbans.MaxBansPlus");
 
         // Jail
-        pm.addNew("BetterJails", "betterjails", () -> new BetterJailsListener(this)   , false, "com.github.fefo.betterjails.api.BetterJails");
-        pm.addNew("EssentialsX", "essentials" , () -> new EssentialsJailListener(this), false, "net.ess3.api.events.JailStatusChangeEvent");
+        pm.addNew("BetterJails", "betterjails", () -> new BetterJailsExtension(this)   , false, "com.github.fefo.betterjails.api.BetterJails");
+        pm.addNew("EssentialsX", "essentials" , () -> new EssentialsJailExtension(this), false, "net.ess3.api.events.JailStatusChangeEvent");
 
-        for (Extension ext : announcer.getExtensions()) {
-            pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
+        for (ExtensionLoader loader : announcer.getExtensions()) {
+            ExtensionInfo ext = loader.getInfo();
+            pm.addNew(ext.getName(), ext.getKey(), loader.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
         }
 
         String pun = config.getPunishmentManager().toLowerCase();

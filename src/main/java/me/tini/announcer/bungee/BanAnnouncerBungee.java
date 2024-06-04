@@ -27,11 +27,12 @@ import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.PunishmentListeners;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
-import me.tini.announcer.bungee.listener.AdvancedBanListener;
 import me.tini.announcer.config.Config;
-import me.tini.announcer.extension.Extension;
-import me.tini.announcer.listener.LibertyBansListener;
-import me.tini.announcer.listener.LiteBansListener;
+import me.tini.announcer.extension.ExtensionInfo;
+import me.tini.announcer.extension.ExtensionLoader;
+import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtension;
+import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
+import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 import net.md_5.bungee.api.plugin.Plugin;
 
 public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlugin {
@@ -60,12 +61,13 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
         pm = new PunishmentListeners(getLogger());
 
         // General punishments
-        pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanListener(this), true, "me.leoko.advancedban.Universal");
-        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansListener(this)   , true, "litebans.api.Events");
-        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansListener(this), true, "space.arim.libertybans.api.LibertyBans");
+        pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanExtension(this), true, "me.leoko.advancedban.Universal");
+        pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , true, "litebans.api.Events");
+        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
 
-        for (Extension ext : announcer.getExtensions()) {
-            pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
+        for (ExtensionLoader loader : announcer.getExtensions()) {
+            ExtensionInfo info = loader.getInfo();
+            pm.addNew(info.getName(), info.getKey(), loader.getInstanceSupplier(this), info.isPunishmentManager(), info.getRequiredClass());
         }
 
         final String pun = config.getPunishmentManager().toLowerCase();

@@ -8,11 +8,12 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import me.tini.announcer.extension.AbstractExtension;
+
 public class PunishmentListeners {
 
     private final Logger logger;
     private final Map<String, PunishmentManagerInfo> punishListeners = new HashMap<>();
-    private final Map<String, PunishmentManagerInfo> jailListeners = new HashMap<>();
 
     private final List<ActiveListenerEntry> activeListeners = new ArrayList<>();
 
@@ -20,12 +21,8 @@ public class PunishmentListeners {
         this.logger = logger;
     }
 
-    public void addNew(String name, String key, Supplier<PunishmentListener> listenerSupplier, boolean isPun, String classToDetect) {
-        if (isPun) {
-            punishListeners.put(key, new PunishmentManagerInfo(name, listenerSupplier, classToDetect));
-        } else {
-            jailListeners.put(key, new PunishmentManagerInfo(name, listenerSupplier, classToDetect));
-        }
+    public void addNew(String name, String key, Supplier<AbstractExtension> listenerSupplier, boolean isPun, String classToDetect) {
+        punishListeners.put(key, new PunishmentManagerInfo(name, listenerSupplier, classToDetect));
     }
 
     public void autoDetect() {
@@ -59,9 +56,10 @@ public class PunishmentListeners {
             logger.severe("You choose " + key + " but I don't know what that is!");
         }
     }
+
     public void startJailListener(String key) {
-        if (jailListeners.containsKey(key)) {
-            PunishmentManagerInfo info = jailListeners.get(key);
+        if (punishListeners.containsKey(key)) {
+            PunishmentManagerInfo info = punishListeners.get(key);
 
             if (isClassPresent(info.getClassToDetect())) {
                 PunishmentListener listener = info.newInstance();
@@ -108,10 +106,10 @@ public class PunishmentListeners {
     private class PunishmentManagerInfo {
 
         private final String name;
-        private final Supplier<PunishmentListener> listenerSupplier;
+        private final Supplier<AbstractExtension> listenerSupplier;
         private final String classToDetect;
 
-        PunishmentManagerInfo(String name, Supplier<PunishmentListener> listenerSupplier, String classToDetect) {
+        PunishmentManagerInfo(String name, Supplier<AbstractExtension> listenerSupplier, String classToDetect) {
             this.name = name;
             this.listenerSupplier = listenerSupplier;
             this.classToDetect = classToDetect;
@@ -122,7 +120,7 @@ public class PunishmentListeners {
         }
 
         public PunishmentListener newInstance() {
-            return listenerSupplier.get();
+            return listenerSupplier.get().getPunishmentListener();
         }
 
         public String getClassToDetect() {

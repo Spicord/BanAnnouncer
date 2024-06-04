@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.tini.announcer.utils;
+package me.tini.announcer.extension.impl.betterjails;
 
 import java.util.concurrent.TimeUnit;
 

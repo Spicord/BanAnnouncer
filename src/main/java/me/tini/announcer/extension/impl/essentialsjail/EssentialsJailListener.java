@@ -1,4 +1,4 @@
-package me.tini.announcer.bukkit.listener;
+package me.tini.announcer.extension.impl.essentialsjail;
 
 import org.bukkit.event.EventHandler;
 

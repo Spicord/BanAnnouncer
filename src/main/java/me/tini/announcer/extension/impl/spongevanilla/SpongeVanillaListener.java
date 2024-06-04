@@ -1,4 +1,4 @@
-package me.tini.announcer.sponge.listener;
+package me.tini.announcer.extension.impl.spongevanilla;
 
 import java.net.Inet4Address;
 import java.net.Inet6Address;
@@ -21,9 +21,9 @@ import me.tini.announcer.sponge.SpongePunishmentListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 
-public class VanillaListener extends SpongePunishmentListener {
+public class SpongeVanillaListener extends SpongePunishmentListener {
 
-    public VanillaListener(BanAnnouncerSponge plugin) {
+    public SpongeVanillaListener(BanAnnouncerSponge plugin) {
         super(plugin);
     }
 

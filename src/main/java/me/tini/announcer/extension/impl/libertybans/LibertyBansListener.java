@@ -1,4 +1,4 @@
-package me.tini.announcer.listener;
+package me.tini.announcer.extension.impl.libertybans;
 
 import java.time.Duration;
 import java.util.Optional;

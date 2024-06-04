@@ -1,4 +1,4 @@
-package me.tini.announcer.bukkit.listener;
+package me.tini.announcer.extension.impl.betterjails;
 
 import com.github.fefo.betterjails.api.BetterJails;
 import com.github.fefo.betterjails.api.event.prisoner.PlayerImprisonEvent;
@@ -9,7 +9,6 @@ import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.PunishmentInfo.Type;
 import me.tini.announcer.bukkit.BanAnnouncerBukkit;
 import me.tini.announcer.bukkit.BukkitPunishmentListener;
-import me.tini.announcer.utils.TimeUtils;
 
 public class BetterJailsListener extends BukkitPunishmentListener {
 

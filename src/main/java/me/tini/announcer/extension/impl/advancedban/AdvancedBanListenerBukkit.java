@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.tini.announcer.bukkit.listener;
+package me.tini.announcer.extension.impl.advancedban;
 
 import org.bukkit.event.EventHandler;
 
@@ -24,11 +24,10 @@ import me.leoko.advancedban.bukkit.event.RevokePunishmentEvent;
 import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.bukkit.BanAnnouncerBukkit;
 import me.tini.announcer.bukkit.BukkitPunishmentListener;
-import me.tini.announcer.utils.AdvancedBanUtil;
 
-public final class AdvancedBanListener extends BukkitPunishmentListener {
+public final class AdvancedBanListenerBukkit extends BukkitPunishmentListener {
 
-    public AdvancedBanListener(BanAnnouncerBukkit plugin) {
+    public AdvancedBanListenerBukkit(BanAnnouncerBukkit plugin) {
         super(plugin);
     }
 

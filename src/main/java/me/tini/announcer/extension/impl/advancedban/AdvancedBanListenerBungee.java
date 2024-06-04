@@ -15,19 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.tini.announcer.bungee.listener;
+package me.tini.announcer.extension.impl.advancedban;
 
 import me.leoko.advancedban.bungee.event.PunishmentEvent;
 import me.leoko.advancedban.bungee.event.RevokePunishmentEvent;
 import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.bungee.BanAnnouncerBungee;
 import me.tini.announcer.bungee.BungeePunishmentListener;
-import me.tini.announcer.utils.AdvancedBanUtil;
 import net.md_5.bungee.event.EventHandler;
 
-public final class AdvancedBanListener extends BungeePunishmentListener {
+public final class AdvancedBanListenerBungee extends BungeePunishmentListener {
 
-    public AdvancedBanListener(BanAnnouncerBungee plugin) {
+    public AdvancedBanListenerBungee(BanAnnouncerBungee plugin) {
         super(plugin);
     }
 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.tini.announcer.listener;
+package me.tini.announcer.extension.impl.litebans;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

@@ -21,9 +21,10 @@ import me.tini.announcer.PunishmentListeners;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
-import me.tini.announcer.extension.Extension;
-import me.tini.announcer.listener.LibertyBansListener;
-import me.tini.announcer.sponge.listener.VanillaListener;
+import me.tini.announcer.extension.ExtensionInfo;
+import me.tini.announcer.extension.ExtensionLoader;
+import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
+import me.tini.announcer.extension.impl.spongevanilla.SpongeVanillaExtension;
 
 @Plugin("banannouncer")
 public class BanAnnouncerSponge implements BanAnnouncerPlugin {
@@ -74,23 +75,12 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
         pm = new PunishmentListeners(getLogger());
 
         // General punishments
-        pm.addNew(
-            "LibertyBans",
-            "libertybans",
-            () -> new LibertyBansListener(this),
-            true,
-            "space.arim.libertybans.api.LibertyBans"
-        );
-        pm.addNew(
-            "Sponge",
-            "sponge",
-            () -> new VanillaListener(this),
-            true,
-            "org.spongepowered.api.Game"
-        );
+        pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
+        pm.addNew("Sponge", "sponge", () -> new SpongeVanillaExtension(this), true, "org.spongepowered.api.Game");
 
-        for (Extension ext : announcer.getExtensions()) {
-            pm.addNew(ext.getName(), ext.getKey(), ext.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
+        for (ExtensionLoader loader : announcer.getExtensions()) {
+            ExtensionInfo ext = loader.getInfo();
+            pm.addNew(ext.getName(), ext.getKey(), loader.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
         }
 
         String pun = config.getPunishmentManager().toLowerCase();
