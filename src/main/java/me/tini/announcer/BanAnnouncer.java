@@ -20,14 +20,12 @@ package me.tini.announcer;
 import static me.tini.announcer.PunishmentInfo.Type.*;
 
 import java.io.File;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -51,7 +49,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 
 public final class BanAnnouncer {
 
-    private Set<ExtensionContainer> allExtensions = new HashSet<>(0);
+    private Map<String, ExtensionContainer> allExtensions = new HashMap<>(0);
 
     @Getter private Config config;
     @Getter private final BanAnnouncerPlugin plugin;
@@ -204,7 +202,7 @@ public final class BanAnnouncer {
     }
 
     public void disable() {
-        for (ExtensionContainer ext : allExtensions) {
+        for (ExtensionContainer ext : allExtensions.values()) {
             ext.close();
         }
         allExtensions.clear();
@@ -215,31 +213,25 @@ public final class BanAnnouncer {
         callbacks = null;
     }
 
-    public Set<ExtensionContainer> loadExtensions(File folder) {
+    public void loadExtensions(File folder) {
         if (folder.mkdirs()) {
-            return Collections.emptySet();
+            return;
         }
 
         File[] files = folder.listFiles((d, name) -> name.endsWith(".jar") || name.endsWith(".ext"));
 
-        Set<ExtensionContainer> extensions = new HashSet<>(files.length, 1.0f);
-
         for (File file : files) {
             ExtensionContainer container = new FileExtensionContainer(file);
 
-            extensions.add(container);
-
             ExtensionInfo info = container.getInfo();
             plugin.log("[Extension] Loaded %s (id: %s)", info.getName(), info.getId());
+
+            allExtensions.put(info.getId(), container);
         }
-
-        allExtensions.addAll(extensions);
-
-        return extensions;
     }
 
-    public Set<ExtensionContainer> getExtensions() {
-        return allExtensions;
+    public Collection<ExtensionContainer> getExtensions() {
+        return allExtensions.values();
     }
 
     public void registerPlaceholder(String placeholder, Function<PunishmentInfo, String> provider) {
@@ -247,7 +239,7 @@ public final class BanAnnouncer {
     }
 
     public String processPlaceholder(PunishmentInfo info, String placeholder) {
-        for (ExtensionContainer loader : allExtensions) {
+        for (ExtensionContainer loader : allExtensions.values()) {
             if (loader.isInstanceCreated()) {
                 AbstractExtension extension = loader.getInstance();
                 String result = extension.processPlaceholder(info, placeholder);
@@ -267,24 +259,42 @@ public final class BanAnnouncer {
 
     public void registerExtension(String name, String id, Supplier<AbstractExtension> instanceSupplier, String requiredClass) {
         ExtensionContainer container = new ExtensionContainer(new ExtensionInfo(name, id, null, requiredClass), instanceSupplier);
-        allExtensions.add(container);
+        allExtensions.put(id, container);
         plugin.log("[Extension] Loaded %s (id: %s)", name, id);
     }
 
     public void enableExtensions() {
-        for (ExtensionContainer container : getExtensions()) {
+        for (String id : config.getEnabledExtensions()) {
+            ExtensionContainer container = allExtensions.get(id);
+
+            if (container == null) {
+                plugin.warn("The extension with the id '%s' was not found", id);
+                continue;
+            }
+
             ExtensionInfo info = container.getInfo();
 
-            if (config.getEnabledExtensions().contains(info.getId())) {
-                AbstractExtension instance = container.getInstanceSupplier(plugin).get();
+            if (!isClassPresent(info.getRequiredClass())) {
+                plugin.warn("[Extension] %s (id: %s) will not work on this server because it is missing a dependency", info.getName(), info.getId());
+                continue;
+            }
 
-                plugin.log("[Extension] Enabled %s (id: %s)", info.getName(), info.getId());
+            AbstractExtension instance = container.getInstanceSupplier(plugin).get();
 
-                PunishmentListener listener = instance.getPunishmentListener();
-                if (listener != null) {
-                    listener.register();
-                }
+            plugin.log("[Extension] Enabled %s (id: %s)", info.getName(), info.getId());
+
+            PunishmentListener listener = instance.getPunishmentListener();
+            if (listener != null) {
+                listener.register();
             }
         }
+    }
+
+    private static boolean isClassPresent(String className) {
+        try {
+            Class.forName(className, false, BanAnnouncer.class.getClassLoader());
+            return true;
+        } catch (ClassNotFoundException e) {}
+        return false;
     }
 }

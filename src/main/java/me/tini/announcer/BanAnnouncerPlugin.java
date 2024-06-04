@@ -11,4 +11,8 @@ public interface BanAnnouncerPlugin extends PluginInterface {
     default void log(String msg, Object... args) {
         getLogger().info(String.format(msg, args));
     }
+
+    default void warn(String msg, Object... args) {
+        getLogger().warning(String.format(msg, args));
+    }
 }
