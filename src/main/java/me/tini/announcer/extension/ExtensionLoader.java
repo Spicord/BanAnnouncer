@@ -76,6 +76,14 @@ public class ExtensionLoader {
         };
     }
 
+    public boolean isInstanceCreated() {
+        return instance != null;
+    }
+
+    public AbstractExtension getInstance() {
+        return instance;
+    }
+
     public void close() {
         try {
             loader.close();

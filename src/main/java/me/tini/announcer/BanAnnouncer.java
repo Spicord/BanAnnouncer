@@ -40,6 +40,7 @@ import org.spicord.embed.EmbedSender;
 import lombok.Getter;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.config.Messages;
+import me.tini.announcer.extension.AbstractExtension;
 import me.tini.announcer.extension.ExtensionLoader;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
@@ -141,12 +142,14 @@ public final class BanAnnouncer {
         callbacks.put(TEMPWARN,  callbacks.get(WARN));
     }
 
-    public void handlePunishment(PunishmentInfo punishment) {
+    public void handlePunishment(PunishmentInfo punishment, PunishmentListener listener) {
         if (!enabled) {
             logger.warning("BanAnnouncer is not enabled, ignoring punishment.");
             logger.warning(punishment.toString());
             return;
         }
+
+        logger.info("Got announcement request from the '" + listener.getName() + "' listener.");
 
         Embed embed = buildEmbed(punishment);
         sendDiscordMessage(embed);
@@ -158,7 +161,7 @@ public final class BanAnnouncer {
 
     private void sendDiscordMessage(Embed message) {
         if (message == null) {
-            System.out.println("Message is null, ignoring it.");
+            logger.warning("(message is null, ignoring it)");
             return;
         }
 
@@ -219,7 +222,7 @@ public final class BanAnnouncer {
 
             extensions.add(loader);
 
-            logger.info("Loaded " + loader.getInfo().getName() + " extension.");
+            logger.info("Loaded '" + loader.getInfo().getName() + "' extension.");
         }
 
         allExtensions.addAll(extensions);
@@ -233,6 +236,20 @@ public final class BanAnnouncer {
 
     public void registerPlaceholder(String placeholder, Function<PunishmentInfo, String> provider) {
         allPlaceholders.put(placeholder, provider);
+    }
+
+    public String processPlaceholder(PunishmentInfo info, String placeholder) {
+        for (ExtensionLoader loader : allExtensions) {
+            if (loader.isInstanceCreated()) {
+                AbstractExtension extension = loader.getInstance();
+                String result = extension.processPlaceholder(info, placeholder);
+
+                if (result != null) {
+                    return result;
+                }
+            }
+        }
+        return null;
     }
 
     @SuppressWarnings("deprecation")
