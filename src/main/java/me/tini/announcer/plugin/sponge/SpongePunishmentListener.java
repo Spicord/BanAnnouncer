@@ -1,4 +1,4 @@
-package me.tini.announcer.sponge;
+package me.tini.announcer.plugin.sponge;
 
 import me.tini.announcer.PunishmentListener;
 

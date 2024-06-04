@@ -1,6 +1,6 @@
 name: BanAnnouncer
 author: Tini
-main: me.tini.announcer.bungee.BanAnnouncerBungee
+main: me.tini.announcer.plugin.bungee.BanAnnouncerBungee
 version: ${project.version}
 depends: [Spicord]
 softdepends: [AdvancedBan, LiteBans]

@@ -1,4 +1,4 @@
-package me.tini.announcer.bukkit;
+package me.tini.announcer.plugin.bukkit;
 
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;

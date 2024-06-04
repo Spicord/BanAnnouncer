@@ -1,4 +1,4 @@
-package me.tini.announcer.bungee;
+package me.tini.announcer.plugin.bungee;
 
 import me.tini.announcer.PunishmentListener;
 import net.md_5.bungee.api.plugin.Listener;

@@ -4,8 +4,8 @@ import org.bukkit.event.EventHandler;
 
 import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.PunishmentInfo.Type;
-import me.tini.announcer.bukkit.BanAnnouncerBukkit;
-import me.tini.announcer.bukkit.BukkitPunishmentListener;
+import me.tini.announcer.plugin.bukkit.BanAnnouncerBukkit;
+import me.tini.announcer.plugin.bukkit.BukkitPunishmentListener;
 import net.ess3.api.IUser;
 import net.ess3.api.events.JailStatusChangeEvent;
 

@@ -20,8 +20,8 @@ package me.tini.announcer.extension.impl.advancedban;
 import me.leoko.advancedban.bungee.event.PunishmentEvent;
 import me.leoko.advancedban.bungee.event.RevokePunishmentEvent;
 import me.tini.announcer.PunishmentInfo;
-import me.tini.announcer.bungee.BanAnnouncerBungee;
-import me.tini.announcer.bungee.BungeePunishmentListener;
+import me.tini.announcer.plugin.bungee.BanAnnouncerBungee;
+import me.tini.announcer.plugin.bungee.BungeePunishmentListener;
 import net.md_5.bungee.event.EventHandler;
 
 public final class AdvancedBanListenerBungee extends BungeePunishmentListener {

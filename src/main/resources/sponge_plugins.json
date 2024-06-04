@@ -9,7 +9,7 @@
             "id": "banannouncer",
             "name": "BanAnnouncer",
             "version": "${project.version}",
-            "entrypoint": "me.tini.announcer.sponge.BanAnnouncerSponge",
+            "entrypoint": "me.tini.announcer.plugin.sponge.BanAnnouncerSponge",
             "description": "Announce the Minecraft bans on your Discord server.",
             "links": {
                 "homepage": "https://github.com/Spicord/BanAnnouncer",

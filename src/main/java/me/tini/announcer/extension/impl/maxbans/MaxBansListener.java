@@ -36,8 +36,8 @@ import org.maxgamer.maxbans.util.TemporalDuration;
 
 import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.PunishmentInfo.Type;
-import me.tini.announcer.bukkit.BanAnnouncerBukkit;
-import me.tini.announcer.bukkit.BukkitPunishmentListener;
+import me.tini.announcer.plugin.bukkit.BanAnnouncerBukkit;
+import me.tini.announcer.plugin.bukkit.BukkitPunishmentListener;
 
 public class MaxBansListener extends BukkitPunishmentListener {
 

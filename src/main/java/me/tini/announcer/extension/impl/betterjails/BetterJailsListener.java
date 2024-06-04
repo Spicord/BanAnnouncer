@@ -7,8 +7,8 @@ import com.github.fefo.betterjails.api.model.prisoner.Prisoner;
 
 import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.PunishmentInfo.Type;
-import me.tini.announcer.bukkit.BanAnnouncerBukkit;
-import me.tini.announcer.bukkit.BukkitPunishmentListener;
+import me.tini.announcer.plugin.bukkit.BanAnnouncerBukkit;
+import me.tini.announcer.plugin.bukkit.BukkitPunishmentListener;
 
 public class BetterJailsListener extends BukkitPunishmentListener {
 

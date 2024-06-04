@@ -2,7 +2,7 @@ package me.tini.announcer.extension.impl.spongevanilla;
 
 import me.tini.announcer.PunishmentListener;
 import me.tini.announcer.extension.AbstractExtension;
-import me.tini.announcer.sponge.BanAnnouncerSponge;
+import me.tini.announcer.plugin.sponge.BanAnnouncerSponge;
 
 public class SpongeVanillaExtension extends AbstractExtension {
 

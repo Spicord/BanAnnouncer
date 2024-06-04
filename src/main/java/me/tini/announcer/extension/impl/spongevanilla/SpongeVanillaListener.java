@@ -16,8 +16,8 @@ import org.spongepowered.api.event.user.PardonUserEvent;
 
 import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.PunishmentInfo.Type;
-import me.tini.announcer.sponge.BanAnnouncerSponge;
-import me.tini.announcer.sponge.SpongePunishmentListener;
+import me.tini.announcer.plugin.sponge.BanAnnouncerSponge;
+import me.tini.announcer.plugin.sponge.SpongePunishmentListener;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 

@@ -1,4 +1,4 @@
-package me.tini.announcer.velocity;
+package me.tini.announcer.plugin.velocity;
 
 import java.io.File;
 

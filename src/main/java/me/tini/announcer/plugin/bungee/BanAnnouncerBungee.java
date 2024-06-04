@@ -15,11 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.tini.announcer.bukkit;
+package me.tini.announcer.plugin.bungee;
 
 import java.io.File;
 
-import org.bukkit.plugin.java.JavaPlugin;
 import org.spicord.Spicord;
 import org.spicord.SpicordLoader;
 
@@ -32,13 +31,11 @@ import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.ExtensionInfo;
 import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtension;
-import me.tini.announcer.extension.impl.betterjails.BetterJailsExtension;
-import me.tini.announcer.extension.impl.essentialsjail.EssentialsJailExtension;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
-import me.tini.announcer.extension.impl.maxbans.MaxBansExtension;
+import net.md_5.bungee.api.plugin.Plugin;
 
-public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin {
+public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlugin {
 
     private BanAnnouncer announcer;
     private PunishmentListeners pm;
@@ -67,18 +64,13 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
         pm.addNew("AdvancedBan", "advancedban", () -> new AdvancedBanExtension(this), true, "me.leoko.advancedban.Universal");
         pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , true, "litebans.api.Events");
         pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
-        pm.addNew("MaxBansPlus", "maxbans"    , () -> new MaxBansExtension(this)    , true, "org.maxgamer.maxbans.MaxBansPlus");
-
-        // Jail
-        pm.addNew("BetterJails", "betterjails", () -> new BetterJailsExtension(this)   , false, "com.github.fefo.betterjails.api.BetterJails");
-        pm.addNew("EssentialsX", "essentials" , () -> new EssentialsJailExtension(this), false, "net.ess3.api.events.JailStatusChangeEvent");
 
         for (ExtensionContainer loader : announcer.getExtensions()) {
-            ExtensionInfo ext = loader.getInfo();
-            pm.addNew(ext.getName(), ext.getKey(), loader.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
+            ExtensionInfo info = loader.getInfo();
+            pm.addNew(info.getName(), info.getKey(), loader.getInstanceSupplier(this), info.isPunishmentManager(), info.getRequiredClass());
         }
 
-        String pun = config.getPunishmentManager().toLowerCase();
+        final String pun = config.getPunishmentManager().toLowerCase();
 
         if ("auto".equals(pun)) {
             pm.autoDetect();
@@ -86,7 +78,7 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
             pm.startPunishListener(pun);
         }
 
-        String jail = config.getJailManager().toLowerCase();
+        final String jail = config.getJailManager().toLowerCase();
 
         if (config.isJailManagerEnabled()) { // Jail enabled
             pm.startJailListener(jail);
@@ -95,7 +87,6 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
         spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
     }
 
-    @Override
     public BanAnnouncer getAnnouncer() {
         return announcer;
     }
@@ -103,11 +94,6 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
     @Override
     public PunishmentListeners getPunishmentListeners() {
         return pm;
-    }
-
-    @Override
-    public File getFile() {
-        return super.getFile();
     }
 
     @Override

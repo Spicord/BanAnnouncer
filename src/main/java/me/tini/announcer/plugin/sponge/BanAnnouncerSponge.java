@@ -1,4 +1,4 @@
-package me.tini.announcer.sponge;
+package me.tini.announcer.plugin.sponge;
 
 import java.io.File;
 import java.nio.file.Path;
