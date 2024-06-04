@@ -29,7 +29,7 @@ import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.ExtensionInfo;
-import me.tini.announcer.extension.ExtensionLoader;
+import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtension;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
@@ -65,7 +65,7 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
         pm.addNew("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , true, "litebans.api.Events");
         pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
 
-        for (ExtensionLoader loader : announcer.getExtensions()) {
+        for (ExtensionContainer loader : announcer.getExtensions()) {
             ExtensionInfo info = loader.getInfo();
             pm.addNew(info.getName(), info.getKey(), loader.getInstanceSupplier(this), info.isPunishmentManager(), info.getRequiredClass());
         }

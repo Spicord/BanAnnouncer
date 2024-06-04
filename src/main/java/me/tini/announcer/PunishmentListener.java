@@ -1,12 +1,12 @@
 package me.tini.announcer;
 
-import me.tini.announcer.extension.ExtensionLoader;
+import me.tini.announcer.extension.ExtensionContainer;
 
 public abstract class PunishmentListener {
 
     private final BanAnnouncer announcer;
 
-    private ExtensionLoader myLoader;
+    private ExtensionContainer myLoader;
 
     public PunishmentListener(BanAnnouncer announcer) {
         this.announcer = announcer;
@@ -20,11 +20,11 @@ public abstract class PunishmentListener {
         return announcer;
     }
 
-    public ExtensionLoader getExtensionLoader() {
+    public ExtensionContainer getExtensionLoader() {
         if (myLoader != null) {
             return myLoader;
         }
-        for (ExtensionLoader loader : announcer.getExtensions()) {
+        for (ExtensionContainer loader : announcer.getExtensions()) {
             if (loader.isInstanceCreated()) {
                 if (loader.getInstance().getPunishmentListener() == this) {
                     return myLoader = loader;

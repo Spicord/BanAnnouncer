@@ -30,7 +30,7 @@ import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.ExtensionInfo;
-import me.tini.announcer.extension.ExtensionLoader;
+import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtension;
 import me.tini.announcer.extension.impl.betterjails.BetterJailsExtension;
 import me.tini.announcer.extension.impl.essentialsjail.EssentialsJailExtension;
@@ -73,7 +73,7 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
         pm.addNew("BetterJails", "betterjails", () -> new BetterJailsExtension(this)   , false, "com.github.fefo.betterjails.api.BetterJails");
         pm.addNew("EssentialsX", "essentials" , () -> new EssentialsJailExtension(this), false, "net.ess3.api.events.JailStatusChangeEvent");
 
-        for (ExtensionLoader loader : announcer.getExtensions()) {
+        for (ExtensionContainer loader : announcer.getExtensions()) {
             ExtensionInfo ext = loader.getInfo();
             pm.addNew(ext.getName(), ext.getKey(), loader.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
         }

@@ -13,21 +13,17 @@ import java.util.function.Supplier;
 import com.google.gson.Gson;
 
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.PunishmentListener;
 
-public class ExtensionLoader {
+public class FileExtensionContainer extends ExtensionContainer {
 
     private static final Gson GSON = new Gson();
 
     private URLClassLoader loader;
-    private ExtensionInfo info;
 
-    private AbstractExtension instance;
-
-    public ExtensionLoader(File file) {
+    public FileExtensionContainer(File file) {
         loader = new URLClassLoader(
             new URL[] { fileToUrl(file) },
-            ExtensionLoader.class.getClassLoader()
+            FileExtensionContainer.class.getClassLoader()
         );
 
         InputStream extensionJson = loader.getResourceAsStream("extension.json");
@@ -39,10 +35,7 @@ public class ExtensionLoader {
         info = GSON.fromJson(new InputStreamReader(extensionJson), ExtensionInfo.class);
     }
 
-    public ExtensionInfo getInfo() {
-        return info;
-    }
-
+    @Override
     public Supplier<AbstractExtension> getInstanceSupplier(BanAnnouncerPlugin plugin) {
         if (instance != null) {
             return () -> instance;
@@ -59,16 +52,6 @@ public class ExtensionLoader {
                     return instance;
                 }
 
-                if (ins instanceof PunishmentListener) {
-                    instance = new AbstractExtension() {
-                        @Override
-                        public PunishmentListener getPunishmentListener() {
-                            return (PunishmentListener) ins;
-                        }
-                    };
-                    return instance;
-                }
-
                 throw new IllegalStateException("Unknown instance type: " + ins.getClass());
             } catch (Exception e) {
                 throw new RuntimeException("Failed to create listener instance", e);
@@ -76,14 +59,7 @@ public class ExtensionLoader {
         };
     }
 
-    public boolean isInstanceCreated() {
-        return instance != null;
-    }
-
-    public AbstractExtension getInstance() {
-        return instance;
-    }
-
+    @Override
     public void close() {
         try {
             loader.close();

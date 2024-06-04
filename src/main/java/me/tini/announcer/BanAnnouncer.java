@@ -41,14 +41,15 @@ import lombok.Getter;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.config.Messages;
 import me.tini.announcer.extension.AbstractExtension;
-import me.tini.announcer.extension.ExtensionLoader;
+import me.tini.announcer.extension.ExtensionContainer;
+import me.tini.announcer.extension.FileExtensionContainer;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 
 public final class BanAnnouncer {
 
-    private Set<ExtensionLoader> allExtensions = new HashSet<>(0);
+    private Set<ExtensionContainer> allExtensions = new HashSet<>(0);
 
     @Getter private Config config;
     @Getter private Logger logger;
@@ -197,7 +198,7 @@ public final class BanAnnouncer {
     }
 
     public void disable() {
-        for (ExtensionLoader ext : allExtensions) {
+        for (ExtensionContainer ext : allExtensions) {
             ext.close();
         }
         allExtensions.clear();
@@ -208,17 +209,17 @@ public final class BanAnnouncer {
         callbacks = null;
     }
 
-    public Set<ExtensionLoader> loadExtensions(File folder) {
+    public Set<ExtensionContainer> loadExtensions(File folder) {
         if (folder.mkdirs()) {
             return Collections.emptySet();
         }
 
         File[] files = folder.listFiles((d, name) -> name.endsWith(".jar") || name.endsWith(".ext"));
 
-        Set<ExtensionLoader> extensions = new HashSet<>(files.length, 1.0f);
+        Set<ExtensionContainer> extensions = new HashSet<>(files.length, 1.0f);
 
         for (File file : files) {
-            ExtensionLoader loader = new ExtensionLoader(file);
+            ExtensionContainer loader = new FileExtensionContainer(file);
 
             extensions.add(loader);
 
@@ -230,7 +231,7 @@ public final class BanAnnouncer {
         return extensions;
     }
 
-    public Set<ExtensionLoader> getExtensions() {
+    public Set<ExtensionContainer> getExtensions() {
         return allExtensions;
     }
 
@@ -239,7 +240,7 @@ public final class BanAnnouncer {
     }
 
     public String processPlaceholder(PunishmentInfo info, String placeholder) {
-        for (ExtensionLoader loader : allExtensions) {
+        for (ExtensionContainer loader : allExtensions) {
             if (loader.isInstanceCreated()) {
                 AbstractExtension extension = loader.getInstance();
                 String result = extension.processPlaceholder(info, placeholder);

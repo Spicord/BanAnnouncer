@@ -22,7 +22,7 @@ import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.ExtensionInfo;
-import me.tini.announcer.extension.ExtensionLoader;
+import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.spongevanilla.SpongeVanillaExtension;
 
@@ -78,7 +78,7 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
         pm.addNew("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), true, "space.arim.libertybans.api.LibertyBans");
         pm.addNew("Sponge", "sponge", () -> new SpongeVanillaExtension(this), true, "org.spongepowered.api.Game");
 
-        for (ExtensionLoader loader : announcer.getExtensions()) {
+        for (ExtensionContainer loader : announcer.getExtensions()) {
             ExtensionInfo ext = loader.getInfo();
             pm.addNew(ext.getName(), ext.getKey(), loader.getInstanceSupplier(this), ext.isPunishmentManager(), ext.getRequiredClass());
         }
