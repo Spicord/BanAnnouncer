@@ -124,7 +124,7 @@ public class Config {
                     if ("auto".equals(punishmentManager)) {
                         this.autoDetect = true;
                     } else {
-                        legacyEnabled.add(jailManager);
+                        legacyEnabled.add(punishmentManager);
                     }
                 }
                 if (jailManager != null) {

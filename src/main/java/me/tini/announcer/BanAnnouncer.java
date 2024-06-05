@@ -264,6 +264,8 @@ public final class BanAnnouncer {
     }
 
     public void enableExtensions() {
+        int enabledCount = 0;
+
         for (String id : config.getEnabledExtensions()) {
             ExtensionContainer container = allExtensions.get(id);
 
@@ -287,6 +289,12 @@ public final class BanAnnouncer {
             if (listener != null) {
                 listener.register();
             }
+
+            enabledCount++;
+        }
+
+        if (enabledCount == 0) {
+            plugin.warn("None of the extensions were enabled!");
         }
     }
 
