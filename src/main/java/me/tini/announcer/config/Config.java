@@ -128,7 +128,7 @@ public class Config {
                     }
                 }
                 if (jailManager != null) {
-                    if (!"off".equals(jailManager)) {
+                    if (!"off".equals(jailManager) && !"false".equals(jailManager)) {
                         legacyEnabled.add(jailManager);
                     }
                 }

@@ -10,7 +10,7 @@ public class ExtensionInfo {
     private String id;
 
     @SerializedName("class")
-    private String clazz;
+    private String mainClass;
 
     private String requiredClass;
 
@@ -21,6 +21,8 @@ public class ExtensionInfo {
     public ExtensionInfo(String name, String id, String mainClass, String requiredClass) {
         this.name = name;
         this.id = id;
+        this.mainClass = mainClass;
+        this.requiredClass = requiredClass;
     }
 
     public String getName() {
@@ -32,13 +34,14 @@ public class ExtensionInfo {
     }
 
     public String getMainClass() {
-        return clazz;
+        return mainClass;
     }
 
     public String getRequiredClass() {
         return requiredClass;
     }
 
+    @Deprecated
     public boolean hasPunishmentManager() {
         return isPunishmentManager || isJailManager;
     }

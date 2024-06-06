@@ -17,6 +17,10 @@ public class ExtensionContainer {
         this.instanceSupplier = instanceSupplier;
     }
 
+    public String getName() {
+        return info.getName();
+    }
+
     public ExtensionInfo getInfo() {
         return info;
     }

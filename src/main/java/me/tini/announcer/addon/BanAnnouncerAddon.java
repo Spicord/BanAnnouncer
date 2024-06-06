@@ -59,6 +59,7 @@ public final class BanAnnouncerAddon extends SimpleAddon {
         }
 
         if (!announcer.getConfig().isUseDiscordCommand()) {
+            getLogger().info("Skipped Discord command registration.");
             return;
         }
 

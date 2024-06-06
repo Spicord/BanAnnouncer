@@ -28,7 +28,7 @@ import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
-import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtension;
+import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtensionBukkit;
 import me.tini.announcer.extension.impl.betterjails.BetterJailsExtension;
 import me.tini.announcer.extension.impl.essentialsjail.EssentialsJailExtension;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
@@ -53,7 +53,7 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
 
         announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
-        announcer.registerExtension("AdvancedBan", "advancedban", () -> new AdvancedBanExtension(this)   , "me.leoko.advancedban.Universal");
+        announcer.registerExtension("AdvancedBan", "advancedban", () -> new AdvancedBanExtensionBukkit(this), "me.leoko.advancedban.Universal");
         announcer.registerExtension("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)      , "litebans.api.Events");
         announcer.registerExtension("LibertyBans", "libertybans", () -> new LibertyBansExtension(this)   , "space.arim.libertybans.api.LibertyBans");
         announcer.registerExtension("MaxBansPlus", "maxbans"    , () -> new MaxBansExtension(this)       , "org.maxgamer.maxbans.MaxBansPlus");

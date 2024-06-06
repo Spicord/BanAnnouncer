@@ -293,6 +293,26 @@ public final class BanAnnouncer {
             enabledCount++;
         }
 
+        if (config.isAutoDetect()) {
+            for (ExtensionContainer ext : allExtensions.values()) {
+                if (config.getEnabledExtensions().contains(ext.getName())) {
+                    continue;
+                }
+                if (isClassPresent(ext.getInfo().getRequiredClass())) {
+                    AbstractExtension instance = ext.getInstanceSupplier(plugin).get();
+
+                    plugin.log("[Extension] [AutoDetect] Enabled %s (id: %s)", ext.getInfo().getName(), ext.getInfo().getId());
+
+                    PunishmentListener listener = instance.getPunishmentListener();
+                    if (listener != null) {
+                        listener.register();
+                    }
+
+                    enabledCount++;
+                }
+            }
+        }
+
         if (enabledCount == 0) {
             plugin.warn("None of the extensions were enabled!");
         }
