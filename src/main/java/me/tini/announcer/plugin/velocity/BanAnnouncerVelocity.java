@@ -26,7 +26,7 @@ import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 @Plugin(
     id = "ban_announcer",
     name = "BanAnnouncer",
-    version = "2.7",
+    version = "2.9.0",
     authors = { "Tini" },
     dependencies = {
         @Dependency(id = "spicord", optional = false),
