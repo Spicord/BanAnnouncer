@@ -69,7 +69,7 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
 
         announcer.enableExtensions();
 
-        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
+        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this), this);
     }
 
     public void onDisable() {

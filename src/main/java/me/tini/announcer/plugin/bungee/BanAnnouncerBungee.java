@@ -56,7 +56,7 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
         announcer.enableExtensions();
 
-        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
+        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this), this);
     }
 
     public BanAnnouncer getAnnouncer() {

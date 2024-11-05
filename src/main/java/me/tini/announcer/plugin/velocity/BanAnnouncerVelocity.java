@@ -63,7 +63,7 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
 
         announcer.enableExtensions();
 
-        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
+        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this), this);
     }
 
     @Override

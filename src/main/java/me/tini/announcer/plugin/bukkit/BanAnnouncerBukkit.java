@@ -62,7 +62,7 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
 
         announcer.enableExtensions();
 
-        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this));
+        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this), this);
     }
 
     @Override
