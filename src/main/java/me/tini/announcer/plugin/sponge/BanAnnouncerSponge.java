@@ -31,16 +31,20 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
     private final PluginContainer pluginContainer;
 
     private BanAnnouncer announcer;
+    private Logger logger;
 
     @Inject
     public BanAnnouncerSponge(
         @ConfigDir(sharedRoot = false) Path dataFolder,
         Game game,
-        PluginContainer pluginContainer
+        PluginContainer pluginContainer,
+        org.apache.logging.log4j.Logger log
     ) {
         this.dataFolder = dataFolder;
         this.game = game;
         this.pluginContainer = pluginContainer;
+
+        this.logger = new Log4JWrapper(log);
     }
 
     public Game getGame() {
@@ -103,7 +107,7 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
 
     @Override
     public Logger getLogger() {
-        return Logger.getLogger("banannouncer");
+        return logger;
     }
 
     @Override

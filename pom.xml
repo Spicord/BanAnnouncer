@@ -130,10 +130,12 @@
             <version>2.18.2</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- Installed latest release jar on my local .m2 -->
         <dependency>
-            <groupId>com.github.fefo6644</groupId>
-            <artifactId>betterjails-api</artifactId>
-            <version>1.5-SNAPSHOT</version>
+            <groupId>io.github.emilyydev</groupId>
+            <artifactId>betterjails</artifactId>
+            <version>1.6</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
