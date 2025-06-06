@@ -267,6 +267,8 @@ public final class BanAnnouncer {
         int enabledCount = 0;
 
         for (String id : config.getEnabledExtensions()) {
+            if (id == null || "null".equals(id)) continue;
+
             ExtensionContainer container = allExtensions.get(id);
 
             if (container == null) {

@@ -138,6 +138,9 @@ public class Config {
                 }
                 this.enabledExtensions = legacyEnabled;
 
+                // Remove null values
+                this.enabledExtensions.removeIf(s -> s == null);
+
                 ignoreSilent      = config.getBoolean("ignore-silent", false);
                 consoleName       = config.getString("console-name", "Console");
                 automaticText     = config.getString("automatic", "Automatic");
