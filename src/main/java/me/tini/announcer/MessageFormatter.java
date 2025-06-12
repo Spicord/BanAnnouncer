@@ -102,9 +102,18 @@ public class MessageFormatter {
             final String foundNoSym = found.substring(1, found.length() - 1);
 
             String value = map.get(foundNoSym);
-            if (value == null && otherHandler != null) {
-                value = otherHandler.apply(foundNoSym);
+
+            if (value == null) {
+                if (otherHandler != null) {
+                    value = otherHandler.apply(foundNoSym);
+                    if (value == null) {
+                        value = "";
+                    }
+                } else {
+                    value = "";
+                }
             }
+
             if (isUrl) {
                 value = urlencode(value);
             }

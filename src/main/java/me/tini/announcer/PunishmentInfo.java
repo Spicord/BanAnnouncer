@@ -51,13 +51,21 @@ public final class PunishmentInfo {
     }
 
     public void setReason(String reason) {
-        reason = ChatColor.stripColor(reason);
-        this.reason = reason.equals("") ? "none" : reason;
+        if (reason == null) {
+            this.reason = "none";
+        } else {
+            reason = ChatColor.stripColor(reason);
+            this.reason = reason.equals("") ? "none" : reason;
+        }
     }
 
     public void setDuration(String duration) {
-        duration = ChatColor.stripColor(duration);
-        this.duration = duration.equals("") ? "unknown" : duration;
+        if (duration == null) {
+            this.duration = "unknown";
+        } else {
+            duration = ChatColor.stripColor(duration);
+            this.duration = duration.equals("") ? "unknown" : duration;
+        }
     }
 
     public boolean isRevoked() {
