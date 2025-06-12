@@ -301,7 +301,14 @@ public final class BanAnnouncer {
                     continue;
                 }
                 if (isClassPresent(ext.getInfo().getRequiredClass())) {
-                    AbstractExtension instance = ext.getInstanceSupplier(plugin).get();
+                    AbstractExtension instance;
+                    try {
+                        instance = ext.getInstanceSupplier(plugin).get();
+                    } catch (Throwable e) {
+                        plugin.log("[Extension] [AutoDetect] Failed to enable %s (id: %s)", ext.getInfo().getName(), ext.getInfo().getId());
+                        e.printStackTrace();
+                        continue;
+                    }
 
                     plugin.log("[Extension] [AutoDetect] Enabled %s (id: %s)", ext.getInfo().getName(), ext.getInfo().getId());
 
