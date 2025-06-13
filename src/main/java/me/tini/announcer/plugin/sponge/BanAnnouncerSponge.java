@@ -10,6 +10,8 @@ import org.spicord.SpicordLoader;
 import org.spicord.reflect.ReflectUtils;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.config.ConfigDir;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.lifecycle.ConstructPluginEvent;
 import org.spongepowered.plugin.PluginContainer;
 import org.spongepowered.plugin.builtin.jvm.Plugin;
 
@@ -55,7 +57,8 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
         return pluginContainer;
     }
 
-    public void onEnable() {
+    @Listener
+    public void onEnable(ConstructPluginEvent event) {
         SpicordLoader.addStartupListener(this::onSpicordLoad);
     }
 
