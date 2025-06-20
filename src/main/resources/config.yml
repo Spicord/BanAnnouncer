@@ -85,4 +85,4 @@ console-name: "Console"
 automatic: "Automatic"
 
 # Do not change this or i'll eat your cookies
-config-version: 4
+config-version: 5

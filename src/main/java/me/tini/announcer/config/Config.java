@@ -41,7 +41,7 @@ import me.tini.announcer.embed.EmbedLoader;
 
 public class Config {
 
-    private final static int CONFIG_VERSION = 4;
+    private final static int CONFIG_VERSION = 5;
 
     @Getter private static Config instance;
 
@@ -117,6 +117,8 @@ public class Config {
                 createConfig();
 
                 loadConfig(false);
+
+                return;
             } else {
                 if (reload) {
                     messages.reload();
