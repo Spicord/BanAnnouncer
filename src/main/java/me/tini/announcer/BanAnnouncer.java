@@ -31,11 +31,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
-import org.spicord.Spicord;
-import org.spicord.bot.DiscordBot;
-import org.spicord.embed.Embed;
-import org.spicord.embed.EmbedSender;
-
 import lombok.Getter;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.config.Messages;
@@ -43,25 +38,22 @@ import me.tini.announcer.extension.AbstractExtension;
 import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.ExtensionInfo;
 import me.tini.announcer.extension.FileExtensionContainer;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import me.tini.announcer.utils.Embed;
 
-public final class BanAnnouncer {
+public abstract class BanAnnouncer {
 
     private Map<String, ExtensionContainer> allExtensions = new HashMap<>(0);
 
-    @Getter private Config config;
-    @Getter private final BanAnnouncerPlugin plugin;
-    @Getter private Logger logger;
-    @Getter private boolean enabled = true;
+    @Getter protected Config config;
+    @Getter protected final BanAnnouncerPlugin plugin;
+    @Getter protected Logger logger;
+    @Getter protected boolean enabled = false;
 
     private Map<PunishmentInfo.Type, Function<PunishmentInfo, Embed>> callbacks;
-    private DiscordBot bot;
 
     private Map<String, Function<PunishmentInfo, String>> allPlaceholders = new HashMap<>();
 
-    public BanAnnouncer(Config config, Spicord spicord, BanAnnouncerPlugin plugin) {
+    public BanAnnouncer(Config config, BanAnnouncerPlugin plugin) {
         this.config = config;
         this.plugin = plugin;
         this.logger = plugin.getLogger();
@@ -147,6 +139,8 @@ public final class BanAnnouncer {
         callbacks.put(TEMPWARN,  callbacks.get(WARN));
     }
 
+    public abstract void initialize();
+
     public void handlePunishment(PunishmentInfo punishment, PunishmentListener listener) {
         if (!enabled) {
             logger.warning("BanAnnouncer is not enabled, ignoring punishment.");
@@ -164,42 +158,7 @@ public final class BanAnnouncer {
         return callbacks.get(punishment.getType()).apply(punishment);
     }
 
-    private void sendDiscordMessage(Embed message) {
-        if (message == null) {
-            logger.warning("(message is null, ignoring it)");
-            return;
-        }
-
-        if (bot == null || bot.getJda() == null) {
-            logger.warning("BanAnnouncer does not have access to an active bot.");
-            return;
-        }
-
-        JDA jda = bot.getJda();
-
-        long channelId = config.getChannelToAnnounce();
-
-        GuildChannel channel = jda.getGuildChannelById(channelId);
-
-        if (channel == null || !(channel instanceof GuildMessageChannel)) {
-            logger.severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");
-            return;
-        } else {
-            EmbedSender.prepare((GuildMessageChannel) channel, message).queue(success -> {
-                logger.info("The punishment message was sent.");
-            }, fail -> {
-                logger.warning("Couldn't send the punishment message: " + fail.getMessage());
-            });
-        }
-    }
-
-    public void setBot(DiscordBot bot) {
-        this.bot = bot;
-    }
-
-    public void removeBot(DiscordBot bot) {
-        this.bot = null;
-    }
+    public abstract void sendDiscordMessage(Embed message);
 
     public void disable() {
         for (ExtensionContainer ext : allExtensions.values()) {
@@ -207,7 +166,6 @@ public final class BanAnnouncer {
         }
         allExtensions.clear();
         callbacks.clear();
-        bot = null;
         enabled = false;
         config = null;
         callbacks = null;
@@ -333,5 +291,18 @@ public final class BanAnnouncer {
             return true;
         } catch (ClassNotFoundException e) {}
         return false;
+    }
+
+    public static BanAnnouncer build(BanAnnouncerPlugin plugin, Config config) {
+        String mode = config.getMode();
+
+        if ("spicord".equals(mode)) {
+            return new BanAnnouncerSpicord(config, plugin);
+        }
+        if ("webhook".equals(mode)) {
+            return new BanAnnouncerWebhook(config, plugin);
+        }
+
+        throw new IllegalArgumentException("Invalid mode: " + mode);
     }
 }

@@ -18,10 +18,12 @@
 package me.tini.announcer.config;
 
 import java.io.File;
-import org.spicord.embed.Embed;
-import org.spicord.embed.EmbedLoader;
-import eu.mcdb.universal.config.YamlConfiguration;
+
+import com.google.gson.JsonObject;
+
 import lombok.Getter;
+import me.tini.announcer.utils.Embed;
+import me.tini.announcer.utils.EmbedLoader;
 
 @Getter 
 public final class Messages {
@@ -48,12 +50,12 @@ public final class Messages {
     private Embed unnote;
 
     private final EmbedLoader embedLoader;
-    private final YamlConfiguration config;
+    private final JsonObject json;
     private final File embedFolder;
 
-    protected Messages(EmbedLoader embedLoader, YamlConfiguration config, File dataFolder) {
+    protected Messages(EmbedLoader embedLoader, JsonObject json, File dataFolder) {
         this.embedLoader = embedLoader;
-        this.config = config;
+        this.json = json;
         this.embedFolder = new File(dataFolder, "embed");
         this.load();
     }
@@ -84,7 +86,9 @@ public final class Messages {
     }
 
     private Embed getEmbed(final String key) {
-        String message = config.getString("messages." + key);
+        JsonObject tmp = json.get("messages").getAsJsonObject();
+
+        String message = tmp.get(key).getAsString();
 
         if (message != null) {
             message = message.trim();

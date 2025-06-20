@@ -1,4 +1,4 @@
-package me.tini.announcer.plugin.sponge;
+package me.tini.announcer.utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +12,7 @@ public class Log4JWrapper extends java.util.logging.Logger {
     private final Logger logger;
     private final Map<Level, MessageLogger> levelToLoggerMap = new HashMap<>();
 
-    protected Log4JWrapper(Logger logger) {
+    public Log4JWrapper(Logger logger) {
         super(null,null);
         this.logger = logger;
 

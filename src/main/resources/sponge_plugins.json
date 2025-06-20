@@ -27,7 +27,7 @@
                     "id": "spicord",
                     "version": "[5.7.2,)",
                     "load-order": "after",
-                    "optional": false
+                    "optional": true
                 },
                 {
                     "id": "libertybans",

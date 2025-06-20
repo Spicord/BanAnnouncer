@@ -26,8 +26,8 @@ import org.spicord.bot.DiscordBot;
 import org.spicord.bot.command.SlashCommand;
 import org.spicord.embed.Embed;
 
-import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
+import me.tini.announcer.BanAnnouncerSpicord;
 import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.config.Config;
 import net.dv8tion.jda.api.Permission;
@@ -38,11 +38,11 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 public final class BanAnnouncerAddon extends SimpleAddon {
 
-    private BanAnnouncer announcer;
+    private BanAnnouncerSpicord announcer;
 
     public BanAnnouncerAddon(BanAnnouncerPlugin plugin) {
         super("BanAnnouncer", "ban_announcer", "Tini", plugin.getVersion());
-        this.announcer = plugin.getAnnouncer();
+        this.announcer = (BanAnnouncerSpicord) plugin.getAnnouncer();
     }
 
     @Override
@@ -105,7 +105,7 @@ public final class BanAnnouncerAddon extends SimpleAddon {
                         action.setJail("jail1");
                         action.setPermanent(true);
 
-                        Embed embed = announcer.buildEmbed(action);
+                        Embed embed = Helper.toSpicordEmbed(announcer.buildEmbed(action));
 
                         if (embed == null) {
                             event.reply("The specified embed is disabled in your server").setEphemeral(true).queue();

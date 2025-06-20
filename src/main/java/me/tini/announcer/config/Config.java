@@ -18,20 +18,26 @@
 package me.tini.announcer.config;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
-import org.spicord.embed.EmbedLoader;
+import org.yaml.snakeyaml.Yaml;
 
-import eu.mcdb.universal.config.YamlConfiguration;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import lombok.Getter;
 import me.tini.announcer.BanAnnouncerPlugin;
+import me.tini.announcer.utils.EmbedLoader;
 
 public class Config {
 
@@ -43,6 +49,10 @@ public class Config {
     private EmbedLoader embedLoader;
     private File configFile;
     private Logger logger;
+
+    @Getter private String mode;
+
+    @Getter private String webhookUrl;
 
     @Getter private long channelToAnnounce;
     @Getter private Messages messages;
@@ -85,8 +95,14 @@ public class Config {
             if (!configFile.exists())
                 createConfig();
 
-            final YamlConfiguration config = YamlConfiguration.load(configFile);
-            final int file_version = config.getInt("config-version", 0);
+            JsonObject json = new Gson().toJsonTree(
+                new Yaml().loadAs(
+                    new FileReader(configFile),
+                    Map.class
+                )
+            ).getAsJsonObject();
+
+            final int file_version = json.get("config-version").getAsInt();
 
             if (file_version < CONFIG_VERSION && !reload) {
                 final File oldConfig = new File(dataFolder, "config.yml." + file_version);
@@ -105,46 +121,28 @@ public class Config {
                 if (reload) {
                     messages.reload();
                 } else {
-                    messages = new Messages(embedLoader, config, dataFolder);
+                    messages = new Messages(embedLoader, json, dataFolder);
                 }
 
-                List<Long> oldConfigChannels = config.getLongList("channels-to-announce");
+                channelToAnnounce = json.get("channel-to-announce").getAsLong();
 
-                channelToAnnounce = config.getLong(
-                    "channel-to-announce",
-                    oldConfigChannels != null && !oldConfigChannels.isEmpty() ? oldConfigChannels.get(0) : 0L
-                );
+                JsonArray enabledExt = json.get("enabled-extensions").getAsJsonArray();
 
-                String punishmentManager = config.getString("punishment-manager", "auto");
-                String jailManager       = config.getString("jail-manager", "off");
+                this.enabledExtensions = new HashSet<>();
 
-                Set<String> legacyEnabled = new HashSet<>();
-
-                if (punishmentManager != null) {
-                    if ("auto".equals(punishmentManager)) {
-                        this.autoDetect = true;
-                    } else {
-                        legacyEnabled.add(punishmentManager);
-                    }
+                for (JsonElement el : enabledExt) {
+                    String ext = el.getAsString();
+                    enabledExtensions.add(ext);
                 }
-                if (jailManager != null) {
-                    if (!"off".equals(jailManager) && !"false".equals(jailManager)) {
-                        legacyEnabled.add(jailManager);
-                    }
-                }
-                List<String> enabledExt = config.getStringList("enabled-extensions");
-                if (enabledExt != null) {
-                    legacyEnabled.addAll(enabledExt);
-                }
-                this.enabledExtensions = legacyEnabled;
 
-                // Remove null values
-                this.enabledExtensions.removeIf(s -> s == null);
+                ignoreSilent      = json.get("ignore-silent").getAsBoolean();
+                consoleName       = json.get("console-name").getAsString();
+                automaticText     = json.get("automatic").getAsString();
+                useDiscordCommand = json.get("enable-discord-command").getAsBoolean();
 
-                ignoreSilent      = config.getBoolean("ignore-silent", false);
-                consoleName       = config.getString("console-name", "Console");
-                automaticText     = config.getString("automatic", "Automatic");
-                useDiscordCommand = config.getBoolean("enable-discord-command", true);
+                mode              = json.get("mode").getAsString();
+                webhookUrl        = json.get("webhook-url").getAsString();
+
             }
         } catch (Exception e) {
             logger.severe("This is a configuration error, NOT a plugin error, please generate a new config or fix it.");

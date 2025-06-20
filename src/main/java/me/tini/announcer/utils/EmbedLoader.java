@@ -1,4 +1,4 @@
-package me.tini.announcer.embed;
+package me.tini.announcer.utils;
 
 import java.io.File;
 import java.io.IOException;

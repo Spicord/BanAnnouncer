@@ -19,13 +19,9 @@ package me.tini.announcer.plugin.bungee;
 
 import java.io.File;
 
-import org.spicord.Spicord;
-import org.spicord.SpicordLoader;
-
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.ReloadCommand;
-import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtensionBungee;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
@@ -38,15 +34,11 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
     @Override
     public void onEnable() {
-        SpicordLoader.addStartupListener(this::onSpicordLoad);
-    }
-
-    private void onSpicordLoad(Spicord spicord) {
         Config config = new Config(this);
 
         new ReloadCommand().register(this);
 
-        announcer = new BanAnnouncer(config, spicord, this);
+        announcer = BanAnnouncer.build(this, config);
 
         announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
@@ -56,7 +48,7 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
 
         announcer.enableExtensions();
 
-        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this), this);
+        announcer.initialize();
     }
 
     public BanAnnouncer getAnnouncer() {

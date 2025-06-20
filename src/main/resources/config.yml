@@ -1,6 +1,20 @@
 # The channel id where the messages will be sent
+# (only used in "mode: spicord")
 # If you don't know how to get a channel id... https://www.google.com/?q=discord+how+to+get+channel+id
 channel-to-announce: 123456789012345678
+
+# The webhook url (only used in "mode: webhook")
+webhook-url: 'https://.......'
+
+# > The plugin mode.
+# Possible values:
+# 
+# spicord = Uses a Spicord bot.
+# webhook = Uses a Webhook.
+# 
+# In the Spicord mode you need to set the 'channel-to-announce' value.
+# In Webhook mode you need to set the 'webhook-url' value.
+mode: spicord
 
 # If the text is empty (nothing between the double quotes),
 #    the message will not be sent (a.k.a. the message is "disabled"), for example:

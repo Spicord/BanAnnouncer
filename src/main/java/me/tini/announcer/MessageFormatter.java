@@ -8,12 +8,12 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.spicord.embed.Embed;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import me.tini.announcer.utils.Embed;
 
 public class MessageFormatter {
 

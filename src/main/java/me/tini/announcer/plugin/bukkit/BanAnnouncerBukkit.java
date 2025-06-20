@@ -20,13 +20,10 @@ package me.tini.announcer.plugin.bukkit;
 import java.io.File;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.spicord.Spicord;
-import org.spicord.SpicordLoader;
 
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.ReloadCommand;
-import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtensionBukkit;
 import me.tini.announcer.extension.impl.betterjails.BetterJailsExtension;
@@ -41,15 +38,11 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
 
     @Override
     public void onEnable() {
-        SpicordLoader.addStartupListener(this::onSpicordLoad);
-    }
-
-    private void onSpicordLoad(Spicord spicord) {
         Config config = new Config(this);
 
         new ReloadCommand().register(this);
 
-        announcer = new BanAnnouncer(config, spicord, this);
+        announcer = BanAnnouncer.build(this, config);
 
         announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
@@ -62,7 +55,7 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
 
         announcer.enableExtensions();
 
-        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this), this);
+        announcer.initialize();
     }
 
     @Override

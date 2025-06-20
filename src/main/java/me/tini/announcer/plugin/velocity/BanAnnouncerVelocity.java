@@ -1,27 +1,22 @@
 package me.tini.announcer.plugin.velocity;
 
 import java.io.File;
+import java.util.logging.Logger;
 
-import org.spicord.Spicord;
-import org.spicord.SpicordLoader;
-import org.spicord.plugin.VelocityPlugin;
-import org.spicord.reflect.ReflectUtils;
-
-import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
-import com.velocitypowered.api.proxy.ProxyServer;
 
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.ReloadCommand;
-import me.tini.announcer.addon.BanAnnouncerAddon;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
+import me.tini.announcer.utils.ReflectUtils;
+import me.tini.announcer.utils.SLF4JWrapper;
 
 @Plugin(
     id = "ban_announcer",
@@ -29,32 +24,30 @@ import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
     version = "2.9.0",
     authors = { "Tini" },
     dependencies = {
-        @Dependency(id = "spicord", optional = false),
+        @Dependency(id = "spicord", optional = true),
         @Dependency(id = "libertybans", optional = true),
         @Dependency(id = "litebans", optional = true)
     }
 )
-public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncerPlugin {
+public class BanAnnouncerVelocity implements BanAnnouncerPlugin {
 
     private BanAnnouncer announcer;
     private Config config;
+    private Logger logger;
+    private File dataFolder;
 
-    @Inject
-    public BanAnnouncerVelocity(ProxyServer proxyServer) {
-        super(proxyServer);
+    public BanAnnouncerVelocity() {
+        this.logger = new SLF4JWrapper("BanAnnouncer");
+        this.dataFolder = new File("plugins/ban_announcer");
     }
 
     @Subscribe
     public void onProxyInitialize(ProxyInitializeEvent event) {
-        SpicordLoader.addStartupListener(this::onSpicordLoad);
-    }
-
-    private void onSpicordLoad(Spicord spicord) {
         config = new Config(this);
 
         new ReloadCommand().register(this);
 
-        announcer = new BanAnnouncer(config, spicord, this);
+        announcer = BanAnnouncer.build(this, config);
 
         announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
@@ -63,7 +56,7 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
 
         announcer.enableExtensions();
 
-        spicord.getAddonManager().registerAddon(new BanAnnouncerAddon(this), this);
+        announcer.initialize();
     }
 
     @Override
@@ -91,5 +84,15 @@ public class BanAnnouncerVelocity extends VelocityPlugin implements BanAnnouncer
             return "unknown";
         }
         return info.version();
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
+
+    @Override
+    public File getDataFolder() {
+        return dataFolder;
     }
 }

@@ -2,8 +2,8 @@ name: BanAnnouncer
 author: Tini
 main: me.tini.announcer.plugin.bukkit.BanAnnouncerBukkit
 version: ${project.version}
-depend: [Spicord]
 softdepend:
+ - Spicord
  - AdvancedBan
  - LiteBans
  - LibertyBans
