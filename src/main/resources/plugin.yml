@@ -3,7 +3,13 @@ author: Tini
 main: me.tini.announcer.plugin.bukkit.BanAnnouncerBukkit
 version: ${project.version}
 depend: [Spicord]
-softdepend: [AdvancedBan, LiteBans, MaxBansPlus, Essentials, BetterJails]
+softdepend:
+ - AdvancedBan
+ - LiteBans
+ - LibertyBans
+ - MaxBansPlus
+ - Essentials
+ - BetterJails
 description: Announce the punishments on your Discord server
 api-version: 1.13
 
