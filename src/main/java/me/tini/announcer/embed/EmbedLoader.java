@@ -1,4 +1,4 @@
-package me.tini.announcer.utils;
+package me.tini.announcer.embed;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import java.util.Map;
 
 import com.google.common.base.Preconditions;
 import com.google.gson.JsonSyntaxException;
+
+import me.tini.announcer.utils.ZipExtractor;
 
 public class EmbedLoader {
 

@@ -34,11 +34,12 @@ import java.util.logging.Logger;
 import lombok.Getter;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.config.Messages;
+import me.tini.announcer.embed.Embed;
 import me.tini.announcer.extension.AbstractExtension;
 import me.tini.announcer.extension.ExtensionContainer;
 import me.tini.announcer.extension.ExtensionInfo;
 import me.tini.announcer.extension.FileExtensionContainer;
-import me.tini.announcer.utils.Embed;
+import me.tini.announcer.spicord.BanAnnouncerSpicord;
 
 public abstract class BanAnnouncer {
 

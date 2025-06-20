@@ -1,4 +1,4 @@
-package me.tini.announcer.utils;
+package me.tini.announcer.embed;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;

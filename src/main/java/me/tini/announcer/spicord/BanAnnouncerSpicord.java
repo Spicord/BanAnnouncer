@@ -1,14 +1,14 @@
-package me.tini.announcer;
+package me.tini.announcer.spicord;
 
 import org.spicord.Spicord;
 import org.spicord.SpicordLoader;
 import org.spicord.bot.DiscordBot;
 import org.spicord.embed.EmbedSender;
 
-import me.tini.announcer.addon.BanAnnouncerAddon;
-import me.tini.announcer.addon.Helper;
+import me.tini.announcer.BanAnnouncer;
+import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.config.Config;
-import me.tini.announcer.utils.Embed;
+import me.tini.announcer.embed.Embed;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
@@ -27,8 +27,8 @@ public final class BanAnnouncerSpicord extends BanAnnouncer {
 
     private void onSpicordLoad(Spicord spicord) {
         spicord.getAddonManager().registerAddon(
-            new BanAnnouncerAddon(plugin),
-            new PluginWrapper(plugin)
+            new BanAnnouncerAddon(plugin, this),
+            new SpicordPluginWrapper(plugin)
         );
         enabled = true;
     }
@@ -55,7 +55,7 @@ public final class BanAnnouncerSpicord extends BanAnnouncer {
             logger.severe("Cannot find the channel with id '" + channelId + "'. The message was not sent.");
             return;
         } else {
-            EmbedSender.prepare((GuildMessageChannel) channel, Helper.toSpicordEmbed(message)).queue(success -> {
+            EmbedSender.prepare((GuildMessageChannel) channel, Conversions.toSpicordEmbed(message)).queue(success -> {
                 logger.info("The punishment message was sent.");
             }, fail -> {
                 logger.warning("Couldn't send the punishment message: " + fail.getMessage());

@@ -13,7 +13,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import me.tini.announcer.utils.Embed;
+import me.tini.announcer.embed.Embed;
 
 public class MessageFormatter {
 

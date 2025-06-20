@@ -1,15 +1,17 @@
-package me.tini.announcer;
+package me.tini.announcer.spicord;
 
 import java.io.File;
 import java.util.logging.Logger;
 
 import org.spicord.plugin.PluginInterface;
 
-public class PluginWrapper implements PluginInterface {
+import me.tini.announcer.BanAnnouncerPlugin;
+
+public class SpicordPluginWrapper implements PluginInterface {
 
     private final BanAnnouncerPlugin plugin;
 
-    public PluginWrapper(BanAnnouncerPlugin plugin) {
+    public SpicordPluginWrapper(BanAnnouncerPlugin plugin) {
         this.plugin = plugin;
     }
 

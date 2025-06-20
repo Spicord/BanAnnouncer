@@ -37,7 +37,7 @@ import com.google.gson.JsonObject;
 
 import lombok.Getter;
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.utils.EmbedLoader;
+import me.tini.announcer.embed.EmbedLoader;
 
 public class Config {
 

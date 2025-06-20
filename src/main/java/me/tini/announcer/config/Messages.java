@@ -22,8 +22,8 @@ import java.io.File;
 import com.google.gson.JsonObject;
 
 import lombok.Getter;
-import me.tini.announcer.utils.Embed;
-import me.tini.announcer.utils.EmbedLoader;
+import me.tini.announcer.embed.Embed;
+import me.tini.announcer.embed.EmbedLoader;
 
 @Getter 
 public final class Messages {

@@ -3,7 +3,7 @@ package me.tini.announcer;
 import java.io.IOException;
 
 import me.tini.announcer.config.Config;
-import me.tini.announcer.utils.Embed;
+import me.tini.announcer.embed.Embed;
 
 public final class BanAnnouncerWebhook extends BanAnnouncer {
 

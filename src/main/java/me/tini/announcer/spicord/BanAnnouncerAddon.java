@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.tini.announcer.addon;
+package me.tini.announcer.spicord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,6 @@ import org.spicord.bot.command.SlashCommand;
 import org.spicord.embed.Embed;
 
 import me.tini.announcer.BanAnnouncerPlugin;
-import me.tini.announcer.BanAnnouncerSpicord;
 import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.config.Config;
 import net.dv8tion.jda.api.Permission;
@@ -40,9 +39,9 @@ public final class BanAnnouncerAddon extends SimpleAddon {
 
     private BanAnnouncerSpicord announcer;
 
-    public BanAnnouncerAddon(BanAnnouncerPlugin plugin) {
+    public BanAnnouncerAddon(BanAnnouncerPlugin plugin, BanAnnouncerSpicord announcer) {
         super("BanAnnouncer", "ban_announcer", "Tini", plugin.getVersion());
-        this.announcer = (BanAnnouncerSpicord) plugin.getAnnouncer();
+        this.announcer = announcer;
     }
 
     @Override
@@ -105,7 +104,7 @@ public final class BanAnnouncerAddon extends SimpleAddon {
                         action.setJail("jail1");
                         action.setPermanent(true);
 
-                        Embed embed = Helper.toSpicordEmbed(announcer.buildEmbed(action));
+                        Embed embed = Conversions.toSpicordEmbed(announcer.buildEmbed(action));
 
                         if (embed == null) {
                             event.reply("The specified embed is disabled in your server").setEphemeral(true).queue();
