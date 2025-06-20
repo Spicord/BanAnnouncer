@@ -21,7 +21,7 @@ import me.tini.announcer.utils.SLF4JWrapper;
 @Plugin(
     id = "ban_announcer",
     name = "BanAnnouncer",
-    version = "2.9.0",
+    version = "3.0.0",
     authors = { "Tini" },
     dependencies = {
         @Dependency(id = "spicord", optional = true),

@@ -5,7 +5,7 @@
 
     <groupId>me.tini</groupId>
     <artifactId>ban-announcer</artifactId>
-    <version>2.9.0</version>
+    <version>3.0.0</version>
     <name>BanAnnouncer</name>
 
     <repositories>
