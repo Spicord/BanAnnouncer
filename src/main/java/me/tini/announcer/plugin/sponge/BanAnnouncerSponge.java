@@ -23,9 +23,10 @@ import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.spongevanilla.SpongeVanillaExtension;
 import me.tini.announcer.utils.Log4JWrapper;
 import me.tini.announcer.utils.ReflectUtils;
+import me.tini.command.sponge.ISpongePlugin;
 
 @Plugin("banannouncer")
-public class BanAnnouncerSponge implements BanAnnouncerPlugin {
+public class BanAnnouncerSponge implements BanAnnouncerPlugin, ISpongePlugin {
 
     private final Path dataFolder;
     private final Game game;
@@ -60,7 +61,7 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin {
     public void onEnable(ConstructPluginEvent event) {
         Config config = new Config(this);
 
-        new ReloadCommand().register(this);
+        registerCommand("banannouncer-reload", new ReloadCommand());
 
         announcer = BanAnnouncer.build(this, config);
 

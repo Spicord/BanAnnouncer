@@ -17,7 +17,6 @@
 
 package me.tini.announcer;
 
-import eu.mcdb.util.chat.ChatColor;
 import lombok.Data;
 import lombok.ToString;
 
@@ -54,7 +53,7 @@ public final class PunishmentInfo {
         if (reason == null) {
             this.reason = "none";
         } else {
-            reason = ChatColor.stripColor(reason);
+            reason = stripColor(reason);
             this.reason = reason.equals("") ? "none" : reason;
         }
     }
@@ -63,9 +62,13 @@ public final class PunishmentInfo {
         if (duration == null) {
             this.duration = "unknown";
         } else {
-            duration = ChatColor.stripColor(duration);
+            duration = stripColor(duration);
             this.duration = duration.equals("") ? "unknown" : duration;
         }
+    }
+
+    private static String stripColor(String str) {
+        return str.replaceAll("(?i)(&|§)[a-f0-9klmnor]", "");
     }
 
     public boolean isRevoked() {

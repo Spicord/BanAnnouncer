@@ -31,8 +31,9 @@ import me.tini.announcer.extension.impl.essentialsjail.EssentialsJailExtension;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 import me.tini.announcer.extension.impl.maxbans.MaxBansExtension;
+import me.tini.command.bukkit.IBukkitPlugin;
 
-public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin {
+public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin, IBukkitPlugin {
 
     private BanAnnouncer announcer;
 
@@ -40,7 +41,7 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
     public void onEnable() {
         Config config = new Config(this);
 
-        new ReloadCommand().register(this);
+        registerCommand("banannouncer-reload", new ReloadCommand());
 
         announcer = BanAnnouncer.build(this, config);
 

@@ -297,11 +297,11 @@ public abstract class BanAnnouncer {
     public static BanAnnouncer build(BanAnnouncerPlugin plugin, Config config) {
         String mode = config.getMode();
 
-        if ("spicord".equals(mode)) {
-            return new BanAnnouncerSpicord(config, plugin);
-        }
         if ("webhook".equals(mode)) {
             return new BanAnnouncerWebhook(config, plugin);
+        }
+        if ("spicord".equals(mode)) {
+            return new BanAnnouncerSpicord(config, plugin);
         }
 
         throw new IllegalArgumentException("Invalid mode: " + mode);

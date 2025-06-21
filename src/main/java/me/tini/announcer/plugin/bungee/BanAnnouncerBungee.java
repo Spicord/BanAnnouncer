@@ -26,9 +26,10 @@ import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtensionBungee;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
+import me.tini.command.bungee.IBungeePlugin;
 import net.md_5.bungee.api.plugin.Plugin;
 
-public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlugin {
+public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlugin, IBungeePlugin {
 
     private BanAnnouncer announcer;
 
@@ -36,7 +37,7 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
     public void onEnable() {
         Config config = new Config(this);
 
-        new ReloadCommand().register(this);
+        registerCommand("banannouncer-reload", new ReloadCommand());
 
         announcer = BanAnnouncer.build(this, config);
 

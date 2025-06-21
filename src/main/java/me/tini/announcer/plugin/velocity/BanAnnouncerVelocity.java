@@ -3,11 +3,13 @@ package me.tini.announcer.plugin.velocity;
 import java.io.File;
 import java.util.logging.Logger;
 
+import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.proxy.ProxyServer;
 
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
@@ -17,6 +19,7 @@ import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 import me.tini.announcer.utils.ReflectUtils;
 import me.tini.announcer.utils.SLF4JWrapper;
+import me.tini.command.velocity.IVelocityPlugin;
 
 @Plugin(
     id = "ban_announcer",
@@ -29,14 +32,17 @@ import me.tini.announcer.utils.SLF4JWrapper;
         @Dependency(id = "litebans", optional = true)
     }
 )
-public class BanAnnouncerVelocity implements BanAnnouncerPlugin {
+public class BanAnnouncerVelocity implements BanAnnouncerPlugin, IVelocityPlugin {
 
     private BanAnnouncer announcer;
     private Config config;
     private Logger logger;
     private File dataFolder;
+    private ProxyServer proxyServer;
 
-    public BanAnnouncerVelocity() {
+    @Inject
+    public BanAnnouncerVelocity(ProxyServer proxyServer) {
+        this.proxyServer = proxyServer;
         this.logger = new SLF4JWrapper("BanAnnouncer");
         this.dataFolder = new File("plugins/ban_announcer");
     }
@@ -45,7 +51,7 @@ public class BanAnnouncerVelocity implements BanAnnouncerPlugin {
     public void onProxyInitialize(ProxyInitializeEvent event) {
         config = new Config(this);
 
-        new ReloadCommand().register(this);
+        registerCommand("banannouncer-reload", new ReloadCommand());
 
         announcer = BanAnnouncer.build(this, config);
 
@@ -94,5 +100,10 @@ public class BanAnnouncerVelocity implements BanAnnouncerPlugin {
     @Override
     public File getDataFolder() {
         return dataFolder;
+    }
+
+    @Override
+    public ProxyServer getProxyServer() {
+        return proxyServer;
     }
 }
