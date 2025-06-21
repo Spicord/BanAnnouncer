@@ -31,6 +31,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
+import org.spicord.Spicord;
+
 import lombok.Getter;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.config.Messages;
@@ -301,9 +303,19 @@ public abstract class BanAnnouncer {
             return new BanAnnouncerWebhook(config, plugin);
         }
         if ("spicord".equals(mode)) {
+            if (!hasSpicord()) {
+                throw new IllegalStateException("Selected mode 'spicord' but the Spicord plugin is not present.");
+            }
             return new BanAnnouncerSpicord(config, plugin);
         }
 
         throw new IllegalArgumentException("Invalid mode: " + mode);
+    }
+
+    private static boolean hasSpicord() {
+        try {
+            return Spicord.class != null;
+        } catch (Throwable e) {}
+        return false;
     }
 }
