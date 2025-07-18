@@ -24,6 +24,7 @@ import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtensionBungee;
+import me.tini.announcer.extension.impl.forward.ForwardExtensionBungee;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 import me.tini.command.bungee.IBungeePlugin;
@@ -46,6 +47,7 @@ public final class BanAnnouncerBungee extends Plugin implements BanAnnouncerPlug
         announcer.registerExtension("AdvancedBan", "advancedban", () -> new AdvancedBanExtensionBungee(this), "me.leoko.advancedban.Universal");
         announcer.registerExtension("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , "litebans.api.Events");
         announcer.registerExtension("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), "space.arim.libertybans.api.LibertyBans");
+        announcer.registerExtension("Forward"    , "forward"    , () -> new ForwardExtensionBungee(this), "net.md_5.bungee.api.ProxyServer");
 
         announcer.enableExtensions();
 

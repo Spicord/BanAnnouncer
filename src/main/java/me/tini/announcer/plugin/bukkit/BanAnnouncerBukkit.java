@@ -18,11 +18,14 @@
 package me.tini.announcer.plugin.bukkit;
 
 import java.io.File;
+import java.util.Iterator;
 
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
+import me.tini.announcer.IMessenger;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtensionBukkit;
@@ -33,7 +36,7 @@ import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 import me.tini.announcer.extension.impl.maxbans.MaxBansExtension;
 import me.tini.command.bukkit.IBukkitPlugin;
 
-public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin, IBukkitPlugin {
+public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin, IBukkitPlugin, IMessenger {
 
     private BanAnnouncer announcer;
 
@@ -80,5 +83,25 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
     @Override
     public String getVersion() {
         return getDescription().getVersion();
+    }
+
+    @Override
+    public void registerOutgoingChannel(String channel) {
+        getServer().getMessenger().registerOutgoingPluginChannel(this, channel);
+    }
+
+    @Override
+    public boolean isAvailable() {
+        return getServer().getOnlinePlayers().size() > 0;
+    }
+
+    @Override
+    public boolean sendMessage(String channel, byte[] payload) {
+        Iterator<? extends Player> i = getServer().getOnlinePlayers().iterator();
+        if (i.hasNext()) {
+            i.next().sendPluginMessage(this, channel, payload);
+            return true;
+        }
+        return false;
     }
 }

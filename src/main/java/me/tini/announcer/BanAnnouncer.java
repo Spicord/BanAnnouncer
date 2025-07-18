@@ -302,6 +302,12 @@ public abstract class BanAnnouncer {
         if ("webhook".equals(mode)) {
             return new BanAnnouncerWebhook(config, plugin);
         }
+        if ("forward".equals(mode)) {
+            if (!(plugin instanceof IMessenger)) {
+                throw new IllegalStateException("Selected mode 'forward' is not available in this server platform.");
+            }
+            return new BanAnnouncerForward(config, plugin);
+        }
         if ("spicord".equals(mode)) {
             if (!hasSpicord()) {
                 throw new IllegalStateException("Selected mode 'spicord' but the Spicord plugin is not present.");

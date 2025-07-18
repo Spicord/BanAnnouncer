@@ -15,6 +15,7 @@ import me.tini.announcer.BanAnnouncer;
 import me.tini.announcer.BanAnnouncerPlugin;
 import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.config.Config;
+import me.tini.announcer.extension.impl.forward.ForwardExtensionVelocity;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
 import me.tini.announcer.utils.ReflectUtils;
@@ -59,6 +60,7 @@ public class BanAnnouncerVelocity implements BanAnnouncerPlugin, IVelocityPlugin
 
         announcer.registerExtension("LiteBans"   , "litebans"   , () -> new LiteBansExtension(this)   , "litebans.api.Events");
         announcer.registerExtension("LibertyBans", "libertybans", () -> new LibertyBansExtension(this), "space.arim.libertybans.api.LibertyBans");
+        announcer.registerExtension("Forward"    , "forward"    , () -> new ForwardExtensionVelocity(this), "com.velocitypowered.api.proxy.ProxyServer");
 
         announcer.enableExtensions();
 
