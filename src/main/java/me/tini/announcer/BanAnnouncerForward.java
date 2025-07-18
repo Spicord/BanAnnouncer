@@ -29,7 +29,11 @@ public final class BanAnnouncerForward extends BanAnnouncer {
 
         final byte[] payload = gson.toJson(punishment).getBytes();
 
-        messenger.sendMessage(CHANNEL, payload);
+        final boolean success = messenger.sendMessage(CHANNEL, payload);
+
+        if (!success) {
+            plugin.warn("Punishment not forwarded because there are no players connected to the server.");
+        }
     }
 
     @Override
