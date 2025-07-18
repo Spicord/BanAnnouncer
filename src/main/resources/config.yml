@@ -11,6 +11,7 @@ webhook-url: 'https://.......'
 # 
 # spicord = Uses a Spicord bot.
 # webhook = Uses a Webhook.
+# forward = Forwards punishments from Spigot to Proxy (BungeeCord/Velocity).
 # 
 # In the Spicord mode you need to set the 'channel-to-announce' value.
 # In Webhook mode you need to set the 'webhook-url' value.
@@ -68,6 +69,7 @@ enable-discord-command: true
 #     libertybans = For LibertyBans
 #     essentials  = For EssentialsX Jails
 #     betterjails = For BetterJails
+#     forward     = For punishments forwarded by subservers
 enabled-extensions:
  - advancedban
  - essentials
