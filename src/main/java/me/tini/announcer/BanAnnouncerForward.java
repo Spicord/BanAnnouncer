@@ -1,21 +1,17 @@
 package me.tini.announcer;
 
-import com.google.gson.Gson;
-
 import me.tini.announcer.config.Config;
 import me.tini.announcer.embed.Embed;
 
 public final class BanAnnouncerForward extends BanAnnouncer {
 
-    private static final String CHANNEL = "banannouncer:punishment";
-    private final Gson gson = new Gson();
     private IMessenger messenger;
 
     public BanAnnouncerForward(Config config, BanAnnouncerPlugin plugin) {
         super(config, plugin);
 
         this.messenger = (IMessenger) plugin;
-        this.messenger.registerOutgoingChannel(CHANNEL);
+        this.messenger.registerOutgoingChannel(ForwardInfo.CHANNEL);
     }
 
     @Override
@@ -27,9 +23,9 @@ public final class BanAnnouncerForward extends BanAnnouncer {
     public void handlePunishment(PunishmentInfo punishment, PunishmentListener listener) {
         // Forward punishment to proxy server
 
-        final byte[] payload = gson.toJson(punishment).getBytes();
+        final byte[] payload = ForwardInfo.GSON.toJson(punishment).getBytes();
 
-        final boolean success = messenger.sendMessage(CHANNEL, payload);
+        final boolean success = messenger.sendMessage(ForwardInfo.CHANNEL, payload);
 
         if (!success) {
             plugin.warn("Punishment not forwarded because there are no players connected to the server.");
