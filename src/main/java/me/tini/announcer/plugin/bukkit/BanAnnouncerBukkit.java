@@ -30,6 +30,7 @@ import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.impl.advancedban.AdvancedBanExtensionBukkit;
 import me.tini.announcer.extension.impl.betterjails.BetterJailsExtension;
+import me.tini.announcer.extension.impl.cmi.CMIExtension;
 import me.tini.announcer.extension.impl.essentialsjail.EssentialsJailExtension;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.litebans.LiteBansExtension;
@@ -98,6 +99,13 @@ public class BanAnnouncerBukkit extends JavaPlugin implements BanAnnouncerPlugin
             "ultrapunishments",
             () -> new UltraPunishmentsExtension(this),
             "me.TechsCode.UltraPunishments.UltraPunishmentsAPI"
+        );
+
+        announcer.registerExtension(
+            "CMI",
+            "cmi",
+            () -> new CMIExtension(this),
+            "com.Zrips.CMI.CMI"
         );
 
         announcer.enableExtensions();
