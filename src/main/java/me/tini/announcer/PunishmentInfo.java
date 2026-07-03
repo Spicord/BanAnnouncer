@@ -49,6 +49,10 @@ public final class PunishmentInfo {
         this.type = type;
     }
 
+    public String getReason() {
+        return reason == null ? "unknown" : reason;
+    }
+
     public void setReason(String reason) {
         if (reason == null) {
             this.reason = "none";
