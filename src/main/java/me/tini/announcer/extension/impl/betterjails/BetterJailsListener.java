@@ -9,6 +9,7 @@ import me.tini.announcer.PunishmentInfo;
 import me.tini.announcer.PunishmentInfo.Type;
 import me.tini.announcer.plugin.bukkit.BanAnnouncerBukkit;
 import me.tini.announcer.plugin.bukkit.BukkitPunishmentListener;
+import me.tini.announcer.utils.TimeUtils;
 
 public class BetterJailsListener extends BukkitPunishmentListener {
 

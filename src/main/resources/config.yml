@@ -63,13 +63,15 @@ enable-discord-command: true
 # You can add as many as you want.
 # 
 # (Some) Possible values:
-#     advancedban = For AdvancedBan
-#     litebans    = For LiteBans
-#     maxbans     = For MaxBansPlus
-#     libertybans = For LibertyBans
-#     essentials  = For EssentialsX Jails
-#     betterjails = For BetterJails
-#     forward     = For punishments forwarded by subservers
+#     advancedban      = For AdvancedBan
+#     litebans         = For LiteBans
+#     maxbans          = For MaxBansPlus
+#     libertybans      = For LibertyBans
+#     essentials       = For EssentialsX Jails
+#     betterjails      = For BetterJails
+#     ultrapunishments = For UltraPunishments
+#     forward          = For punishments forwarded by subservers
+#     sponge           = For built-in Sponge
 enabled-extensions:
  - advancedban
  - essentials
