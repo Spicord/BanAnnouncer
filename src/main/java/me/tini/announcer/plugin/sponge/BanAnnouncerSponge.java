@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import java.util.logging.Logger;
 
 import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.spicord.Spicord;
+import org.spicord.SpicordLoader;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.config.ConfigDir;
 import org.spongepowered.api.event.Listener;
@@ -20,6 +22,7 @@ import me.tini.announcer.ReloadCommand;
 import me.tini.announcer.config.Config;
 import me.tini.announcer.extension.impl.libertybans.LibertyBansExtension;
 import me.tini.announcer.extension.impl.spongevanilla.SpongeVanillaExtension;
+import me.tini.announcer.spicord.BanAnnouncerSpicord;
 import me.tini.announcer.utils.Log4JWrapper;
 import me.tini.announcer.utils.ReflectUtils;
 import me.tini.command.sponge.ISpongePlugin;
@@ -58,11 +61,17 @@ public class BanAnnouncerSponge implements BanAnnouncerPlugin, ISpongePlugin {
 
     @Listener
     public void onEnable(ConstructPluginEvent event) {
+        logger.info("Loading BanAnnouncer");
+
+        SpicordLoader.addStartupListener(this::onSpicordLoad);
+    }
+
+    private void onSpicordLoad(Spicord spicord) {
         Config config = new Config(this);
 
         registerCommand("banannouncer-reload", new ReloadCommand());
 
-        announcer = BanAnnouncer.build(this, config);
+        announcer = new BanAnnouncerSpicord(config, this);
 
         announcer.loadExtensions(new File(getDataFolder(), "extensions"));
 
