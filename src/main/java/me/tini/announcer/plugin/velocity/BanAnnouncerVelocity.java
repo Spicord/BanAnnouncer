@@ -25,7 +25,7 @@ import me.tini.command.velocity.IVelocityPlugin;
 @Plugin(
     id = "ban_announcer",
     name = "BanAnnouncer",
-    version = "3.0.0",
+    version = "3.0.1",
     authors = { "Tini" },
     dependencies = {
         @Dependency(id = "spicord", optional = true),
